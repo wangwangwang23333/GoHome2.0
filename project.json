@@ -1,0 +1,8 @@
+{
+  "engine": "cocos-creator-js",
+  "packages": "packages",
+  "name": "cell-game",
+  "id": "ce3b6b09-e58d-40c1-98b0-f39ae091ea41",
+  "version": "2.4.6",
+  "isNew": false
+}
