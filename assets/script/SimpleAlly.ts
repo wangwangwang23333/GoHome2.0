@@ -18,10 +18,10 @@ const State = {
 export default class SimpleAlly extends cc.Component {
 
     @property
-    speed: number = 100;
+    speed: number = 200;
 
     @property
-    _designed_speed: number = 100;
+    _designed_speed: number = 200;
 
     @property
     state: number = State.moving;
@@ -120,13 +120,11 @@ export default class SimpleAlly extends cc.Component {
             // 播放运动动画
         }
     }
-
     
-    onBeginContect(contact, self, other) {
-        cc.log(contact, self, other);
-    }
-
-    onCollisionEnter(other:cc.Component, self){
-        cc.log(self, other);
+    onBeginContact(contact, self, other) {
+        if (other.node.group == "platform") return;
+        console.log(contact, self, other);
+        let enemy = other.getComponent(SimpleEnemy);
+        console.log(enemy);
     }
 }

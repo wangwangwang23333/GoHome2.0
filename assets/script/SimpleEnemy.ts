@@ -23,6 +23,9 @@ export default class SimpleEnemy extends cc.Component {
     start () {
 
     }
+    
+    onBeginContact(contact, self, other) {
+    }
 
     // update (dt) {}
 }
