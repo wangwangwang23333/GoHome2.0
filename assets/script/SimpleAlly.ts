@@ -119,8 +119,8 @@ export default class SimpleAlly extends cc.Component {
     /** 死亡，顺便播放动画。让父节点回收改节点进入对象池。 */
     private getKilled() {
         // TODO: 填充被击杀的逻辑
-
         this.node.destroy();
+        this.destroy();
     }
 
 

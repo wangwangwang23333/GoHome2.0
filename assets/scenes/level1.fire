@@ -689,8 +689,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        514.628,
-        -185.51,
+        544.961,
+        -163.844,
         0,
         0,
         0,
@@ -754,7 +754,7 @@
       "__id__": 15
     },
     "_enabled": true,
-    "_type": 0,
+    "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 1,
     "_linearDamping": 0,
@@ -805,8 +805,15 @@
       "__id__": 15
     },
     "_enabled": true,
-    "label": null,
-    "text": "hello",
+    "speed": -50,
+    "_designed_speed": -50,
+    "state": 0,
+    "_max_health": 150,
+    "health": 160,
+    "atk": 15,
+    "atkInterval": 1,
+    "contact_allies": [],
+    "anim_name": "move",
     "_id": "38F49ksExFOIdIFAHufPxJ"
   },
   {
@@ -1426,6 +1433,8 @@
         "__uuid__": "e8585f74-0e0b-4eed-b220-85bb206a15d4"
       }
     ],
+    "enemySequence": [],
+    "enemies": [],
     "_id": "edWfpaxb1NYat46NmLbqq+"
   },
   {
