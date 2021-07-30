@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "f12feb94-5d28-4678-b914-9bb872c8d875",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 62,
+  "height": 37,
+  "platformSettings": {},
+  "subMetas": {
+    "lysosome": {
+      "ver": "1.0.6",
+      "uuid": "d350cbba-7487-4e25-9a60-7061084f833f",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "f12feb94-5d28-4678-b914-9bb872c8d875",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 62,
+      "height": 37,
+      "rawWidth": 62,
+      "rawHeight": 37,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
