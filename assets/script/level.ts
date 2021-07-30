@@ -19,9 +19,23 @@ export default class NewClass extends cc.Component {
     @property({
         displayName:"己方单位",
         type:[cc.Prefab],
-        tooltip:"己方单位"
+        tooltip:"己方单位种类"
     })
-    allies:cc.Prefab[]=[];
+    allies: cc.Prefab[] = [];
+
+    @property({
+        displayName: "敌人顺序",
+        tooltip: "敌人顺序",
+        type: [cc.Integer]
+    })
+    enemySequence: number[] = [];
+
+    @property({
+        displayName: "敌方单位",
+        tooltip: "敌方单位种类",
+        type: [cc.Prefab]
+    })
+    enemies: cc.Prefab[] = [];
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -51,10 +65,20 @@ export default class NewClass extends cc.Component {
         console.log("成功", i)
         //   console.log(this.allies[i-1])
         let prefab = this.allies[i-1]
+
+        // TODO: 检查剩余多少钱，够不够买
         let ally = cc.instantiate(prefab)
         ally.setParent(this.node)
         ally.position = cc.v3(-112, -203)
-        
+
+    }
+
+    createEnemy(i) {
+        let prefab = this.enemies[i-1]
+
+        let enemy = cc.instantiate(prefab)
+        enemy.setParent(this.node)
+        enemy.position = cc.v3(720, -184);
     }
 
     start () {
