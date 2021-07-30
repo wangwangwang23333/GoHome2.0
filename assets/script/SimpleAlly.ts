@@ -18,10 +18,10 @@ export const State = {
 export default class SimpleAlly extends cc.Component {
 
     @property
-    speed: number = 100;
+    speed: number = 200;
 
     @property
-    _designed_speed: number = 100;
+    _designed_speed: number = 200;
 
     @property
     state: number = State.moving;
@@ -151,7 +151,6 @@ export default class SimpleAlly extends cc.Component {
             // 播放攻击动画
         }
     }
-
     
     onBeginContact(contact, self, other) {
         if (self != null && other != null && self.getComponent(SimpleAlly) != null && other.getComponent(SimpleEnemy) != null) {

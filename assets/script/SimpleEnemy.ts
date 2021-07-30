@@ -163,5 +163,8 @@ export default class SimpleEnemy extends cc.Component {
             
         }
     }
+    
+    onBeginContact(contact, self, other) {
+    }
 
 }

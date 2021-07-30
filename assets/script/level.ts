@@ -1,0 +1,65 @@
+// Learn TypeScript:
+//  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
+// Learn Attribute:
+//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
+
+const {ccclass, property} = cc._decorator;
+
+const AllyKinds = {
+    "lysosome": 1,
+    "p450": 2,
+    "crisp": 3
+}
+
+@ccclass
+export default class NewClass extends cc.Component {
+
+    @property({
+        displayName:"己方单位",
+        type:[cc.Prefab],
+        tooltip:"己方单位"
+    })
+    allies:cc.Prefab[]=[];
+
+    // LIFE-CYCLE CALLBACKS:
+
+    onLoad () {
+        cc.director.getPhysicsManager().enabled = true;
+        cc.director.getPhysicsManager().debugDrawFlags = 1;
+        cc.director.getCollisionManager().enabled = true;
+        cc.director.getCollisionManager().enabledDebugDraw = true;
+
+        // let clickEventHandler = new cc.Component.EventHandler();
+        // clickEventHandler.target = this.node
+        // clickEventHandler.component = "Game"
+        // clickEventHandler.handler = "createAlly(" + AllyKinds.lysosome + ")"
+
+        // let buttons = this.getComponents(cc.Button)
+        // console.log(buttons)
+        // var createLysosomeBtn = null;
+        // for (let i = 0; i < buttons.length; i++) {
+        //     const b = buttons[i];
+        //     console.log(b)
+        //     if (b.name == "createLysosomeBtn") createLysosomeBtn = b;
+        // }
+        // createLysosomeBtn.clickEvents.push(clickEventHandler)
+    }
+
+    createAlly(e, i) {
+        console.log("成功", i)
+        //   console.log(this.allies[i-1])
+        let prefab = this.allies[i-1]
+        let ally = cc.instantiate(prefab)
+        ally.setParent(this.node)
+        ally.position = cc.v3(-112, -203)
+        
+    }
+
+    start () {
+
+    }
+
+    // update (dt) {}
+}
