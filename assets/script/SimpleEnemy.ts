@@ -12,7 +12,8 @@ import SimpleAlly from "./SimpleAlly";
 
 const State = {
     moving: 0, 
-    attacking: 1
+    attacking: 1,
+    falling:2
 }
 
 
@@ -44,8 +45,6 @@ export default class SimpleEnemy extends cc.Component {
     contact_allies: Array<SimpleAlly> = []
 
     attackCallback: () => void = null;
-    
-    killed: boolean = false;
 
     @property
     anim_name: string = 'move'
@@ -76,6 +75,14 @@ export default class SimpleEnemy extends cc.Component {
         }
         this.schedule(this.attackCallback, this.atkInterval,cc.macro.REPEAT_FOREVER,0.5);
 
+        // TODO: 添加动画相关逻辑
+    }
+
+    /** 改变为下落状态，同时改变速度和动画。 */
+    private setFalling() {
+        this.state = State.falling;
+        this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 1);
+        
         // TODO: 添加动画相关逻辑
     }
 
@@ -133,17 +140,30 @@ export default class SimpleEnemy extends cc.Component {
 
     start() {
         this.node.getComponent(cc.RigidBody).fixedRotation = true;
-        cc.log("enemy:",this.uuid," health:",this.health," atk:",this.atk," speed:",this.speed)
-        this.setMoving();
+        cc.log("enemy:", this.uuid, " health:", this.health, " atk:", this.atk, " speed:", this.speed)
+        this.setFalling();
     }
 
-    update (dt) {
-        let v_y = this.node.getComponent(cc.RigidBody).linearVelocity.y; 
-        if (this.state == State.attacking)
-            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, 0);
-        if (this.state == State.moving)
-            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, v_y);
+    update(dt) {
         
+        if (this.state == State.falling) {
+            this.node.getComponent(cc.RigidBody).linearVelocity.x = 0;
+        }
+
+        if (this.state == State.moving) {
+            // 播放运动动画
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, 0);
+        }
+
+        if (this.state == State.attacking) {
+            // 播放攻击动画
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
+        }
+
+        if (this.state == State.falling && this.node.getComponent(cc.RigidBody).linearVelocity.y == 0) {
+            this.setMoving();
+        }
+
         if (this.state == State.attacking && this.contact_allies.length == 0) {
             
             this.setMoving();
@@ -152,13 +172,7 @@ export default class SimpleEnemy extends cc.Component {
             this.setAttacking();
         }
         
-        if (this.state == State.moving) {
-            // 播放运动动画
-        }
-
-        if (this.state == State.attacking) {
-            // 播放攻击动画
-        }
+        
 
     }
 

@@ -11,17 +11,18 @@ const {ccclass, property} = cc._decorator;
 
 const State = {
     moving: 0, 
-    attacking: 1
+    attacking: 1,
+    falling:2
 }
 
 @ccclass
 export default class SimpleAlly extends cc.Component {
 
     @property
-    speed: number = 200;
+    speed: number = 100;
 
     @property
-    _designed_speed: number = 200;
+    _designed_speed: number = 100;
 
     @property
     state: number = State.moving;
@@ -42,8 +43,6 @@ export default class SimpleAlly extends cc.Component {
     contact_enemies: Array<SimpleEnemy> = []
 
     attackCallback: () => void = null;
-    
-    killed: boolean = false;
 
     @property
     anim_name: string = 'move'
@@ -79,6 +78,14 @@ export default class SimpleAlly extends cc.Component {
         }
         this.schedule(this.attackCallback, this.atkInterval,cc.macro.REPEAT_FOREVER,0.5);
 
+        // TODO: 添加动画相关逻辑
+    }
+
+    /** 改变为下落状态，同时改变速度和动画。 */
+    private setFalling() {
+        this.state = State.falling;
+        this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 1);
+        
         // TODO: 添加动画相关逻辑
     }
 
@@ -137,29 +144,34 @@ export default class SimpleAlly extends cc.Component {
     start() {
         this.node.getComponent(cc.RigidBody).fixedRotation = true;
         cc.log("ally:",this.uuid," health:",this.health," atk:",this.atk," speed:",this.speed)
-        this.setMoving();
+        this.setFalling();
     }
 
     update (dt) {
-        let v_y = this.node.getComponent(cc.RigidBody).linearVelocity.y; 
-        if (this.state == State.attacking)
-            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, 0);
-        if (this.state == State.moving)
-            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, v_y);
+        if (this.state == State.falling) {
+            this.node.getComponent(cc.RigidBody).linearVelocity.x = 0;
+        }
 
-        if (this.state==State.attacking&&this.contact_enemies.length == 0) {
-            this.setMoving();
-        }
-        if (this.state==State.moving&&this.contact_enemies.length != 0) {
-            this.setAttacking();
-        }
-        
         if (this.state == State.moving) {
             // 播放运动动画
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, 0);
         }
 
         if (this.state == State.attacking) {
             // 播放攻击动画
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
+        }
+
+        if (this.state == State.falling && this.node.getComponent(cc.RigidBody).linearVelocity.y == 0) {
+            this.setMoving();
+        }
+
+        if (this.state == State.attacking && this.contact_enemies.length == 0) {
+            
+            this.setMoving();
+        }
+        if (this.state == State.moving && this.contact_enemies.length != 0) {
+            this.setAttacking();
         }
     }
     
