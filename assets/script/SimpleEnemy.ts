@@ -151,15 +151,6 @@ export default class SimpleEnemy extends cc.Component {
     }
 
     update(dt) {
-
-        if (this.node.getComponent(cc.RigidBody).linearVelocity.x != 0) {
-            this.node.getComponent(cc.PhysicsBoxCollider).density = 10000/this.node.getComponent(cc.RigidBody).linearVelocity.x;
-        }
-        else
-        {
-            this.node.getComponent(cc.PhysicsBoxCollider).density = 10000;
-        }
-
         
         if (this.state == State.falling) {
             this.node.getComponent(cc.RigidBody).linearVelocity.x = 0;
