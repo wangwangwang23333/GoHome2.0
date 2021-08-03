@@ -9,7 +9,7 @@ import SimpleEnemy from "./SimpleEnemy";
 
 const {ccclass, property} = cc._decorator;
 
-export const State = {
+const State = {
     moving: 0, 
     attacking: 1
 }
@@ -41,7 +41,9 @@ export default class SimpleAlly extends cc.Component {
     @property
     contact_enemies: Array<SimpleEnemy> = []
 
-    attackCallback: () => void=null;
+    attackCallback: () => void = null;
+    
+    killed: boolean = false;
 
     @property
     anim_name: string = 'move'
@@ -71,7 +73,6 @@ export default class SimpleAlly extends cc.Component {
             this.attackCallback = function () {
                 if (this.contact_enemies.length != 0) {
                     this.contact_enemies[0].getDamaged(this.atk);
-                    cc.log("enemy ",this.contact_enemies[0]," get hurt, rest")
                 }
                 
             }
@@ -84,18 +85,22 @@ export default class SimpleAlly extends cc.Component {
 
     /** 添加接触的敌方单位。 */
     addContact(e: SimpleEnemy) {
+
+        cc.log("add enemy", e.uuid);
         this.contact_enemies.push(e);
     }
 
     /** 减少接触的敌方单位（敌方单位死亡时调用）。 */
     removeContact(e: SimpleEnemy) {
-        let index = this.contact_enemies.findIndex((i) => { return i.uuid == e.uuid; });
-        if (index < 0) {
-            // 找不到这个敌人？
-            cc.error("deleting failed");
+        if (e == null)
+        {
+            cc.error("e is null");
             return;
         }
-        this.contact_enemies = this.contact_enemies.splice(index, 1);
+        this.contact_enemies = this.contact_enemies.filter((i) => { return i.uuid != e.uuid; });
+
+        cc.log("remove ally", e.uuid, " from ", this.uuid);
+        cc.log("length of rest contacts", this.contact_enemies.length);
     } 
 
     /** 设置移动速度值，不改变当前移动速度。 */ 
@@ -110,8 +115,10 @@ export default class SimpleAlly extends cc.Component {
     /** 受到伤害。 */
     getDamaged(d: number) {
         this.health -= d;
+        cc.log("ally ", this.uuid, " get hurt, rest ", this.health);
         if (this.health <= 0) {
             this.health = 0;
+
             this.getKilled();
         }
     }
@@ -119,22 +126,26 @@ export default class SimpleAlly extends cc.Component {
     /** 死亡，顺便播放动画。让父节点回收改节点进入对象池。 */
     private getKilled() {
         // TODO: 填充被击杀的逻辑
+        cc.log("ally ", this.uuid, " died ");
         this.node.destroy();
-        this.destroy();
     }
 
 
     // ------------------------------- OVERLOADED --------------------------------- //
     // onLoad () {}
 
-    start () {
-        cc.log("ally",this.speed, this._designed_speed)
+    start() {
+        this.node.getComponent(cc.RigidBody).fixedRotation = true;
+        cc.log("ally:",this.uuid," health:",this.health," atk:",this.atk," speed:",this.speed)
         this.setMoving();
     }
 
     update (dt) {
         let v_y = this.node.getComponent(cc.RigidBody).linearVelocity.y; 
-        this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, v_y);
+        if (this.state == State.attacking)
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, 0);
+        if (this.state == State.moving)
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, v_y);
 
         if (this.state==State.attacking&&this.contact_enemies.length == 0) {
             this.setMoving();
