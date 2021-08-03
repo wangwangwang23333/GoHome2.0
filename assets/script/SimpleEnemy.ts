@@ -53,17 +53,22 @@ export default class SimpleEnemy extends cc.Component {
     // ------------------------------------ METHODS ------------------------------------ //
     /** 改变为运动状态，同时改变速度和动画。 */
     private setMoving() {
+        
+
         this.state = State.moving;
         this.speed = this._designed_speed;
         if (this.attackCallback != null) {
             this.unschedule(this.attackCallback);
             this.attackCallback = null;
         }
+        this.getComponent(cc.PhysicsBoxCollider).density = 10000 / this.speed;
         // TODO: 添加动画相关逻辑
     }
 
     /** 改变为攻击状态，同时改变速度和动画。 */
     private setAttacking() {
+        
+
         this.state = State.attacking;
         this.speed = 0;
         if (this.contact_allies.length != 0) {
@@ -74,15 +79,16 @@ export default class SimpleEnemy extends cc.Component {
             }
         }
         this.schedule(this.attackCallback, this.atkInterval,cc.macro.REPEAT_FOREVER,0.5);
-
+        this.getComponent(cc.PhysicsBoxCollider).density = 100000000;
         // TODO: 添加动画相关逻辑
     }
 
     /** 改变为下落状态，同时改变速度和动画。 */
     private setFalling() {
+        
         this.state = State.falling;
         this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 1);
-        
+        this.getComponent(cc.PhysicsBoxCollider).density = 100;
         // TODO: 添加动画相关逻辑
     }
 
@@ -145,6 +151,15 @@ export default class SimpleEnemy extends cc.Component {
     }
 
     update(dt) {
+
+        if (this.node.getComponent(cc.RigidBody).linearVelocity.x != 0) {
+            this.node.getComponent(cc.PhysicsBoxCollider).density = 10000/this.node.getComponent(cc.RigidBody).linearVelocity.x;
+        }
+        else
+        {
+            this.node.getComponent(cc.PhysicsBoxCollider).density = 10000;
+        }
+
         
         if (this.state == State.falling) {
             this.node.getComponent(cc.RigidBody).linearVelocity.x = 0;
