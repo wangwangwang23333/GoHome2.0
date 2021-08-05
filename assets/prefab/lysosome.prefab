@@ -149,7 +149,7 @@
     "_enabled": true,
     "tag": 0,
     "_density": 10,
-    "_sensor": false,
+    "_sensor": true,
     "_friction": 1,
     "_restitution": 0,
     "body": null,

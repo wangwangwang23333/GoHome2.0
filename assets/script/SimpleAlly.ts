@@ -62,7 +62,6 @@ export default class SimpleAlly extends cc.Component {
             this.unschedule(this.attackCallback);
             this.attackCallback = null;
         }
-        this.getComponent(cc.PhysicsBoxCollider).density = 10000 / this.speed;
         // TODO: 添加动画相关逻辑
     }
 
@@ -71,16 +70,13 @@ export default class SimpleAlly extends cc.Component {
         
         this.state = State.attacking;
         this.speed = 0;
-        if (this.contact_enemies.length != 0) {
-            this.attackCallback = function () {
-                if (this.contact_enemies.length != 0) {
-                    this.contact_enemies[0].getDamaged(this.atk);
-                }
-                
+        this.attackCallback = function () {
+            if (this.contact_enemies.length != 0) {
+                this.contact_enemies[0].getDamaged(this.atk);
             }
+            
         }
         this.schedule(this.attackCallback, this.atkInterval,cc.macro.REPEAT_FOREVER,0.5);
-        this.getComponent(cc.PhysicsBoxCollider).density = 100000000;
         // TODO: 添加动画相关逻辑
     }
 
@@ -89,7 +85,6 @@ export default class SimpleAlly extends cc.Component {
         
         this.state = State.falling;
         this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 1);
-        this.getComponent(cc.PhysicsBoxCollider).density = 100;
         // TODO: 添加动画相关逻辑
     }
 
@@ -186,9 +181,11 @@ export default class SimpleAlly extends cc.Component {
     
     onBeginContact(contact, self, other) {
         if (self != null && other != null && self.getComponent(SimpleAlly) != null && other.getComponent(SimpleEnemy) != null) {
-            
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
             //添加正在接触的敌人
             this.addContact(other.getComponent(SimpleEnemy));
+
+            
 
         }
         
@@ -201,6 +198,7 @@ export default class SimpleAlly extends cc.Component {
             self.getComponent(SimpleAlly).removeContact(other.getComponent(SimpleEnemy));
             
         }
+
     }
 
 }

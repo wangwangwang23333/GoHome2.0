@@ -9,6 +9,7 @@ const { ccclass, property } = cc._decorator;
 
 
 import SimpleAlly from "./SimpleAlly";
+import Nucleus from "./Nucleus";
 
 const State = {
     moving: 0, 
@@ -44,6 +45,9 @@ export default class SimpleEnemy extends cc.Component {
     @property
     contact_allies: Array<SimpleAlly> = []
 
+    @property
+    contact_nucleus: Nucleus = null;
+
     attackCallback: () => void = null;
 
     @property
@@ -61,7 +65,6 @@ export default class SimpleEnemy extends cc.Component {
             this.unschedule(this.attackCallback);
             this.attackCallback = null;
         }
-        this.getComponent(cc.PhysicsBoxCollider).density = 10000 / this.speed;
         // TODO: 添加动画相关逻辑
     }
 
@@ -71,15 +74,16 @@ export default class SimpleEnemy extends cc.Component {
 
         this.state = State.attacking;
         this.speed = 0;
-        if (this.contact_allies.length != 0) {
-            this.attackCallback = function () {
-                if (this.contact_allies.length != 0) {
-                    this.contact_allies[0].getDamaged(this.atk);
-                }
+        
+        this.attackCallback = function () {
+            if (this.contact_allies.length != 0) {
+                this.contact_allies[0].getDamaged(this.atk);
+            }
+            else if (this.contact_nucleus != null){
+                this.contact_nucleus.getDamaged(this.atk);
             }
         }
         this.schedule(this.attackCallback, this.atkInterval,cc.macro.REPEAT_FOREVER,0.5);
-        this.getComponent(cc.PhysicsBoxCollider).density = 100000000;
         // TODO: 添加动画相关逻辑
     }
 
@@ -88,7 +92,6 @@ export default class SimpleEnemy extends cc.Component {
         
         this.state = State.falling;
         this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 1);
-        this.getComponent(cc.PhysicsBoxCollider).density = 100;
         // TODO: 添加动画相关逻辑
     }
 
@@ -170,24 +173,29 @@ export default class SimpleEnemy extends cc.Component {
             this.setMoving();
         }
 
-        if (this.state == State.attacking && this.contact_allies.length == 0) {
+        if (this.state == State.attacking && (this.contact_allies.length == 0 && this.contact_nucleus==null)) {
             
             this.setMoving();
         }
-        if (this.state==State.moving&&this.contact_allies.length != 0) {
+        if (this.state==State.moving&&(this.contact_allies.length != 0||this.contact_nucleus!=null)) {
             this.setAttacking();
         }
-        
-        
 
     }
 
     
     onBeginContact(contact, self, other) {
         if (self != null && other != null && self.getComponent(SimpleEnemy) != null && other.getComponent(SimpleAlly) != null) {
-            
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
             //添加正在接触的敌人
             this.addContact(other.getComponent(SimpleAlly));
+
+        }
+        if (self != null && other != null && self.getComponent(SimpleEnemy) != null && other.getComponent(Nucleus) != null) {
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
+            //添加正在接触的细胞核
+            cc.log("begin contacting the nucleus");
+            this.contact_nucleus = other.getComponent(Nucleus);
 
         }
     }
@@ -198,6 +206,13 @@ export default class SimpleEnemy extends cc.Component {
             //从自己单方面销毁对方
             self.getComponent(SimpleEnemy).removeContact(other.getComponent(SimpleAlly));
             
+        }
+        if (self != null && other != null && self.getComponent(SimpleEnemy) != null && other.getComponent(Nucleus) != null) {
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
+            //销毁正在接触的细胞核
+            cc.log("end contacting the nucleus");
+            this.contact_nucleus = null;
+
         }
     }
 }

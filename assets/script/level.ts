@@ -62,18 +62,19 @@ export default class NewClass extends cc.Component {
     }
 
     createAlly(e, i) {
-        console.log("成功", i)
-        //   console.log(this.allies[i-1])
-        let prefab = this.allies[i-1]
+        console.log("add ally number ", i);
+
+        let prefab = this.allies[i - 1];
 
         // TODO: 检查剩余多少钱，够不够买
-        let ally = cc.instantiate(prefab)
-        ally.setParent(this.node)
-        ally.position = cc.v3(-112, -203)
+        let ally = cc.instantiate(prefab);
+        ally.setParent(this.node);
+        ally.position = cc.v3(-112, -203);
 
     }
 
     createEnemy(i) {
+        console.log("add enemy number ", i);
         let prefab = this.enemies[i-1]
 
         let enemy = cc.instantiate(prefab)
