@@ -10,13 +10,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Nucleus extends cc.Component {
 
-    @property(cc.Label)
-    label: cc.Label = null;
-
-    @property
-    text: string = 'nucleus';
-
-
     @property
     _max_health: number = 500;
 
