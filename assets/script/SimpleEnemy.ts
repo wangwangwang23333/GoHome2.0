@@ -14,7 +14,8 @@ import Nucleus from "./Nucleus";
 const State = {
     moving: 0, 
     attacking: 1,
-    falling:2
+    falling:2,
+    dying: 3
 }
 
 
@@ -22,19 +23,19 @@ const State = {
 export default class SimpleEnemy extends cc.Component {
 
     @property
-    speed: number = -50;
+    _speed: number = -50;
 
     @property
-    _designed_speed: number = -50;
+    designedSpeed: number = -50;
 
     @property
     state: number = State.moving;
 
     @property
-    _max_health: number = 150;
+    maxHealth: number = 150;
 
     @property
-    health: number = 160;
+    _health: number = 160;
 
     @property
     atk: number = 15;
@@ -42,64 +43,72 @@ export default class SimpleEnemy extends cc.Component {
     @property
     atkInterval: number = 1;
 
-    @property
-    contact_allies: Array<SimpleAlly> = []
+    @property()
+    unitName: string = "";
 
-    @property
-    contact_nucleus: Nucleus = null;
+    @property()
+    atpWorth: number = 10;
+
+    @property(cc.AudioClip)
+    deadSoundEffect: cc.AudioClip = null;
+
+    @property(cc.AudioClip)
+    attackSoundEffect: cc.AudioClip = null;
 
     attackCallback: () => void = null;
 
-    @property
-    anim_name: string = 'move'
+    animManager: cc.Animation = null;
+
+    contactAllies: Array<SimpleAlly> = []
+
+    contactNucleus: Nucleus = null;
 
     // LIFE-CYCLE CALLBACKS:
     // ------------------------------------ METHODS ------------------------------------ //
     /** 改变为运动状态，同时改变速度和动画。 */
     private setMoving() {
-        
-
         this.state = State.moving;
-        this.speed = this._designed_speed;
+        this._speed = this.designedSpeed;
         if (this.attackCallback != null) {
             this.unschedule(this.attackCallback);
             this.attackCallback = null;
         }
-        // TODO: 添加动画相关逻辑
+        this.animManager.stop();
+        this.animManager.play(this.unitName + "-walk")
     }
 
     /** 改变为攻击状态，同时改变速度和动画。 */
     private setAttacking() {
-        
-
         this.state = State.attacking;
-        this.speed = 0;
+        this._speed = 0;
         
-        this.attackCallback = function () {
-            if (this.contact_allies.length != 0) {
-                this.contact_allies[0].getDamaged(this.atk);
+        this.attackCallback = () => {
+            if (this.contactAllies.length != 0) {
+                this.animManager.stop();
+                this.animManager.play(this.unitName + "-attack")
+                this.contactAllies[0].getDamaged(this.atk);
             }
-            else if (this.contact_nucleus != null){
-                this.contact_nucleus.getDamaged(this.atk);
+            else if (this.contactNucleus != null){
+                this.animManager.stop();
+                this.animManager.play(this.unitName + "-attack")
+                this.contactNucleus.getDamaged(this.atk);
             }
+            cc.audioEngine.playEffect(this.attackSoundEffect, false);
         }
-        this.schedule(this.attackCallback, this.atkInterval,cc.macro.REPEAT_FOREVER,0.5);
-        // TODO: 添加动画相关逻辑
+        this.schedule(this.attackCallback, this.atkInterval, cc.macro.REPEAT_FOREVER, 0.5);
     }
 
     /** 改变为下落状态，同时改变速度和动画。 */
     private setFalling() {
-        
         this.state = State.falling;
         this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 1);
-        // TODO: 添加动画相关逻辑
     }
 
 
     /** 添加接触的敌方单位。 */
     addContact(a: SimpleAlly) {
-        cc.log("add ally", a.uuid);
-        this.contact_allies.push(a);
+        // cc.log("add ally", a.uuid);
+        this.contactAllies.push(a);
     }
 
     /** 减少接触的敌方单位（敌方单位死亡时调用）。 */
@@ -109,38 +118,39 @@ export default class SimpleEnemy extends cc.Component {
             cc.error("a is null");
             return;
         }
-        this.contact_allies = this.contact_allies.filter((i) => { return i.uuid != a.uuid; });
+        this.contactAllies = this.contactAllies.filter((i) => { return i.uuid != a.uuid; });
 
-        cc.log("remove ally", a.uuid, " from ", this.uuid);
-        cc.log("length of rest contacts", this.contact_allies.length);
-        
+        // cc.log("remove ally", a.uuid, " from ", this.uuid);
+        // cc.log("length of rest contacts", this.contactAllies.length);
     } 
-
-    /** 设置移动速度值，不改变当前移动速度。 */ 
-    setDesignedSpeed(temp: number) {
-        // TODO: 更多限制
-        if (temp < 0) {
-            return;
-        }
-        this._designed_speed = temp;
-    }
     
     /** 受到伤害。 */
     getDamaged(d: number) {
-        this.health -= d;
-        cc.log("enemy ", this.uuid, " get hurt, rest ", this.health);
-        if (this.health <= 0) {
-            this.health = 0;
+        this._health -= d;
+        // cc.log("enemy ", this.uuid, " get hurt, rest ", this._health);
+        if (this._health <= 0) {
+            this._health = 0;
+            this.node.getChildByName("progressBar").getComponents(cc.ProgressBar)[0].progress=0;
             this.getKilled();
+        }
+        else{
+            this.node.getChildByName("progressBar").getComponents(cc.ProgressBar)[0].progress=this._health/this.maxHealth;
         }
         
     }
 
     /** 死亡，顺便播放动画。让父节点回收改节点进入对象池。 */
     private getKilled() {
-        // TODO: 填充被击杀的逻辑
         cc.log("enemy ", this.uuid, " died ");
-        this.node.destroy();
+        this.animManager.stop();
+        this.animManager.play("die");
+        //播放死亡音效
+        cc.audioEngine.playEffect(this.deadSoundEffect, false);
+        this.node.dispatchEvent( new cc.Event("enemyDied" + this.unitName, true) );
+        this.state = State.dying;
+        this.getComponent(cc.RigidBody).destroy();
+        this.node.getChildByName("progressBar").destroy();
+        setTimeout(() => {this.node.destroy();}, 1500);
     }
 
 
@@ -149,8 +159,11 @@ export default class SimpleEnemy extends cc.Component {
 
     start() {
         this.node.getComponent(cc.RigidBody).fixedRotation = true;
-        cc.log("enemy:", this.uuid, " health:", this.health, " atk:", this.atk, " speed:", this.speed)
+        this._speed = this.designedSpeed;
+        this._health = this.maxHealth;
+        cc.log("enemy:", this.uuid, " health:", this._health, " atk:", this.atk, " speed:", this._speed)
         this.setFalling();
+        this.animManager = this.getComponent(cc.Animation);
     }
 
     update(dt) {
@@ -161,7 +174,7 @@ export default class SimpleEnemy extends cc.Component {
 
         if (this.state == State.moving) {
             // 播放运动动画
-            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speed, 0);
+            this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(this._speed, 0);
         }
 
         if (this.state == State.attacking) {
@@ -173,11 +186,11 @@ export default class SimpleEnemy extends cc.Component {
             this.setMoving();
         }
 
-        if (this.state == State.attacking && (this.contact_allies.length == 0 && this.contact_nucleus==null)) {
+        if (this.state == State.attacking && (this.contactAllies.length == 0 && this.contactNucleus==null)) {
             
             this.setMoving();
         }
-        if (this.state==State.moving&&(this.contact_allies.length != 0||this.contact_nucleus!=null)) {
+        if (this.state==State.moving&&(this.contactAllies.length != 0||this.contactNucleus!=null)) {
             this.setAttacking();
         }
 
@@ -189,14 +202,12 @@ export default class SimpleEnemy extends cc.Component {
             this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
             //添加正在接触的敌人
             this.addContact(other.getComponent(SimpleAlly));
-
         }
         if (self != null && other != null && self.getComponent(SimpleEnemy) != null && other.getComponent(Nucleus) != null) {
             this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
             //添加正在接触的细胞核
-            cc.log("begin contacting the nucleus");
-            this.contact_nucleus = other.getComponent(Nucleus);
-
+            // cc.log("begin contacting the nucleus");
+            this.contactNucleus = other.getComponent(Nucleus);
         }
     }
 
@@ -210,8 +221,8 @@ export default class SimpleEnemy extends cc.Component {
         if (self != null && other != null && self.getComponent(SimpleEnemy) != null && other.getComponent(Nucleus) != null) {
             this.node.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, 0);
             //销毁正在接触的细胞核
-            cc.log("end contacting the nucleus");
-            this.contact_nucleus = null;
+            // cc.log("end contacting the nucleus");
+            this.contactNucleus = null;
 
         }
     }

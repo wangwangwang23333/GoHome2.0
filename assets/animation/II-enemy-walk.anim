@@ -1,0 +1,55 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "II-enemy-walk",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.5,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "7a8cdbb2-f8af-4321-8feb-a759f5ad6c8f"
+            }
+          }
+        ]
+      }
+    },
+    "props": {
+      "height": [
+        {
+          "frame": 0.16666666666666666,
+          "value": 110
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 120
+        },
+        {
+          "frame": 0.5,
+          "value": 110
+        }
+      ],
+      "width": [
+        {
+          "frame": 0,
+          "value": 100
+        },
+        {
+          "frame": 0.16666666666666666,
+          "value": 110
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 100
+        }
+      ]
+    }
+  },
+  "events": []
+}

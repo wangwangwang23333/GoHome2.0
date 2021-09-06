@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "ec0facce-f809-4339-a43e-581add2b7df9",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 349,
+  "height": 556,
+  "platformSettings": {},
+  "subMetas": {
+    "绿色细胞核": {
+      "ver": "1.0.6",
+      "uuid": "01b0070a-d463-4c4c-b291-990a546a78c9",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "ec0facce-f809-4339-a43e-581add2b7df9",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -10.5,
+      "offsetY": 8,
+      "trimX": 0,
+      "trimY": 8,
+      "width": 328,
+      "height": 524,
+      "rawWidth": 349,
+      "rawHeight": 556,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

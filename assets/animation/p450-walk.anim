@@ -1,0 +1,55 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "p450-walk",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.5,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "e9a7edea-82b2-4f45-a886-d19ef99d5805"
+            }
+          }
+        ]
+      }
+    },
+    "props": {
+      "width": [
+        {
+          "frame": 0,
+          "value": 110
+        },
+        {
+          "frame": 0.16666666666666666,
+          "value": 120
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 110
+        }
+      ],
+      "height": [
+        {
+          "frame": 0.16666666666666666,
+          "value": 130
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 140
+        },
+        {
+          "frame": 0.5,
+          "value": 130
+        }
+      ]
+    }
+  },
+  "events": []
+}

@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "d2e24500-1d30-4de8-8a41-3c727d053b75",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 900,
+  "height": 900,
+  "platformSettings": {},
+  "subMetas": {
+    "细胞核1(已处理)": {
+      "ver": "1.0.6",
+      "uuid": "ff7e7622-a620-408a-8682-c20797ba1c16",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "d2e24500-1d30-4de8-8a41-3c727d053b75",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -17.5,
+      "offsetY": -19.5,
+      "trimX": 63,
+      "trimY": 76,
+      "width": 739,
+      "height": 787,
+      "rawWidth": 900,
+      "rawHeight": 900,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

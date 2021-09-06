@@ -1,0 +1,71 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "protease-walk",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.6666666666666666,
+  "sample": 60,
+  "speed": 0.4,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "4aee238a-5d80-4e77-8949-c097e318078c"
+            }
+          }
+        ]
+      }
+    },
+    "props": {
+      "width": [
+        {
+          "frame": 0,
+          "value": 110
+        },
+        {
+          "frame": 0.16666666666666666,
+          "value": 120
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 110
+        },
+        {
+          "frame": 0.5,
+          "value": 120
+        },
+        {
+          "frame": 0.6666666666666666,
+          "value": 110
+        }
+      ],
+      "height": [
+        {
+          "frame": 0,
+          "value": 110
+        },
+        {
+          "frame": 0.16666666666666666,
+          "value": 115
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 110
+        },
+        {
+          "frame": 0.5,
+          "value": 115
+        },
+        {
+          "frame": 0.6666666666666666,
+          "value": 110
+        }
+      ]
+    }
+  },
+  "events": []
+}

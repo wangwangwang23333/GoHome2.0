@@ -32,14 +32,12 @@ export default class Platform extends cc.Component {
     // update (dt) {}
 
     onBeginContact(contact, self, other) {
-        cc.log(other.node.uuid," begin contacting the platform")
+        // cc.log(other.node.uuid," begin contacting the platform")
         if (self != null && other != null && self.getComponent(Platform) != null && other.getComponent(SimpleEnemy) != null) {
-            
             other.getComponent(cc.RigidBody).gravityScale = 0;
             other.getComponent(cc.RigidBody).linearVelocity=cc.v2(0,0);
         }
         if (self != null && other != null && self.getComponent(Platform) != null && other.getComponent(SimpleAlly) != null) {
-            
             other.getComponent(cc.RigidBody).gravityScale = 0;
             other.getComponent(cc.RigidBody).linearVelocity=cc.v2(0,0);
         }
@@ -47,7 +45,7 @@ export default class Platform extends cc.Component {
     }
 
     onEndContact(contact, self, other) {
-        cc.log(other.node.uuid," end contacting the platform")
+        // cc.log(other.node.uuid," end contacting the platform")
         if (self != null && other != null && self.getComponent(Platform) != null && other.getComponent(SimpleEnemy) != null) {
             other.getComponent(cc.RigidBody).linearVelocity=cc.v2(0,0);
             other.getComponent(cc.RigidBody).gravityScale = 1;
@@ -55,7 +53,6 @@ export default class Platform extends cc.Component {
         if (self != null && other != null && self.getComponent(Platform) != null && other.getComponent(SimpleAlly) != null) {
             other.getComponent(cc.RigidBody).linearVelocity=cc.v2(0,0);
             other.getComponent(cc.RigidBody).gravityScale = 1;
-            
         }
         
     }
