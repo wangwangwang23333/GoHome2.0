@@ -57,6 +57,10 @@ export default class SceneManager extends cc.Component {
     @property(cc.Node)
     jumpLabel: cc.Node = null;
 
+    //任务完成提示
+    @property(cc.Node)
+    taskFinishedLabel: cc.Node = null;
+
     //当前怪物
     curAllies: cc.Node[] = [];
 
@@ -83,6 +87,7 @@ export default class SceneManager extends cc.Component {
 
         this.propBar.active = false;
         this.jumpLabel.active = false;
+        this.taskFinishedLabel.active = false;
         this.gameFailureBlock.active = false;
 
         //建立定时器
@@ -206,6 +211,14 @@ export default class SceneManager extends cc.Component {
 
     getScore(){
         this.gameScore += 1
+
+        if (this.gameScore == 25 && !this.dailyTask){
+            //发送任务完成API
+            this.taskFinishedLabel.active = true
+            setTimeout(() => {
+                this.taskFinishedLabel.active = false;
+            }, 2400);
+        }
         
         this.scoreUpdate()
     }
@@ -215,10 +228,10 @@ export default class SceneManager extends cc.Component {
             this.scoreBlock.string = String(this.gameScore) + " / 每日任务已完成"
         }
         else {
-            this.scoreBlock.string = String(this.gameScore) + " / 50"
+            this.scoreBlock.string = String(this.gameScore) + " / 25"
 
             //判断任务是否完成
-            if (this.gameScore >= 50){
+            if (this.gameScore >= 25){
                 //发送API
             }
         }
@@ -250,8 +263,9 @@ export default class SceneManager extends cc.Component {
 
     //游戏失败
     gameFail(){
-        //发送API，上传最新记录
         this.gameFailureBlock.active = true;
+        this.gamePaused = true
+        //发送API，上传最新记录
     }
 
     //重新开始游戏

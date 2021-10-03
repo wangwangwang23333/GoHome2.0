@@ -28,7 +28,6 @@ export default class Hero extends cc.Component {
         
         if (self != null && other != null && self.getComponent(Hero) != null && other.node.name == "enemy") {
             cc.log("游戏结束！")
-            this.level.getComponent(SceneManager).gamePause()
             this.level.getComponent(SceneManager).gameFail()
         }
 
