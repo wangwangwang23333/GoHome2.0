@@ -4,7 +4,8 @@
     "platform",
     "ally",
     "enemy",
-    "nucleus"
+    "nucleus",
+    "Prop"
   ],
   "collision-matrix": [
     [
@@ -21,6 +22,8 @@
       false,
       true,
       false,
+      true,
+      null,
       true
     ],
     [
@@ -35,6 +38,14 @@
       false,
       false,
       true,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      false,
       false
     ]
   ],
@@ -64,6 +75,6 @@
       "enable": false
     }
   },
-  "start-scene": "08e2a493-32cd-46f6-b8ab-0d9dfa32fade",
-  "last-module-event-record-time": 1630832319442
+  "last-module-event-record-time": 1630832319442,
+  "start-scene": "08e2a493-32cd-46f6-b8ab-0d9dfa32fade"
 }

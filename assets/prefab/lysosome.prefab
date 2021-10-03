@@ -34,13 +34,10 @@
       },
       {
         "__id__": 12
-      },
-      {
-        "__id__": 13
       }
     ],
     "_prefab": {
-      "__id__": 14
+      "__id__": 13
     },
     "_opacity": 255,
     "_color": {
@@ -64,8 +61,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        709,
-        285,
+        -555.316,
+        -246.344,
         0,
         0,
         0,
@@ -369,7 +366,7 @@
     "_enabled": true,
     "_type": 2,
     "_allowSleep": true,
-    "_gravityScale": 1,
+    "_gravityScale": 5,
     "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
@@ -394,7 +391,7 @@
     "_enabled": true,
     "tag": 0,
     "_density": 10,
-    "_sensor": true,
+    "_sensor": false,
     "_friction": 1,
     "_restitution": 0,
     "body": null,
@@ -407,31 +404,6 @@
       "__type__": "cc.Size",
       "width": 100,
       "height": 110
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "c3e4ajQCCFAA6+yNEjo/MgR",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "_speed": 50,
-    "designedSpeed": 50,
-    "state": 0,
-    "maxHealth": 100,
-    "_health": 100,
-    "atk": 20,
-    "atkInterval": 1,
-    "contactEnemies": [],
-    "unitName": "lysosome",
-    "deadSoundEffect": {
-      "__uuid__": "c89a6abc-8b41-451d-ad72-d521d99f8372"
-    },
-    "attackSoundEffect": {
-      "__uuid__": "eddcc166-727e-45ec-931d-d281f83e6148"
     },
     "_id": ""
   },

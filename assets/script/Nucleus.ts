@@ -5,47 +5,28 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import SceneManager from "./sceneManager";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Nucleus extends cc.Component {
 
-    @property
-    _max_health: number = 500;
-
-    @property
-    health: number = 500;
-
-    getDamaged(d: number) {
-        this.health -= d;
-        // cc.log("nucleus ", this.uuid, " get hurt, rest ", this.health);
-        if (this.health <= 0) {
-            this.health = 0;
-            this.getKilled();
-        }
-        
-    }
-
-
-    private getKilled() {
-        // TODO: 细胞核炸裂游戏结束
-        cc.log("game over");
-        cc.director.pause()
-        this.node.destroy();
-
-        //调用父结点的函数
-        this.node.parent.getComponent('level').fail();
-    }
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {}
+    @property(cc.Node)
+    gameControl: cc.Node = null;
 
     start () {
 
     }
 
+    onLoad() {
+        this.gameControl = this.node.parent;
+    }
+
     update (dt) {
+        if (this.gameControl.getComponent(SceneManager).gamePaused){
+            return;
+        }
         this.node.angle=this.node.angle+1;
     }
 }

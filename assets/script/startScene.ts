@@ -20,6 +20,23 @@ export default class NewClass extends cc.Component {
     @property(cc.AudioClip)
     bgm:cc.AudioClip=null;
 
+    @property({
+        displayName:"排行榜名字",
+        type:[cc.Node],
+        tooltip:"分数最高的10个人的姓名"
+    })
+    winnerName: cc.Node[] = [];
+
+    @property({
+        displayName:"排行榜头像",
+        type:[cc.Node],
+        tooltip:"分数最高的10个人的头像"
+    })
+    winnerAvatar: cc.Node[] = [];
+
+    @property(cc.Node)
+    MaxScore: cc.Node = null;
+
     private bgmId:number;
 
     start () {
@@ -32,10 +49,15 @@ export default class NewClass extends cc.Component {
         cc.audioEngine.setVolume(this.bgmId, 0.6);
 
         //预加载开始游戏界面
-        cc.director.preloadScene("startVideo", function () {
+        cc.director.preloadScene("jumpScene", function () {
             cc.log("Next scene preloaded");
         });
+
+        //调用API获取自己最高得分和排行榜得分
+
     }
+
+
 
     startGame(){
         cc.audioEngine.playEffect(this.pauseSE,false);
@@ -44,7 +66,7 @@ export default class NewClass extends cc.Component {
 
         cc.log('开始游戏')
         //切换场景
-        cc.director.loadScene("startVideo");   
+        cc.director.loadScene("jumpScene");   
         
     }
 
@@ -56,6 +78,11 @@ export default class NewClass extends cc.Component {
     closeMake(){
         cc.audioEngine.playEffect(this.pauseSE,false);
         this.node.getChildByName('Make').active=false;
+    }
+
+    closeGameBackground(){
+        cc.audioEngine.playEffect(this.pauseSE,false);
+        this.node.getChildByName('gameBackground').active=false;
     }
 
     openIntro(){

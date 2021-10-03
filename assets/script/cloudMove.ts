@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import SceneManager from "./sceneManager";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -23,6 +25,9 @@ export default class NewClass extends cc.Component {
     
     @property
     moveSpeed:number=1;
+
+    @property(cc.Node)
+    gameControl: cc.Node = null;
 
     start () {
         this.mapSize=cc.view.getVisibleSize();
@@ -65,6 +70,9 @@ export default class NewClass extends cc.Component {
     }
 
     update (dt) {
+        if (this.gameControl.getComponent(SceneManager).gamePaused){
+            return;
+        }
         this.upMove();
         this.leftMove();
         this.circle();
