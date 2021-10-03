@@ -28,6 +28,7 @@ export default class SceneManager extends cc.Component {
     @property(cc.Label)
     scoreBlock: cc.Label = null
 
+
     //怪物种类
     @property({
         displayName:"敌人",
@@ -61,6 +62,10 @@ export default class SceneManager extends cc.Component {
     @property(cc.Node)
     taskFinishedLabel: cc.Node = null;
 
+    //速度提升提醒
+    @property(cc.Node)
+    speedUpLabel: cc.Node = null;
+
     //当前怪物
     curAllies: cc.Node[] = [];
 
@@ -79,6 +84,9 @@ export default class SceneManager extends cc.Component {
     //游戏是否暂停
     gamePaused: boolean = false
 
+    //游戏开始
+    gameStarted: boolean = false
+
 
     onLoad (){
         cc.director.getPhysicsManager().enabled = true;
@@ -88,6 +96,7 @@ export default class SceneManager extends cc.Component {
         this.propBar.active = false;
         this.jumpLabel.active = false;
         this.taskFinishedLabel.active = false;
+        this.speedUpLabel.active = false;
         this.gameFailureBlock.active = false;
 
         //建立定时器
@@ -120,7 +129,8 @@ export default class SceneManager extends cc.Component {
             cc.log("产生了新的道具")
         },36000)
 
-        
+        // 调取API，判断本日任务是否已完成
+        this.gamePaused = true
     }
 
     start () {
@@ -186,7 +196,6 @@ export default class SceneManager extends cc.Component {
                     cc.log(this.curProp.length)
                     this.curProp=this.curProp.slice(0,i).concat(this.curProp.slice(i+1))
                     
-
                     cc.log(this.curProp.length)
 
                     break
@@ -212,9 +221,19 @@ export default class SceneManager extends cc.Component {
     getScore(){
         this.gameScore += 1
 
+        this.movingSpeed = 3 + this.gameScore / 20
+
+        if (this.gameScore % 20 == 0){
+            this.speedUpLabel.active = true;
+            setTimeout(() => {
+                this.speedUpLabel.active = false;
+            }, 2400);
+        }
+
         if (this.gameScore == 25 && !this.dailyTask){
             //发送任务完成API
             this.taskFinishedLabel.active = true
+            this.dailyTask = true;
             setTimeout(() => {
                 this.taskFinishedLabel.active = false;
             }, 2400);
@@ -225,7 +244,7 @@ export default class SceneManager extends cc.Component {
 
     scoreUpdate(){
         if (this.dailyTask){
-            this.scoreBlock.string = String(this.gameScore) + " / 每日任务已完成"
+            this.scoreBlock.string = String(this.gameScore) + " / 任务完成"
         }
         else {
             this.scoreBlock.string = String(this.gameScore) + " / 25"
@@ -253,6 +272,9 @@ export default class SceneManager extends cc.Component {
 
     //暂停游戏
     gamePause(){
+        if(!this.gameStarted){
+            return
+        }
         this.gamePaused = !this.gamePaused;
     }
 
