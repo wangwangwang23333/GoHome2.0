@@ -33,11 +33,7 @@
         <h3>Enjoy the Warmth at GoHome</h3>
       </div>
     </div>
-    <!--特惠房源板块-->
-    <h2 style="text-align: left;padding-left: 5.5vw">
-      特惠房源
-    </h2>
-    
+
 
   </div>
 </template>
