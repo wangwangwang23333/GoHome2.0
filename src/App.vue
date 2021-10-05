@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <navigate />
-    <router-view
-    style="padding-top: 60px;"
-    />
+    <NewHome></NewHome>
   </div>
 </template>
 
 <script>
 import navigate from '@/components/navigate.vue';
+import NewHome from "./views/NewHome";
 export default {
   name: 'App',
   components: {
     navigate,
+    NewHome
   }
 }
 </script>
