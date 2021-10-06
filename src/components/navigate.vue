@@ -93,6 +93,7 @@
 
         </el-menu-item>
 
+
         <!--房东个人信息-->
         <el-submenu index="5" v-if="loginState==2" style="float: right;">
           <template #title>
@@ -136,6 +137,23 @@
             <i class="el-icon-remove"></i>
             退出登录</el-menu-item>
         </el-submenu>
+
+        <el-submenu index="6" style="padding-left:0% ;">
+            <template #title>
+                <i class="el-icon-s-comment"></i>
+                论坛
+            </template>
+            <el-menu-item index="6-1" @click="routerToPostSquare">
+                广场
+            </el-menu-item>
+            <el-menu-item index="6-2" @click="routerToPostSearch">
+                搜索
+            </el-menu-item>
+            <el-menu-item index="6-3" @click="routerToMyPost">
+                我的帖子
+            </el-menu-item>
+        </el-submenu>
+
         <el-menu-item  v-if="loginState==0" style="float: right;" >
           <el-link :underline="false" @click="login">登录</el-link>
           <el-dialog  
@@ -256,6 +274,21 @@ export default {
     {
       console.log("进入个人")
       this.$router.replace('/userInfoPage');
+    },
+    routerToPostSquare:function ()
+    {
+      console.log("进入论坛广场")
+      this.$router.replace('/postSquare');
+    },
+    routerToPostSearch:function ()
+    {
+      console.log("进入帖子搜索")
+      this.$router.replace('/postSearch');
+    },
+    routerToMyPost:function ()
+    {
+      console.log("进入个人发帖")
+      this.$router.replace('/myPost');
     },
     // add@Lq
     routerToHostPage:function ()
