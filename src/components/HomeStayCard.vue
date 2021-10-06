@@ -7,10 +7,13 @@
     <h4 style="padding-left: 8vw;text-align: left;color:#bebaba;font-weight: normal;margin-top: 0">
       低价优质房源等你来挑！
     </h4>
-      <div style="width: 82%;height: 100vh;margin:0 auto"
+    <el-divider style="width: 80%!important;">
+
+    </el-divider>
+      <div style="width: 85%;height: 100vh;margin:0 auto"
         class="containerFlex">
       <!--使用flex布局-->
-      <div class="CardContainer" >
+      <div class="CardContainer" v-for="(item,index) in PreferentialStatInfoList" >
         <!--房源卡片-->
         <div class="CardType"
              @mouseenter="changeCardStyle($event)"
@@ -18,37 +21,48 @@
         <!---->
           <el-image
               fit="cover"
-              style="width: 100%;border-radius: 10px 10px 0 0"
-              src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/test.png">
-
+              style="width: 100%;height:55%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+              :src="PreferentialStatInfoList[index].StayPic">
           </el-image>
+          <h5 style="font-size:5px;font-weight: revert;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;margin-bottom: 0">
+            {{PreferentialStatInfoList[index].StayType}}
+          </h5>
+          <h4 style="text-align: left;margin-left: 4%;margin-top: 0;margin-right: 4%;margin-bottom: 0">
+            {{PreferentialStatInfoList[index].StayName|ellipsis}}
+          </h4>
+          <el-row>
+            <el-col :span="14">
+              <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                ￥{{PreferentialStatInfoList[index].StayPrice}}/晚
+              </h4>
+              <el-rate
+              v-model="PreferentialStatInfoList[index].StayCommentRate"
+              disabled
+              show-score
+              text-color="#ff9900"
+              score-template="{value}"
+              style="margin-left: 0;margin-bottom: 0"
+              :colors="colors"
+              >
+              </el-rate>
+              <h5 style="margin-top: 0;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
+                {{PreferentialStatInfoList[index].StayCommentNum}}条评价
+              </h5>
+            </el-col>
+            <el-col :span="10">
+              <el-divider
+                  direction="vertical"
+                  style="float: left;margin-right: 0"
+                  class="el-divider--vertical"></el-divider>
+              <el-image class="UserAvatar"
+                        :src="PreferentialStatInfoList[index].UserAvatar"
+                        style="float:right;margin-left: 0;margin-right: 10px"
+              >
+              </el-image>
+            </el-col>
+          </el-row>
         </div>
       </div>
-        <div class="CardContainer">
-            <div class="CardType" @mouseenter="changeCardStyle($event)"
-                 @mouseleave="removeCardStyle($event)">
-
-            </div>
-        </div>
-        <div class="CardContainer">
-          <div class="CardType" @mouseenter="changeCardStyle($event)"
-               @mouseleave="removeCardStyle($event)">
-
-          </div>
-        </div>
-        <div class="CardContainer">
-          <div class="CardType" @mouseenter="changeCardStyle($event)"
-               @mouseleave="removeCardStyle($event)">
-
-          </div>
-        </div>
-        <div class="CardContainer">
-
-          <div class="CardType" @mouseenter="changeCardStyle($event)"
-               @mouseleave="removeCardStyle($event)">
-
-          </div>
-        </div>
       </div>
 
 
@@ -64,8 +78,11 @@ export default {
   },
   data(){
     return{
-
+      colors:['#a3c6ea','#70a8c4','#559bcb']
     }
+  },
+  props:{
+    PreferentialStatInfoList:Array,
   },
   created:function() {
   },
@@ -79,7 +96,16 @@ export default {
         }
 
 
-  }
+  },
+  filters: {
+    ellipsis(value) {
+      if (!value) return ''
+      if (value.length > 16) {
+        return value.slice(0, 16) + '...';
+      }
+      return value
+    }
+  },
 
 
 }
@@ -95,7 +121,7 @@ export default {
 
 .CardContainer{
   width: 270px;
-  height: 300px;
+  height: 310px;
   margin-bottom: 20px;
   margin-left: 25px;
 
@@ -125,6 +151,18 @@ export default {
   -webkit-transition: all 200ms ease-in;
 }
 
+.UserAvatar{
+  width: 54px;
+  height: 54px;
+  border-radius: 27px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  margin-left: 30%;
+}
+
+.el-divider--vertical{
+  height: 4em!important;
+  width: 1.5px!important;
+}
 
 
 </style>

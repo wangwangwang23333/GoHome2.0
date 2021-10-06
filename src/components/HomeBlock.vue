@@ -89,7 +89,7 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 80vh;
+  height: 40vw;
   border-radius: 50px;
   color: #fff;
   cursor: pointer;
