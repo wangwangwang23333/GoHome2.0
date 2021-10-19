@@ -38,9 +38,10 @@ export default {
             ],
 
             //目前以 @#$ html %^& 分割html代码
-            blocks:{value,type},
-            value:"# 写不完啦\n呜呜呜\n![](https://media.geeksforgeeks.org/wp-content/uploads/autometa1.png)\n\n### 标题\n```\n# 一级标题\n## 二级标题\n@#$<vueper-slides>\n<vueper-slide v-for=\"(slide, i) in slides\" :key=\"i\" :title=\"slide.title\" :image=\"slide.image\" />\n</vueper-slides>@#$### 三级标题\n#### 四级标题\n##### 五级标题\n###### 六级标题\n```\n### 字体\n```\n*斜体*\n_斜体_\n \n**粗体**\n__粗体__\n \n~~删除线~~\n_斜体**加粗**斜体_\n```\n**效果：**\n*斜体*\n*斜体*\n**粗体**\n**粗体**\n~~删除线~~\n*斜体**加粗**斜体*\n### 列表\n#### 无序列表\n无序列表使用 `-`、`+` 和 `*` 作为列表标记：\n```\n- Red\n- Green\n- Blue\n* Red\n* Green\n* Blue\n+ Red\n+ Green\n+ Blue\n```\n**效果:**\n+ Red\n+ Green\n+ Blue\n#### 有序列表\n```\n1. first\n2. second\n3. third\n```\n**效果：**\n1. first\n2. second\n3. third\n### 引用\n```\n> 引用一句名言\n多级引用\n> 一级引用\n> > 二级引用\n> > > 三级引用\n```\n**效果：**\n> 引用一句名言\n> 一级引用\n>\n> > 二级引用\n> >\n> > > 三级引用\n### 代码\n```\n行内`代码`块\n三个`号后紧跟语言名称可以开启多行代码块\n```\n**效果：**\n行内`代码`块\n上面那个就是多行代码块"
-}
+            blocks:{value:"",type:0},
+            value:"# 写不完啦\n呜呜呜\n![](https://media.geeksforgeeks.org/wp-content/uploads/autometa1.png)\n\n### 标题\n\
+            \n```\n# 一级标题\n## 二级标题\n### 三级标题\n#### 四级标题\n##### 五级标题\n###### 六级标题\n```\n### 字体\n```\n*斜体*\n_斜体_\n \n**粗体**\n__粗体__\n \n~~删除线~~\n_斜体**加粗**斜体_\n```\n**效果：**\n*斜体*\n*斜体*\n**粗体**\n**粗体**\n~~删除线~~\n*斜体**加粗**斜体*\n### 列表\n#### 无序列表\n无序列表使用 `-`、`+` 和 `*` 作为列表标记：\n```\n- Red\n- Green\n- Blue\n* Red\n* Green\n* Blue\n+ Red\n+ Green\n+ Blue\n```\n**效果:**\n+ Red\n+ Green\n+ Blue\n#### 有序列表\n```\n1. first\n2. second\n3. third\n```\n**效果：**\n1. first\n2. second\n3. third\n### 引用\n```\n> 引用一句名言\n多级引用\n> 一级引用\n> > 二级引用\n> > > 三级引用\n```\n**效果：**\n> 引用一句名言\n> 一级引用\n>\n> > 二级引用\n> >\n> > > 三级引用\n### 代码\n```\n行内`代码`块\n三个`号后紧跟语言名称可以开启多行代码块\n```\n**效果：**\n行内`代码`块\n上面那个就是多行代码块"
+            }
     },
     created() {
     },
@@ -71,25 +72,16 @@ export default {
                     content: 'Slide content.',
                     image: require('../assets/postimg/3.jpg')
                 });
+
+
             
         },
         splitReference:function(){
             
+
+
             
-            let block_list=this.value.split("@#$");
-
-            if(block_list.size<=0)
-            {
-                return;
-            }
-            let block_size=block_list.size;
-
-            let init_type=0;
-
-            if(block_list[0].startsWith("@#$"))
-            {
-                init_type=1;
-            }
+            console.log(mavonEditor.getMarkdownIt().use('markdown-it-container'));
 
         }
     },

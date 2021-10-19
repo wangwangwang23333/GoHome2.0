@@ -61,7 +61,7 @@
 
         </el-menu-item>
         
-        <el-menu-item style="margin-left:10%;">
+        <el-menu-item style="margin-left:5%;">
           <el-divider direction="vertical" >  </el-divider>
         </el-menu-item>
 
@@ -320,7 +320,25 @@ export default {
       }
       if(key==='4'){
         this.$router.push({path:'/help'});
+        return;
       }
+      if(key==='6-1')
+      {
+          this.$router.push({path:'/postSquare'});
+          return;
+      }
+      if(key==='6-2')
+      {
+          this.$router.push({path:'/postSearch'});
+          return;
+      }
+      if(key==='6-3')
+      {
+          this.$router.push({path:'/myPost'});
+          return;
+      }
+
+
       if (this.loginState==1){
         if (keyPath[1]==='5-4'){
           console.log('正在退出登录')
@@ -377,7 +395,7 @@ export default {
             
       }
       else{
-        if (key=='5'){
+        if (key==='5'){
           console.log('打开登录界面')
         }
       }

@@ -22,6 +22,7 @@
     "kuan-utils": "^2.1.3",
     "kuan-vue-photoswipe": "^2.0.1",
     "kuan-vue-waterfall": "^3.0.1",
+    "markdown-it-container": "^3.0.0",
     "mavon-editor": "^2.9.1",
     "moment": "^2.29.1",
     "node-sass": "^4.13.1",
