@@ -5,31 +5,34 @@
                 <p>这里应该是搜索框和标签筛选</p>
             </el-header>
             <!-- 主体瀑布流区域，无限滚动 -->
-            <el-main  id="waterfall-main">
+            <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:100px;">
                 <div class="v-waterfall-content" v-infinite-scroll="getMoreData" infinite-scroll-disabled="disabled"
                     infinite-scroll-distance="10" style="overflow:auto" >
-                    <div v-for="img in waterfallList" :key="img.id" class="v-waterfall-item" :style="{top:img.top.toString()+'px',left:img.left.toString()+'px',width:imageWidth.toString()+'px',height:img.height.toString()}" >
+                    <div v-for="img in waterfallList" :key="img.id" class="v-waterfall-item" 
+                    :style="{border:'2px',position:'absolute',left:img.left.toString()+'px',top:img.top.toString()+'px',width:imageWidth.toString()+'px'}" @click="openDialog(img.id)">
                         <!-- 图片卡片 -->
-                        <el-card shadow="hover" :body-style="{'padding':'0px','border-radius':'10px'}" @click.native="openDialog(img.id)" >
+                        <el-card shadow="hover" :body-style="{'padding':'0px','border-radius':'10px'}" lazy>
                         <!-- 图片懒加载 -->
-                            <el-image :src='img.src' class='image' :key='img.src' lazy>
+                            <el-image :src='img.src' class='image' :key='img.src' >
                                 <!-- 加载前占位 -->
                                 <div slot="placeholder" class="image-slot">
-                                    <div :style="{height:img.height+'px',width:imageWidth + 'px',backgroundColor:img.colour}"></div>
+                                    <div :style="{width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
                                 </div>
                                 <!-- 加载失败占位 -->
                                 <div slot="error" class="image-slot">
-                                    <div :style="{height:img.height+'px',width:imageWidth + 'px',backgroundColor:img.colour}"></div>
+                                    <div :style="{height:img.height.toString()+'px',width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
                                 </div>
                             </el-image>
 
-                            <el-card class="box-card">
+                            <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" :style="{height:cardHeight.toString()+'px'}">
                                 <p>{{img.text}}</p>
+
+                                
                             </el-card>
                         </el-card>
                     </div>
                 </div>
-            </el-main>
+            </div>
         </el-container>
     </div>
 
@@ -47,12 +50,15 @@ export default {
             waterfallList: [],
             //每一列的宽度
             imageWidth: 200,
+            //卡片高度
+            cardHeight:100,
+
             //多少列
             waterfallImgCol: 5,
             //右边距
-            waterfallImgRight: 20,
+            waterfallImgRight: 30,
             //下边距
-            waterfallImgBottom: 10,
+            waterfallImgBottom: 30,
 
             //存放瀑布流各个列的高度
             waterfallColHeight: [],
@@ -204,17 +210,25 @@ export default {
                 //获取随机占位背景色
                 imgData.colour=this.suijicolour[i%9];
 
+                aImg.src = moreList[i].imgUrl;
+
                 aImg.onload = (e) => {
-                    aImg.src = moreList[i].imgUrl;
+                    //console.log("img width height",aImg.width,aImg.height);
+                    imgData.width=this.imageWidth;
+                    imgData.height=aImg.height*this.imageWidth/aImg.width;
+                    imgData=this.rankImg(imgData);
+                    imgData.src = moreList[i].imgUrl;
+                    imgData.text=moreList[i].text;
+                    
+                    this.waterfallList.push(imgData);
+
+                    //console.log("pic top left",imgData.id,imgData.top,imgData.left);
                 };
+                
+                
+                
 
-                imgData=this.rankImg(imgData);
-                imgData.src = moreList[i].imgUrl;
-                imgData.text=moreList[i].text;
-
-                this.waterfallList.push(imgData);
-
-                console.log("pic top left",imgData.id,imgData.top,imgData.left);
+                
             }
         },
         //瀑布流布局核心，计算高度和左偏移
@@ -230,7 +244,7 @@ export default {
             imgData.left = minIndex * (this.waterfallImgRight + this.imageWidth) + this.colLeft;
             //改变当前列高度
 
-            this.waterfallColHeight[minIndex] += imgData.height + this.waterfallImgBottom;
+            this.waterfallColHeight[minIndex] += imgData.height +this.cardHeight+this.waterfallImgBottom;
 
             return imgData;
         },
