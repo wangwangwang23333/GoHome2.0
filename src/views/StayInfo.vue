@@ -93,11 +93,7 @@ import CollectionDialog from '@/components/collectionDialog.vue'
 import {getStayDetails} from '@/api/stay.js'
 
 import{DeleteFavoriteStayByView} from '@/api/favorite.js'
-//假数据
-// import stayinfo from '@/assets/stayinfo.json'
 
-// let data=stayinfo;
-// console.log(data);
 export default {
   name: "StayInfo",
   components: {
@@ -108,15 +104,14 @@ export default {
     CollectionDialog,
   },
   created() {
+    
     let stayId = this.$route.query.stayId;
     this.stayId = stayId;
-    //test
-    // let stayId = 1;
     let params = {"stayId": stayId};
+
     getStayDetails(params)
       .then((response)=>{
         this.data = response.data;
-        console.log(response.data);
         this.dataReady=true;
       })
       .catch((error)=>{this.$message({
@@ -127,21 +122,6 @@ export default {
       });
     },
   methods:{
-    // clickGeneratePicture: function () {
-    //   //生成图片
-    //   html2canvas(this.$refs.imageDom).then((canvas) => {
-    //     // 转成图片，生成图片地址
-    //     this.imgUrl = canvas.toDataURL("image/png"); //可将 canvas 转为 base64 格式
-    //   });
-    //   let eleLink = document.createElement("a");
-    //   eleLink.href = this.imgUrl; // 转换后的图片地址
-    //   eleLink.download = "历史曲线图";
-    //   document.body.appendChild(eleLink);
-    //   // 触发点击
-    //   eleLink.click();
-    //   // 然后移除
-    //   document.body.removeChild(eleLink);
-    // },
 
     //添加房源至收藏夹;
       StayCollection(){

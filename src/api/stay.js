@@ -4,7 +4,6 @@
 */
 
 import request from '@/utils/request'
-import qs from 'qs'
 
 export function getStayTypeList(){
     return request({
@@ -40,8 +39,9 @@ export function putStayInfo(data){
 }
 
 export function getStayDetails(data){
+    console.log("发送api请求",data)
     return request({
-        url: '/stay/getStayDetails',
+        url: '/v1/stay',
         method: 'get',
         params: data,
     })

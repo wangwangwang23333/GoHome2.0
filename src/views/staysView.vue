@@ -81,7 +81,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import BuildingCard from '@/components/buildingCard.vue'
 import BuildingMap from '@/components/buildingMap.vue'
 import CollectionDialog from '@/components/collectionDialog.vue'
