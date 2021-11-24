@@ -23,7 +23,7 @@ export function postStayInfo(data){
     console.log(data);
     let form=new URLSearchParams(data);
     return request({
-        url:'/stay/infos',
+        url:'/v1/stay',
         method:'post',
         data:form,
     })
@@ -49,7 +49,7 @@ export function getStayDetails(data){
 
 export function getComments(stayId){
     return request({
-        url: '/stay/getComments',
+        url: 'v1/stay/comment',
         method: 'get',
         params: {stayId: stayId},
     })

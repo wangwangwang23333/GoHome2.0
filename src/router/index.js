@@ -52,7 +52,11 @@ const routes = [
     name:'hostRegister',
     component: () => import( '../views/hostRegister.vue')
   },
-
+  {
+    path:'/comments',
+    name:'comments',
+    component: () => import( '../components/StayInfo/comments.vue')
+  },
   {
     path: '/userinfopage',
     name: 'UserInfoPage',

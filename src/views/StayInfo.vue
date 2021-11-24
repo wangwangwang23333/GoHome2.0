@@ -27,7 +27,7 @@
       </el-carousel>
         </div>
     
-        <!-- TODO 导航怎么才能好看？ -->
+    
         <el-card class="box-card" shadow="hover" style="width:95%;margin:0 auto;border-radius:15px">
         <div class="NavBar">
           <el-menu class="NavMenu" :default-active="activeIndex" mode="horizontal" >
@@ -69,6 +69,7 @@
           <div>
             <comments id="comments" :stayId="this.$route.query.stayId"> </comments>
           </div>
+          
           <div>
             <location id="location" v-if="data.stayPosition" :centerPosition="data.stayPosition"></location>
           </div>

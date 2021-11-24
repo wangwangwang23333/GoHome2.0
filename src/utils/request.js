@@ -4,7 +4,7 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 
 // 每次请求携带cookies信息
-axios.defaults.headers.post['Content-Type']='application/x-www-form-urlencoded'
+axios.defaults.headers.post['Content-Type']='application/json'
 axios.defaults.withCredentials = true
 
 // create an axios instance

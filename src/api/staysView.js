@@ -17,7 +17,7 @@ import request from '@/utils/request'
 export function GetStaysPosition(wlng,slat,elng,nlat) {
     let param=new URLSearchParams({westLng:wlng,southLat:slat,eastLng:elng,northLat:nlat});
     return request({
-      url: '/stay/getPositions',
+      url: 'v1/stay/positions',
       method: 'get',
       params:param
     })
@@ -28,7 +28,7 @@ export function GetStaysPosition(wlng,slat,elng,nlat) {
 export function GetDetailedStay(stayID){
   let param=new URLSearchParams({stayId:stayID});
   return request({
-    url:'/stay/getDetailedStay',
+    url:'v1/stay/brief',
     method:'get',
     params:param
   })
@@ -40,7 +40,7 @@ export function GetDetailedStay(stayID){
 export function GetRoughStay(stayID){
   let param=new URLSearchParams({stayId:stayID});
   return request({
-    url:'/stay/getRoughStay',
+    url:'v1/stay/map',
     method:'get',
     params:param
   })

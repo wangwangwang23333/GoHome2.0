@@ -6,7 +6,7 @@
         <el-aside style="width : 50%">        
           <el-container>
             <el-header style="padding: 20px;">
-               <!--
+               
                  <el-select v-model="selectMethod" placeholder="请选择" style="margin-right:15px;" class="dialogInput">
                   <el-option
                     v-for="(item,index) in options"
@@ -16,7 +16,7 @@
                   </el-option>
                 </el-select>
                 <el-button icon="el-icon-refresh" circle @click="selectClick()"></el-button>
-                -->
+               
             </el-header>
             <el-main>
               <!--对比隐藏的弹窗界面-->
@@ -153,7 +153,6 @@ export default {
         
         this.loadStaysByPos();
         setTimeout(()=>{       
-          console.log(this.totalStays);
           this.totalStays=this.stays.length
           this.loadShowStaysView();
         },1000)                 
@@ -228,7 +227,6 @@ export default {
               return true;            
             }
             else{
-              console.log("检索失败");
               self.loadingOK=true;
               return false;
             }
@@ -244,7 +242,6 @@ export default {
         this.stays=[];
         let that=this;
         for(let i=0;i<staysPos.length;i++){
-          console.log(staysPos[i].stayID);
           GetDetailedStay(staysPos[i].stayID).then(response=>{
             let data=response.data.stayPositionInfo;
             let tmp={
@@ -276,7 +273,6 @@ export default {
         setTimeout(()=>{
             GetStaysByName(text).then(response=>{
             let datas=response.data.staysDetails;
-            console.log("datas",datas);
             for(let i=0;i<datas.length;i++){
               let tmp={
                 stayID:datas[i].stayId,
@@ -292,9 +288,7 @@ export default {
                 isLike: datas[i].stayPositionInfo.isLike,
                 isCompared:false
               }
-              console.log('tmp',tmp);
               that.stays.push(tmp);
-              console.log(tmp);
             }; 
           })
         })
