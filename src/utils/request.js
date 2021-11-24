@@ -25,11 +25,12 @@ service.interceptors.request.use(
       if (localStorage.getItem('Authorization')) {
         config.headers.Token = localStorage.getItem('Authorization');
       }
-
+      config.headers={ 
+        'Content-Type': 'application/json'
+      }
       return config;
     },
     error => {
-      console.log(error) 
       return Promise.reject(error)
     }
 )

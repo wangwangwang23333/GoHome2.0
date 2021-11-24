@@ -297,7 +297,8 @@ export default {
         const parsed1 = JSON.stringify(this.desInfo);
         localStorage.setItem('stayChars', parsed1);
 
-        const parsed2 = JSON.stringify(this.stayTags);
+        const parsed2 = this.stayTags;
+        
         localStorage.setItem('stayTags', parsed2);
 
 

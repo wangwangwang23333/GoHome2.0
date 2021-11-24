@@ -26,6 +26,7 @@ export function postStayInfo(data){
         url:'/v1/stay',
         method:'post',
         data:form,
+        
     })
 }
 
@@ -39,7 +40,6 @@ export function putStayInfo(data){
 }
 
 export function getStayDetails(data){
-    console.log("发送api请求",data)
     return request({
         url: '/v1/stay',
         method: 'get',

@@ -1,6 +1,6 @@
   <template>
   <el-container id="back" >
-    <el-aside width="70%" style="margin:0 auto;display:block">
+    <el-aside width="70%" style="margin:0 auto;display:block" v-if="stayExisted">
       <CollectionDialog 
               v-bind:dialogVisible="dialogVisible" v-bind:stayID="stayId"
                 @insertFavorite="finishInserted"></CollectionDialog>
@@ -77,9 +77,17 @@
 
       </div>
     </el-aside>
-    <!-- <el-main>
-      <el-image src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/ae21dad38a0a26e51f74d42cba17adfd.png" style="margin-top: 10%; width: 22%; position: fixed; left: 75%;"></el-image>
-    </el-main> -->
+
+    <div v-else>
+      <h1 style="text-align: center;margin-top: 30vh;">啊偶，这里没有房源哦，要不再去搜索一下？</h1>
+      <el-image
+      src="https://tongjigohome.oss-cn-shanghai.aliyuncs.com/%E7%A9%BA%E7%8A%B6%E6%80%81.png"
+      style="width: 50vw; margin-left: 25vw; margin-top: -10vh;"
+      >
+         
+      </el-image>
+  </div>
+
   </el-container>
 
 </template>
@@ -92,6 +100,7 @@ import location from '@/components/StayInfo/location.vue'
 import CollectionDialog from '@/components/collectionDialog.vue'
 // import html2canvas from "html2canvas";
 import {getStayDetails} from '@/api/stay.js'
+
 
 import{DeleteFavoriteStayByView} from '@/api/favorite.js'
 
@@ -112,8 +121,16 @@ export default {
 
     getStayDetails(params)
       .then((response)=>{
+        // 房源不存在
+        if(response.data.stayId == null){
+          
+          return
+        }
         this.data = response.data;
         this.dataReady=true;
+        this.stayExisted = true
+        
+        
       })
       .catch((error)=>{this.$message({
         message: error,
@@ -163,7 +180,9 @@ export default {
       dataReady:false,
       dialogVisible:false,
       isLike:false,
-       hearts:['https://z3.ax1x.com/2021/07/11/W9W78g.png','https://z3.ax1x.com/2021/07/11/W9WH2Q.png' ],
+       hearts:['https://z3.ax1x.com/2021/07/11/W9W78g.png',
+       'https://z3.ax1x.com/2021/07/11/W9WH2Q.png' ],
+       stayExisted: false
     }
   },
 }
