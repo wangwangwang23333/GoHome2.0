@@ -7,27 +7,28 @@ import request from '@/utils/request'
 
 export function getStayTypeList(){
     return request({
-        url:'/stay/type',
+        url:'/v1/stay/type',
         method:'get'
     })
 };
 
 export function getStayTagList(){
     return request({
-        url:'/stay/tag',
+        url:'/v1/stay/tag',
         method:'get'
     })
 };
 
-export function postStayInfo(data){
-    console.log(data);
-    let form=new URLSearchParams(data);
+export function postStayInfo(data) {
     return request({
-        url:'/v1/stay',
-        method:'post',
-        data:form,
-        
+        url: '/v1/stay',
+        method: 'post',
+        data: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
+
 }
 
 export function putStayInfo(data){

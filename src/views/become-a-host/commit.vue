@@ -150,9 +150,6 @@ export default {
 
         createParams(status){
           let params={};
-          // +stayStatus单独处理
-          //+roomInfo单独处理
-          // get用于修改的时候添加stayId
           let paramList=['stayType','maxTenantNum','roomNum','bedNum','pubRestNum','pubBathNum','barrierFree',
           'longitude','latitude','stayName','stayChars','startTime','endTime','minDay','maxDay','struPos'];
 
@@ -169,8 +166,13 @@ export default {
             roomInfo[j]['images']=roomInfo[j]['images'];
           }
           params['roomInfo']=roomInfo;
-          params['stayTags']=localStorage.getItem('stayTags');
-          console.log('此时的标签',params['stayTags'])
+          if (localStorage.getItem('stayTags') != null){
+            params['stayTags']=localStorage.getItem('stayTags').split(',');
+          }
+          else{
+            params['stayTags']=[];
+          }
+          
           return params;
 
         },
@@ -187,32 +189,32 @@ export default {
 
         commit: function (status) {
         let params = this.createParams(status);
-        console.log(params)
         //修改信息
         if (JSON.parse(localStorage.getItem('stayAlter')) == true) {
           let id = JSON.parse(localStorage.getItem('stayId'));
           params['stayId'] = id;
-          // params=qs.stringify(params);
+          
           putStayInfo(params).then(res => {
-            if (res.errorCode == 200) {
-              console.log('提交房源修改信息成功！status=', status);
+            if (res.data) {
+              console.log('提交房源修改信息成功！');
             }
             else {
-              console.log('提交房源修改信息失败！status=', status);
+              console.log('提交房源修改信息失败！');
             }
           })
 
         }
         else {
           // params=qs.stringify(params);
-          console.log('params:', params);
+          console.log("你走的是这条路吗？")
           postStayInfo(params).then(res => {
-            if (res.errorCode == 200) {
-              console.log('提交房源信息成功！status=', status);
+            console.log("提交房源errrr",res)
+            if (res.data) {
+              console.log('提交房源信息成功！');
 
             }
             else {
-              console.log('提交房源信息失败！status=', status);
+              console.log('提交房源信息失败！');
             }
           })
         }
