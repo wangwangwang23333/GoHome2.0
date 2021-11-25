@@ -43,7 +43,7 @@
               <div v-for="(stay,index) in showStays" :key="index">
                 <BuildingCard
                 v-bind:stayID="stay.stayID" :stayName="stay.stayName" :stayDescribe="stay.stayDescribe"
-                :stayLabels="stay.stayLabels" :stayPrice="stay.stayPrice" 
+                :stayLabels="stay.stayLabel" :stayPrice="stay.stayPrice" 
                 :stayPhotos="stay.stayPhotos"
                 :hostAvatar="stay.hostAvatar" :stayCommentNum="stay.stayCommentNum" :stayScore="stay.stayScore"
                 :stayPosition="stay.stayPosition" 
@@ -259,6 +259,7 @@ export default {
               isLike: data.isLike,
               isCompared:false
             };    
+            
             that.stays.push(tmp);
           })         
         }

@@ -54,11 +54,11 @@
                 
                 <el-tag  :color="labelColor[index]" 
                 v-for="(stayLabel,index) in stayLabels" 
-                :key="index" effect="dark" :hit="true" v-if="stayLabels.count>0">
+                :key="index" effect="dark" :hit="true" v-if="stayLabels.length>0" >
                 {{stayLabel}}
                 </el-tag>
                 <el-tag  :color="labelColor[0]" 
-                effect="dark" :hit="true" else>
+                effect="dark" :hit="true" v-if = "stayLabels.length == 0">
                 暂无标签
                 </el-tag>
             </div>
