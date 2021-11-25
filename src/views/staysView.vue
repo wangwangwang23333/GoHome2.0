@@ -421,34 +421,24 @@ export default {
 
       //对数据进行排序选择的一系列函数
       selectClick(){
-        
-        if(this.selectMethod=='1'){
+        console.log("点击了重新排序")
+        this.newStays=this.stays
+        if(this.selectMethod=='1'){       
+          //价格降序
+          this.newStays.sort(
+            (a,b)=>{
+              return a.stayPrice - b.stayPrice
+            }
+          );
           
-          //价格降序;
-          let compare=function(tmp1,tmp2){
-            let x=tmp1.stayPrice;
-            let y=tmp2.stayPrice;
-            return x<y?1:-1;
-          }
-          this.stays.sort(compare);
-          console.log(this.stays)
         }
         else if(this.selectMethod == '2'){
           //价格升序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayPrice;
-              let y=tmp2.stayPrice;
-              if(x > y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
+          this.newStays.sort(
+            (a,b)=>{
+              return b.stayPrice - a.stayPrice
             }
-          this.stays.sort(compare);
+          );
         }
         else if(this.selectMethod == '3'){
           //评分降序;
@@ -501,6 +491,12 @@ export default {
             }
           this.stays.sort(compare);
         }
+        
+        // 一一赋值
+        for(let i = 0;i<this.newStays.length;++i){
+          Vue.set(this.stays,i,this.newStays[i])
+        }
+
       },
   },
   mounted() {
