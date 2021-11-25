@@ -23,7 +23,8 @@
 
 
       <div style="margin-top:3%" 
-      v-for="(comment, index) in comments.comments" 
+      v-for="(comment, index) in 
+      comments.comments.slice((publishedCurrentPage-1)*5,publishedCurrentPage*5)" 
       :key="index">
         <el-card class="box-card" style="width: 800px;height: 100%;margin:0 auto">
           <span class="bigFontSize" style="font-size: 15px;float: left;color: #7b7b7b">
@@ -89,6 +90,7 @@ export default {
         response.data.ratings = Number(response.data.ratings)
         this.comments = response.data;
         console.log('评价为：',this.comments)
+        console.log('当前页码为',this.publishedCurrentPage)
       })
       .catch((error) => {
         this.$message({

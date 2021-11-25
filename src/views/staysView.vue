@@ -43,7 +43,8 @@
               <div v-for="(stay,index) in showStays" :key="index">
                 <BuildingCard
                 v-bind:stayID="stay.stayID" :stayName="stay.stayName" :stayDescribe="stay.stayDescribe"
-                :stayLabels="stay.stayLabels" :stayPrice="stay.stayPrice" :stayPhotos="stay.stayPhotos"
+                :stayLabels="stay.stayLabels" :stayPrice="stay.stayPrice" 
+                :stayPhotos="stay.stayPhotos"
                 :hostAvatar="stay.hostAvatar" :stayCommentNum="stay.stayCommentNum" :stayScore="stay.stayScore"
                 :stayPosition="stay.stayPosition" 
                 :isLike="stay.isLike" 
@@ -250,7 +251,7 @@ export default {
               stayDescribe: data.stayDescribe,
               stayLabel: data.stayLabel,
               stayPrice: data.stayPrice,
-              stayPhotos: data.stayPhotos,
+              stayPhotos: data.stayPhoto,
               hostAvatar: data.hostAvatar,
               stayCommentNum: data.stayCommentNum,
               stayScore: data.stayScore,
