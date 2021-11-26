@@ -78,7 +78,6 @@ export default {
     }
   },
   mounted(){
-    console.log("centerPosition",this.centerPosition);
     setTimeout(()=>{
       this.mapReady=true;
     },1000)

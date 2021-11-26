@@ -89,8 +89,6 @@ export default {
       .then((response) => {
         response.data.ratings = Number(response.data.ratings)
         this.comments = response.data;
-        console.log('评价为：',this.comments)
-        console.log('当前页码为',this.publishedCurrentPage)
       })
       .catch((error) => {
         this.$message({
@@ -104,11 +102,9 @@ export default {
 
     },
     changeValue(){
-      console.log(this.pageCount)
       this.pageCount +=2
     },
     current_change:function (publishedCurrentPage){
-      console.log(this.publishedCurrentPage);
       this.publishedCurrentPage = publishedCurrentPage;
     },
 

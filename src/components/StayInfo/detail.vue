@@ -77,7 +77,6 @@ export default {
     stay: ""
   },
   mounted(){
-    console.log("stay",typeof(this.stay),this.stay);
   }
 }
 

@@ -37,14 +37,14 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import('../views/About.vue')
   },
 
   //注册账号路由
   {
     path:'/register',
     name:'Register',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Register.vue')
+    component: () => import('../views/Register.vue')
   },
   //协议路由
   {
@@ -158,13 +158,6 @@ const routes = [
     name: 'HostOrder',
     component: () =>import('../views/HostOrder.vue')
   },
-
-  //sbq房源信息界面路由
-  // {
-  //   path:'/StayInfo',
-  //   name:'Stayinfo',
-  //   component:()=>import("../views/StayInfo.vue")
-  // }
 
   {
     path: '/customerOrder',
