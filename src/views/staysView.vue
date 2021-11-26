@@ -329,7 +329,6 @@ export default {
       //添加至对比
       addCurCompareID(val){
         this.curCompareID.push(val);
-        console.log(val,'被加入对比了');
         //找到该编号
         for(let i=0;i<this.stays.length;++i){
           if(this.stays[i].stayID==val){
@@ -347,7 +346,6 @@ export default {
           
         }
         else if (this.curCompareID.length==2){
-          console.log('打开对比界面')
           this.compareDialogVisible=true;
           //找出两个下标
           for(let j=0;j<this.stays.length;j++){
@@ -376,7 +374,6 @@ export default {
             message: '一次最多对比两个房源，已取消前面所选房源！',
             type: 'warning'
           });
-          
           
           //更改对比图标
           for(let i=0;i<2;++i){
@@ -418,7 +415,6 @@ export default {
 
       //对数据进行排序选择的一系列函数
       selectClick(){
-        console.log("点击了重新排序")
         if(this.selectMethod=='1'){       
           //价格降序
           this.stays.sort(
@@ -467,7 +463,6 @@ export default {
     $route(to,from){
       console.log({"变化前的路由":from},{"变化后的路由":to});
       this.$router.go(0);
-      //this.loadStaysView()
     },
   }
 }
