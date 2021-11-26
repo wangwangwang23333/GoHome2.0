@@ -136,9 +136,6 @@ export default {
           label: '评分降序'
         }, {
           value: '4',
-          label: '评分升序'
-        }, {
-          value: '5',
           label: '评论数降序'
         }],
       selectMethod:'',
@@ -422,81 +419,41 @@ export default {
       //对数据进行排序选择的一系列函数
       selectClick(){
         console.log("点击了重新排序")
-        this.newStays=this.stays
         if(this.selectMethod=='1'){       
           //价格降序
-          this.newStays.sort(
+          this.stays.sort(
+            (a,b)=>{
+              return  b.stayPrice - a.stayPrice
+            }
+          );
+          this.loadShowStaysView();
+        }
+        else if(this.selectMethod == '2'){
+          //价格升序;
+          this.stays.sort(
             (a,b)=>{
               return a.stayPrice - b.stayPrice
             }
           );
-          
-        }
-        else if(this.selectMethod == '2'){
-          //价格升序;
-          this.newStays.sort(
-            (a,b)=>{
-              return b.stayPrice - a.stayPrice
-            }
-          );
+          this.loadShowStaysView()
         }
         else if(this.selectMethod == '3'){
           //评分降序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayScore;
-              let y=tmp2.stayScore;
-              if(x < y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
+          this.stays.sort(
+            (a,b)=>{
+              return  b.stayScore - a.stayScore
             }
-          this.stays.sort(compare);
+          );
+          this.loadShowStaysView();
         }
         else if(this.selectMethod == '4'){
-          //评分升序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayScore;
-              let y=tmp2.stayScore;
-              if(x > y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
+          this.stays.sort(
+            (a,b)=>{
+              return  b.stayCommentNum - a.stayCommentNum
             }
-          this.stays.sort(compare);
+          );
+          this.loadShowStaysView();
         }
-        else{
-          //评论数量降序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayCommentNum;
-              let y=tmp2.stayCommentNum;
-              if(x < y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
-            }
-          this.stays.sort(compare);
-        }
-        
-        // 一一赋值
-        for(let i = 0;i<this.newStays.length;++i){
-          Vue.set(this.stays,i,this.newStays[i])
-        }
-
       },
   },
   mounted() {
