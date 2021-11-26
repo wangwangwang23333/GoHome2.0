@@ -6,7 +6,7 @@
         <el-aside style="width : 50%">        
           <el-container>
             <el-header style="padding: 20px;">
-               <!--
+               
                  <el-select v-model="selectMethod" placeholder="请选择" style="margin-right:15px;" class="dialogInput">
                   <el-option
                     v-for="(item,index) in options"
@@ -16,7 +16,7 @@
                   </el-option>
                 </el-select>
                 <el-button icon="el-icon-refresh" circle @click="selectClick()"></el-button>
-                -->
+               
             </el-header>
             <el-main>
               <!--对比隐藏的弹窗界面-->
@@ -43,7 +43,8 @@
               <div v-for="(stay,index) in showStays" :key="index">
                 <BuildingCard
                 v-bind:stayID="stay.stayID" :stayName="stay.stayName" :stayDescribe="stay.stayDescribe"
-                :stayLabels="stay.stayLabels" :stayPrice="stay.stayPrice" :stayPhotos="stay.stayPhotos"
+                :stayLabels="stay.stayLabel" :stayPrice="stay.stayPrice" 
+                :stayPhotos="stay.stayPhotos"
                 :hostAvatar="stay.hostAvatar" :stayCommentNum="stay.stayCommentNum" :stayScore="stay.stayScore"
                 :stayPosition="stay.stayPosition" 
                 :isLike="stay.isLike" 
@@ -81,7 +82,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import BuildingCard from '@/components/buildingCard.vue'
 import BuildingMap from '@/components/buildingMap.vue'
 import CollectionDialog from '@/components/collectionDialog.vue'
@@ -135,9 +136,6 @@ export default {
           label: '评分降序'
         }, {
           value: '4',
-          label: '评分升序'
-        }, {
-          value: '5',
           label: '评论数降序'
         }],
       selectMethod:'',
@@ -153,7 +151,6 @@ export default {
         
         this.loadStaysByPos();
         setTimeout(()=>{       
-          console.log(this.totalStays);
           this.totalStays=this.stays.length
           this.loadShowStaysView();
         },1000)                 
@@ -228,7 +225,6 @@ export default {
               return true;            
             }
             else{
-              console.log("检索失败");
               self.loadingOK=true;
               return false;
             }
@@ -244,7 +240,6 @@ export default {
         this.stays=[];
         let that=this;
         for(let i=0;i<staysPos.length;i++){
-          console.log(staysPos[i].stayID);
           GetDetailedStay(staysPos[i].stayID).then(response=>{
             let data=response.data.stayPositionInfo;
             let tmp={
@@ -253,7 +248,7 @@ export default {
               stayDescribe: data.stayDescribe,
               stayLabel: data.stayLabel,
               stayPrice: data.stayPrice,
-              stayPhotos: data.stayPhotos,
+              stayPhotos: data.stayPhoto,
               hostAvatar: data.hostAvatar,
               stayCommentNum: data.stayCommentNum,
               stayScore: data.stayScore,
@@ -261,6 +256,7 @@ export default {
               isLike: data.isLike,
               isCompared:false
             };    
+            
             that.stays.push(tmp);
           })         
         }
@@ -276,7 +272,6 @@ export default {
         setTimeout(()=>{
             GetStaysByName(text).then(response=>{
             let datas=response.data.staysDetails;
-            console.log("datas",datas);
             for(let i=0;i<datas.length;i++){
               let tmp={
                 stayID:datas[i].stayId,
@@ -292,9 +287,7 @@ export default {
                 isLike: datas[i].stayPositionInfo.isLike,
                 isCompared:false
               }
-              console.log('tmp',tmp);
               that.stays.push(tmp);
-              console.log(tmp);
             }; 
           })
         })
@@ -336,7 +329,6 @@ export default {
       //添加至对比
       addCurCompareID(val){
         this.curCompareID.push(val);
-        console.log(val,'被加入对比了');
         //找到该编号
         for(let i=0;i<this.stays.length;++i){
           if(this.stays[i].stayID==val){
@@ -354,7 +346,6 @@ export default {
           
         }
         else if (this.curCompareID.length==2){
-          console.log('打开对比界面')
           this.compareDialogVisible=true;
           //找出两个下标
           for(let j=0;j<this.stays.length;j++){
@@ -383,7 +374,6 @@ export default {
             message: '一次最多对比两个房源，已取消前面所选房源！',
             type: 'warning'
           });
-          
           
           //更改对比图标
           for(let i=0;i<2;++i){
@@ -425,85 +415,40 @@ export default {
 
       //对数据进行排序选择的一系列函数
       selectClick(){
-        
-        if(this.selectMethod=='1'){
-          
-          //价格降序;
-          let compare=function(tmp1,tmp2){
-            let x=tmp1.stayPrice;
-            let y=tmp2.stayPrice;
-            return x<y?1:-1;
-          }
-          this.stays.sort(compare);
-          console.log(this.stays)
+        if(this.selectMethod=='1'){       
+          //价格降序
+          this.stays.sort(
+            (a,b)=>{
+              return  b.stayPrice - a.stayPrice
+            }
+          );
+          this.loadShowStaysView();
         }
         else if(this.selectMethod == '2'){
           //价格升序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayPrice;
-              let y=tmp2.stayPrice;
-              if(x > y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
+          this.stays.sort(
+            (a,b)=>{
+              return a.stayPrice - b.stayPrice
             }
-          this.stays.sort(compare);
+          );
+          this.loadShowStaysView()
         }
         else if(this.selectMethod == '3'){
           //评分降序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayScore;
-              let y=tmp2.stayScore;
-              if(x < y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
+          this.stays.sort(
+            (a,b)=>{
+              return  b.stayScore - a.stayScore
             }
-          this.stays.sort(compare);
+          );
+          this.loadShowStaysView();
         }
         else if(this.selectMethod == '4'){
-          //评分升序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayScore;
-              let y=tmp2.stayScore;
-              if(x > y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
+          this.stays.sort(
+            (a,b)=>{
+              return  b.stayCommentNum - a.stayCommentNum
             }
-          this.stays.sort(compare);
-        }
-        else{
-          //评论数量降序;
-            let compare=function(tmp1,tmp2){
-              let x=tmp1.stayCommentNum;
-              let y=tmp2.stayCommentNum;
-              if(x < y){
-                return 1;
-              }
-              else if(x == y){
-                return 0;
-              }
-              else{
-                return -1;
-              }
-            }
-          this.stays.sort(compare);
+          );
+          this.loadShowStaysView();
         }
       },
   },
@@ -518,7 +463,6 @@ export default {
     $route(to,from){
       console.log({"变化前的路由":from},{"变化后的路由":to});
       this.$router.go(0);
-      //this.loadStaysView()
     },
   }
 }

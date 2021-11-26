@@ -133,7 +133,7 @@ export default {
           center:true,
           showConfirmButton:false,
           callback:action=>{
-            console.log("即将进入房东也没")
+            console.log("即将进入房东页面")
             this.$router.push({path:'/hostinfopage'})
           }
           
@@ -150,9 +150,6 @@ export default {
 
         createParams(status){
           let params={};
-          // +stayStatus单独处理
-          //+roomInfo单独处理
-          // get用于修改的时候添加stayId
           let paramList=['stayType','maxTenantNum','roomNum','bedNum','pubRestNum','pubBathNum','barrierFree',
           'longitude','latitude','stayName','stayChars','startTime','endTime','minDay','maxDay','struPos'];
 
@@ -166,17 +163,16 @@ export default {
           let roomNum=JSON.parse(localStorage.getItem('roomNum'));
           for(let j=0;j<roomNum;j++){
             roomInfo[j]['images']=imgs[j];
-            console.log("图像URL",imgs[j]);
-            // roomInfo[j]['bedNums']=JSON.stringify(roomInfo[j]['bedNums']);
-            // roomInfo[j]['bedTypes']=JSON.stringify(roomInfo[j]['bedTypes']);
             roomInfo[j]['images']=roomInfo[j]['images'];
-            console.log('房源 照片————————',roomInfo[j]['images'])
-            // roomInfo[j]=JSON.stringify(roomInfo[j]);
           }
-          params['roomInfo']=JSON.stringify(roomInfo);
-          params['stayTags']=localStorage.getItem('stayTags');
-
-          console.log("传入的参数是",params);
+          params['roomInfo']=roomInfo;
+          if (localStorage.getItem('stayTags') != null){
+            params['stayTags']=localStorage.getItem('stayTags').split(',');
+          }
+          else{
+            params['stayTags']=[];
+          }
+          
           return params;
 
         },
@@ -191,41 +187,41 @@ export default {
           console.log('清除浏览器记录！');
         },
 
-        commit:function(status){
-            let params=this.createParams(status);
-            console.log(params)
-            //修改信息
-            if(JSON.parse(localStorage.getItem('stayAlter'))==true){
-              let id=JSON.parse(localStorage.getItem('stayId'));
-              params['stayId']=id;
-              // params=qs.stringify(params);
-              putStayInfo(params).then(res=>{
-                if(res.errorCode==200){
-                console.log('提交房源修改信息成功！status=',status);      
-                }
-                else{
-                  console.log('提交房源修改信息失败！status=',status);
-                }
-              })
-              
+        commit: function (status) {
+        let params = this.createParams(status);
+        //修改信息
+        if (JSON.parse(localStorage.getItem('stayAlter')) == true) {
+          let id = JSON.parse(localStorage.getItem('stayId'));
+          params['stayId'] = id;
+          
+          putStayInfo(params).then(res => {
+            if (res.data) {
+              console.log('提交房源修改信息成功！');
             }
-            else{
-              // params=qs.stringify(params);
-               console.log('params:',params);
-              postStayInfo(params).then(res=>{
-              if(res.errorCode==200){
-                console.log('提交房源信息成功！status=',status);
-                
-              }
-              else{
-                console.log('提交房源信息失败！status=',status);
-              }
-            })
+            else {
+              console.log('提交房源修改信息失败！');
             }
-            this.clearStorage();
-            this.suc(status);          
-            
-        },
+          })
+
+        }
+        else {
+          // params=qs.stringify(params);
+          console.log("你走的是这条路吗？")
+          postStayInfo(params).then(res => {
+            console.log("提交房源errrr",res)
+            if (res.data) {
+              console.log('提交房源信息成功！');
+
+            }
+            else {
+              console.log('提交房源信息失败！');
+            }
+          })
+        }
+        this.clearStorage();
+        this.suc(status);
+
+      },
 
     }
 }

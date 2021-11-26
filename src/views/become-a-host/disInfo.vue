@@ -189,12 +189,23 @@ export default {
             stayTags:[], //房源标签
 
             rowItems:4, //每行个数
-            tagList: ['ahf','b','c','d','e','f','g'], //标签列表
+            tagList: [
+                "亲子乐园",
+                "可以做饭",
+                "告白圣地",
+                "山间别墅",
+                "环境宜人",
+                "自助烧烤",
+                "超赞房东",
+                "近地铁站"
+            ], //标签列表
             
         }
     },
 
-    
+    created(){
+
+    },
 
     mounted(){
       if(localStorage.getItem('stayName')){
@@ -286,7 +297,8 @@ export default {
         const parsed1 = JSON.stringify(this.desInfo);
         localStorage.setItem('stayChars', parsed1);
 
-        const parsed2 = JSON.stringify(this.stayTags);
+        const parsed2 = this.stayTags;
+        
         localStorage.setItem('stayTags', parsed2);
 
 

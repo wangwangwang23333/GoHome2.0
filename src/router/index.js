@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import staysView from '../views/staysView.vue'
 import Home from '../views/Home.vue'
+import HomePage from '../views/HomePage.vue'
 import UserInfoPage from "../views/UserInfoPage";
 import UserInfoMessage from "../components/UserInfoMessage";
 import { MessageBox, Message } from 'element-ui'
@@ -17,10 +18,15 @@ VueRouter.prototype.push = function push(location) {
 
 
 const routes = [
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: Home
+  // },
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path:'/',
+    name:'HomePage',
+    component:HomePage
   },
   {
     path: '/staysView',
@@ -31,17 +37,14 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import('../views/About.vue')
   },
 
   //注册账号路由
   {
     path:'/register',
     name:'Register',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Register.vue')
+    component: () => import('../views/Register.vue')
   },
   //协议路由
   {
@@ -55,7 +58,11 @@ const routes = [
     name:'hostRegister',
     component: () => import( '../views/hostRegister.vue')
   },
-
+  {
+    path:'/comments',
+    name:'comments',
+    component: () => import( '../components/StayInfo/comments.vue')
+  },
   {
     path: '/userinfopage',
     name: 'UserInfoPage',
@@ -167,13 +174,6 @@ const routes = [
     component: () =>import('../views/HostOrder.vue')
   },
 
-  //sbq房源信息界面路由
-  // {
-  //   path:'/StayInfo',
-  //   name:'Stayinfo',
-  //   component:()=>import("../views/StayInfo.vue")
-  // }
-
   {
     path: '/customerOrder',
     name: 'CustomerOrder',
@@ -205,6 +205,15 @@ const routes = [
     name:'forgetPassword',
     component: () => import( '../views/forgetPassword.vue')
   },
+
+
+  // {
+  //   path: '/404',
+  //   component: () => import('@/views/404'),
+  //   hidden: true
+  // },
+
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 const router = new VueRouter({

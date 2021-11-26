@@ -1,11 +1,11 @@
 <template>
   <div>
 
-    <el-card class="outer-box-card" shadow="hover" style="width:95%;margin:0 auto;border-radius:15px" >
+    <el-card class="outer-box-card" shadow="hover" style="width:95%;margin:0 auto;border-radius:15px">
       <div slot="header">
         <h2>
-            <i class="iconfont icon-bianji4" id="myIcon" ></i>
-            <span  > 房客评价</span>
+          <i class="iconfont icon-bianji4" id="myIcon"></i>
+          <span>房客评价</span>
         </h2>
 
       </div>
@@ -14,62 +14,58 @@
         <strong>{{comments.commentNum}}</strong>&nbsp;&nbsp;条评价
       </div>
       <div id="ratings" style="margin-left: auto;margin-top:10px;">
-        <el-rate  v-model="comments.ratings.toFixed(2)" disabled show-score text-color="#ff9900" score-template="{value}" ></el-rate>
+        <el-rate v-model="comments.ratings.toFixed(2)" disabled show-score text-color="#ff9900" score-template="{value}"
+    >
+        </el-rate>
       </div>
-      
+
       <br><br>
-      <div style="margin-top:3%" v-for="(comment, index) in comments.comments" :key="index">
-        <el-card    class="box-card" style="width: 800px;height: 100%;margin:0 auto">
-          <span class="bigFontSize" style="font-size: 15px;float: left;color: #7b7b7b">时间：{{comment.date.replace('T',' ')}}</span>
+
+
+      <div style="margin-top:3%" 
+      v-for="(comment, index) in 
+      comments.comments.slice((publishedCurrentPage-1)*5,publishedCurrentPage*5)" 
+      :key="index">
+        <el-card class="box-card" style="width: 800px;height: 100%;margin:0 auto">
+          <span class="bigFontSize" style="font-size: 15px;float: left;color: #7b7b7b">
+            时间：{{comment.date.substring(0,10)}}</span>
+
           <br><br>
-          <el-image :src=comment.avatar
-                    style="width: 56px;height: 56px;border-radius: 28px;float: left"></el-image>
+          <el-image :src=comment.avatar style="width: 56px;height: 56px;border-radius: 28px;float: left"></el-image>
           <span class="NameFontSize" style="font-size: 20px;float:left;padding-left: 2%">
-              {{comment.nickName}}</span>
+            {{comment.nickName}}</span>
           <br><br>
           <el-divider></el-divider>
-          <el-rate style="float: left"
-                   v-model="comment.ratings>=5?5:comment.ratings.toFixed(1)"
-                   disabled
-                   show-score
-                   text-color="#ff9900"
-                   score-template="{value}">
+          <el-rate style="float: left" 
+          v-model="comment.commentScore>=5?5:comment.commentScore.toFixed(1)" 
+          disabled 
+          show-score
+            text-color="#ff9900" score-template="{value}">
           </el-rate>
           <br><br>
-          <span class="commentSize" >
-                {{comment.commentContent}}</span>
+          <span class="commentSize">
+            {{comment.commentContent}}</span>
           <br>
-
         </el-card>
         <br>
       </div>
 
-
-      
-        <el-pagination
-          v-if="comments.commentNum<4?false:true"
-          layout="prev, pager, next"
-          :page-size="publishedPageSize"
-          :page-count="5"
-          :total="comments.commentNum"
-          @current-change="current_change"
-          style="float: bottom ;padding-bottom: 1%"
-          background
-      >
-      
-
+      <el-pagination v-if="comments.commentNum>5" 
+        layout="prev, pager, next" 
+        :page-size="publishedPageSize"
+        :page-count="5" 
+        :total="comments.commentNum" 
+        @current-change="current_change"
+        style="float: bottom ;padding-bottom: 1%" background>
       </el-pagination>
 
-
-    </el-card >
+    </el-card>
   </div>
 
 </template>
 
 <script>
-// import _comment from '@/assets/comments.json'
-// let comments = _comment.data
-// console.log(comments.ratings)
+
 import {getComments} from '@/api/stay.js'
 
 export default {
@@ -78,32 +74,37 @@ export default {
     return{
       publishedPageSize: 5,
       pageCount: 1,
-      comments: Object,
+      comments: {
+        commentNum: 0,
+        ratings: 0,
+        comments:[]
+      },
       publishedCurrentPage: 1,
     }
   },
+
   created() {
-    // let params = {"stayId": this.stayId};
-    // test
     let stayId = this.stayId;
     getComments(stayId)
-      .then((response)=>{
+      .then((response) => {
+        response.data.ratings = Number(response.data.ratings)
         this.comments = response.data;
-        // console.log(response.data);
       })
-      .catch((error)=>{this.$message({
-        message: error,
-        type: "warning",
-      });
-      return;
+      .catch((error) => {
+        this.$message({
+          message: error,
+          type: "warning",
+        });
       });
   },
   methods:{
     disableBookButton(){
 
     },
+    changeValue(){
+      this.pageCount +=2
+    },
     current_change:function (publishedCurrentPage){
-      console.log(this.publishedCurrentPage);
       this.publishedCurrentPage = publishedCurrentPage;
     },
 

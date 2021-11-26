@@ -10,12 +10,10 @@
 <!--      <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
     </div>
     <div class="myInfo">
-      <!--修改-->
-
 
       <el-container>
         <el-main style="width: 100px;">
-          <img :src="room.roomImage[0]" :alt="room.roomImage" width="400px" 
+          <img :src="room.roomImage" :alt="room.roomImage" width="400px" 
           style="border-radius:10px;">
         
         </el-main>
@@ -79,7 +77,6 @@
 </template>
 
 <script>
-//console.log("wwww",this.room.unavailable)
 export default {
   name: "rooms",
   props: {
@@ -94,9 +91,7 @@ export default {
   },
   methods: {
     handleBook: function(){
-      // console.log(this.room.id);
 
-      console.log(this.value1);
       if(this.value1===null){
         this.$message({
           message: '请选择入住日期',
@@ -114,7 +109,6 @@ export default {
   },
   created(){
     let token = localStorage.getItem('userIdentity');
-    console.log('身份为:',token);
     if(token==='Customer'){
       this.isCustomer=true;
     }
@@ -131,11 +125,10 @@ export default {
       return{
         disabledDate(time) {
           const today =new Date().toLocaleDateString();
-          console.log("today",today)
           // 禁用今天之前的日期
           let disable=time<new Date(today);
           // 禁用后端返回的禁止日期
-          if(that.room.unavailable.length==0 || that.room.unavailable ==null){
+          if(that.room.unavailable.length!=0 && that.room.unavailable !=null){
 
             that.room.unavailable.forEach((item) =>　{
             disable =

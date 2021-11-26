@@ -107,7 +107,7 @@ export default {
                 let roughStay=response.data.stayPositionInfo;
                 self.curStayName=roughStay.stayName;
                 self.curStayDescribe=roughStay.stayDescribe;
-                self.curStayPhoto=roughStay.stayPhotos;
+                self.curStayPhoto=roughStay.stayPhoto;
                 self.curHostAvatar=roughStay.hostAvatar;
                 self.curStayScore=roughStay.stayScore;
                 self.isLike=roughStay.isLike;

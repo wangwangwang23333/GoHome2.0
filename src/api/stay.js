@@ -4,30 +4,31 @@
 */
 
 import request from '@/utils/request'
-import qs from 'qs'
 
 export function getStayTypeList(){
     return request({
-        url:'/stay/type',
+        url:'/v1/stay/type',
         method:'get'
     })
 };
 
 export function getStayTagList(){
     return request({
-        url:'/stay/tag',
+        url:'/v1/stay/tag',
         method:'get'
     })
 };
 
-export function postStayInfo(data){
-    console.log(data);
-    let form=new URLSearchParams(data);
+export function postStayInfo(data) {
     return request({
-        url:'/stay/infos',
-        method:'post',
-        data:form,
+        url: '/v1/stay',
+        method: 'post',
+        data: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
+
 }
 
 export function putStayInfo(data){
@@ -41,7 +42,7 @@ export function putStayInfo(data){
 
 export function getStayDetails(data){
     return request({
-        url: '/stay/getStayDetails',
+        url: '/v1/stay',
         method: 'get',
         params: data,
     })
@@ -49,7 +50,7 @@ export function getStayDetails(data){
 
 export function getComments(stayId){
     return request({
-        url: '/stay/getComments',
+        url: 'v1/stay/comment',
         method: 'get',
         params: {stayId: stayId},
     })

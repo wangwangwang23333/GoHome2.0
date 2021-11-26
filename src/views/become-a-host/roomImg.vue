@@ -80,7 +80,7 @@
           <i class="el-icon-s-opportunity" style="font-size:2em;color:orange"></i>
           
           <p>
-            每个房间可添加多张照片，照片需小于 50MB。
+            每个房间可添加多张照片，照片需小于 2MB。
           </p>
           <p>
             照片在自然光下看起来更清晰自然。建议您在白天拍摄，打开窗户，避免使用闪光灯。

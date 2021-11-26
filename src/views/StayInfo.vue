@@ -1,6 +1,6 @@
   <template>
   <el-container id="back" >
-    <el-aside width="70%" style="margin:0 auto;display:block">
+    <el-aside width="70%" style="margin:0 auto;display:block" v-if="stayExisted">
       <CollectionDialog 
               v-bind:dialogVisible="dialogVisible" v-bind:stayID="stayId"
                 @insertFavorite="finishInserted"></CollectionDialog>
@@ -27,7 +27,7 @@
       </el-carousel>
         </div>
     
-        <!-- TODO 导航怎么才能好看？ -->
+    
         <el-card class="box-card" shadow="hover" style="width:95%;margin:0 auto;border-radius:15px">
         <div class="NavBar">
           <el-menu class="NavMenu" :default-active="activeIndex" mode="horizontal" >
@@ -69,6 +69,7 @@
           <div>
             <comments id="comments" :stayId="this.$route.query.stayId"> </comments>
           </div>
+          
           <div>
             <location id="location" v-if="data.stayPosition" :centerPosition="data.stayPosition"></location>
           </div>
@@ -76,9 +77,17 @@
 
       </div>
     </el-aside>
-    <!-- <el-main>
-      <el-image src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/ae21dad38a0a26e51f74d42cba17adfd.png" style="margin-top: 10%; width: 22%; position: fixed; left: 75%;"></el-image>
-    </el-main> -->
+
+    <div v-else>
+      <h1 style="text-align: center;margin-top: 30vh;">啊偶，这里没有房源哦，要不再去搜索一下？</h1>
+      <el-image
+      src="https://tongjigohome.oss-cn-shanghai.aliyuncs.com/%E7%A9%BA%E7%8A%B6%E6%80%81.png"
+      style="width: 50vw; margin-left: 25vw; margin-top: -10vh;"
+      >
+         
+      </el-image>
+  </div>
+
   </el-container>
 
 </template>
@@ -92,12 +101,9 @@ import CollectionDialog from '@/components/collectionDialog.vue'
 // import html2canvas from "html2canvas";
 import {getStayDetails} from '@/api/stay.js'
 
-import{DeleteFavoriteStayByView} from '@/api/favorite.js'
-//假数据
-// import stayinfo from '@/assets/stayinfo.json'
 
-// let data=stayinfo;
-// console.log(data);
+import{DeleteFavoriteStayByView} from '@/api/favorite.js'
+
 export default {
   name: "StayInfo",
   components: {
@@ -108,16 +114,23 @@ export default {
     CollectionDialog,
   },
   created() {
+    
     let stayId = this.$route.query.stayId;
     this.stayId = stayId;
-    //test
-    // let stayId = 1;
     let params = {"stayId": stayId};
+
     getStayDetails(params)
       .then((response)=>{
+        // 房源不存在
+        if(response.data.stayId == null){
+          
+          return
+        }
         this.data = response.data;
-        console.log(response.data);
         this.dataReady=true;
+        this.stayExisted = true
+        
+        
       })
       .catch((error)=>{this.$message({
         message: error,
@@ -127,21 +140,6 @@ export default {
       });
     },
   methods:{
-    // clickGeneratePicture: function () {
-    //   //生成图片
-    //   html2canvas(this.$refs.imageDom).then((canvas) => {
-    //     // 转成图片，生成图片地址
-    //     this.imgUrl = canvas.toDataURL("image/png"); //可将 canvas 转为 base64 格式
-    //   });
-    //   let eleLink = document.createElement("a");
-    //   eleLink.href = this.imgUrl; // 转换后的图片地址
-    //   eleLink.download = "历史曲线图";
-    //   document.body.appendChild(eleLink);
-    //   // 触发点击
-    //   eleLink.click();
-    //   // 然后移除
-    //   document.body.removeChild(eleLink);
-    // },
 
     //添加房源至收藏夹;
       StayCollection(){
@@ -182,7 +180,9 @@ export default {
       dataReady:false,
       dialogVisible:false,
       isLike:false,
-       hearts:['https://z3.ax1x.com/2021/07/11/W9W78g.png','https://z3.ax1x.com/2021/07/11/W9WH2Q.png' ],
+       hearts:['https://z3.ax1x.com/2021/07/11/W9W78g.png',
+       'https://z3.ax1x.com/2021/07/11/W9WH2Q.png' ],
+       stayExisted: false
     }
   },
 }

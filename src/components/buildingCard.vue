@@ -50,8 +50,16 @@
             <!-- 标签列表，这里只放三个 -->
             <div class="label-list"> 
                 <span class="small-label" style="float:left; padding:1px 6px;margin-top:6px">标签:</span>                       
-                <el-tag  :color="labelColor[index]" v-for="(stayLabel,index) in stayLabels" :key="index" effect="dark" :hit="true">
+                
+                
+                <el-tag  :color="labelColor[index]" 
+                v-for="(stayLabel,index) in stayLabels" 
+                :key="index" effect="dark" :hit="true" v-if="stayLabels.length>0" >
                 {{stayLabel}}
+                </el-tag>
+                <el-tag  :color="labelColor[0]" 
+                effect="dark" :hit="true" v-if = "stayLabels.length == 0">
+                暂无标签
                 </el-tag>
             </div>
             <!-- 房主头像 -->

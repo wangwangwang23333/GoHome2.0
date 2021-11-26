@@ -182,7 +182,7 @@ export default {
   data: function () {
     return {
       rowItems: 4, // 每行放置按钮数量
-      typeList: ['a','b','c','d','e','f','g'], // 房源类型列表（db获取）
+      typeList: ['乡村小屋','农家乐','冰屋','别墅','地下室','客栈','平房','悬崖旅社','旅舍','茅屋'], // 房源类型列表（db获取）
       stayType:'', // 此房源类型
 
     };
@@ -212,13 +212,13 @@ export default {
       // 调用api获取房源类型信息并存储到本地
       console.log('数据库加载房源类型列表');
       getStayTypeList().then(res=>{
-          if(res.errorCode==200){
+          if(res.status==200){
             this.typeList=res.data.typeList;
             console.log('房源类型获取成功！');
           }
           else{
             console.log('房源类型获取失败！');
-            this.typeList=['住宅','别墅','旅社','农家乐','乡村小屋','客栈','平房'];
+            this.typeList=['乡村小屋','农家乐','冰屋','别墅','地下室','客栈','平房','悬崖旅社','旅舍','茅屋'];
           }
       })
     }
