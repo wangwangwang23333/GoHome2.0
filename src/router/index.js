@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import staysView from '../views/staysView.vue'
 import Home from '../views/Home.vue'
+import HomePage from '../views/HomePage.vue'
 import UserInfoPage from "../views/UserInfoPage";
 import UserInfoMessage from "../components/UserInfoMessage";
 import { MessageBox, Message } from 'element-ui'
@@ -17,10 +18,15 @@ VueRouter.prototype.push = function push(location) {
 
 
 const routes = [
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: Home
+  // },
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path:'/',
+    name:'HomePage',
+    component:HomePage
   },
   {
     path: '/staysView',
@@ -191,6 +197,7 @@ const routes = [
     name:'forgetPassword',
     component: () => import( '../views/forgetPassword.vue')
   },
+
 
   // {
   //   path: '/404',
