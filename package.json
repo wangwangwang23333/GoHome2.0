@@ -24,10 +24,11 @@
         "vue": "^2.6.11",
         "vue-amap": "^0.5.10",
         "vue-clipboard2": "^0.3.1",
-        "vue-juejin-comment": "^0.1.6",
         "vue-jsonp": "^2.0.0",
+        "vue-juejin-comment": "^0.1.6",
         "vue-qr": "^2.5.0",
         "vue-router": "^3.2.0",
+        "vue-wordcloud": "^1.1.1",
         "vueperslides": "^2.15.2",
         "vuex": "^3.4.0"
     },

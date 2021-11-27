@@ -36,20 +36,41 @@
 
     </HomeStayCard>
 
+    <!--词云图-->
+    <wordcloud
+      :data="defaultWords"
+      nameKey="标签"
+      valueKey="热度"
+      :color="cloudColors"
+      :showTooltip="true"
+      :wordClick="wordClickHandler"
+      style="width: 80%;">
+      </wordcloud>
+    
+    <!--瀑布流-->
+
   </div>
 </template>
 
 <script>
 import HomeBlock from "../components/HomeBlock";
 import HomeStayCard from "../components/HomeStayCard";
+import wordcloud from 'vue-wordcloud'
 export default {
   name:'HomePage',
   components:{
   HomeBlock,
     HomeStayCard,
+    wordcloud
   },
   created(){
     console.log("首页初始化加载中")
+    for(let i=1;i<=100;++i){
+      this.defaultWords.push({
+          "标签": "萌宠",
+          "热度": i
+        })
+    }
   },
   data(){
     return{
@@ -134,11 +155,54 @@ export default {
           StayCommentNum:0,
           StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
         },
+      ],
+      cloudColors: ['#1f77b4', '#629fc9', '#94bedb',
+        '#c9e0ef', "#77C9D4", "#57BC90", "#015249",
+        '#409EFF', '#909399', '#F56C6C', '#E6A23C',
+        '#67C23A'],
+      defaultWords: [{
+          "标签": "萌宠",
+          "热度": 26
+        },
+        {
+          "标签": "生活",
+          "热度": 19
+        },
+        {
+          "标签": "美食",
+          "热度": 18
+        },
+        {
+          "标签": "电影",
+          "热度": 16
+        },
+        {
+          "标签": "交通",
+          "热度": 15
+        },
+        {
+          "标签": "民宿",
+          "热度": 9
+        },
+        {
+          "标签": "特价",
+          "热度": 9
+        },
+        {
+          "标签": "曝光",
+          "热度": 9
+        },
+        {
+          "标签": "可行",
+          "热度": 6
+        }
       ]
     }
   },
   methods:{
-
+    wordClickHandler(name, 热度, vm) {
+      console.log('wordClickHandler', name, 热度, vm);
+    }
   }
 
 

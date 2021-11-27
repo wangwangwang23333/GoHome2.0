@@ -27,7 +27,10 @@
           <i class="iconfont icon-shijian" id="myIcon" ></i>
 
       <p style="position: relative; left: 5px;display:inline-block; font-family:'Lato-Bold','FZHeiBJW';">入住时间{{stay.startTime}}-{{stay.endTime}}</p>
-      <el-button style="float:right" v-clipboard:copy="url" v-clipboard:success="onCopy" v-clipboard:error="onError">
+      <el-button style="float:right" 
+      v-clipboard:copy="'兄弟们，我发现归宿平台一个特别好的民宿【'+stay.stayName+'】！\
+      \n链接在这里：'+url" 
+      v-clipboard:success="onCopy" v-clipboard:error="onError">
         <i class="el-icon-share" plain></i>
         分享</el-button>
     </div>
