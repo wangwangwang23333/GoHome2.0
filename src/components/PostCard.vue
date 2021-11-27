@@ -1,27 +1,30 @@
 <template>
-    <div class="CardType" @mouseenter="changeCardStyle($event)" @mouseleave="removeCardStyle($event)">
+    <div class="CardType" 
+    @mouseenter="changeCardStyle($event)" 
+    @mouseleave="removeCardStyle($event)">
         <!--走马灯-->
-        <el-carousel trigger="click" :height="'100'+'px'" indicator-position="none">
+        <el-carousel trigger="click" :height="imgHeight+'px'" indicator-position="none">
             <el-carousel-item v-for="(stayPhoto,index) in [postPhotos]" :key="index">
                 <el-image fit="cover"
                     style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
-                    :src="stayPhoto">
+                    :src="stayPhoto"
+                    >
                 </el-image>
             </el-carousel-item>
         </el-carousel>
 
         <!--标签-->
-        <label-list class="label-list">                        
+        <div class="label-list">                        
             <el-tag
             type="primary"
             v-for="(i,index) in labels.slice(0,3)"
             :key="index"
-            :effect="dark"
+            effect="dark"
             :color="labelColor[index]"
             :hit="true">
             {{i}}
             </el-tag>
-        </label-list>
+        </div>
         
         <el-row>
             
@@ -95,7 +98,7 @@
             postTime:{
                 type:String
             },
-            height:{
+            imgHeight:{
                 type:Number
             }
         },
@@ -103,7 +106,6 @@
             return {
                 colors: ['#a3c6ea', '#70a8c4', '#559bcb'],
                 labelColor:["#77C9D4","#57BC90","#015249"],
-
             }
         },
         methods: {

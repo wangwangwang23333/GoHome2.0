@@ -7,10 +7,12 @@
             <!-- <PostCard /> -->
             <!-- 主体瀑布流区域，无限滚动 -->
             <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:100px;">
-                <div class="v-waterfall-content" v-infinite-scroll="getMoreData" infinite-scroll-disabled="disabled"
+                <div class="v-waterfall-content" 
+                v-infinite-scroll="getMoreData" 
+                infinite-scroll-disabled="disabled"
                     infinite-scroll-distance="10" style="overflow:auto" >
                     <div v-for="img in waterfallList" 
-                    :key="img.id" 
+                    :key="img.stayId" 
                     class="v-waterfall-item" 
                     :style="{border:'2px',position:'absolute',left:img.left.toString()+'px',top:img.top.toString()+'px',width:imageWidth.toString()+'px'}" 
                     @click="openDialog(img.postId)">
@@ -26,6 +28,7 @@
                         :userAvatar="img.userAvatar"
                         :postPhotos="img.postPhotos"
                         :postTime="img.postTime"
+                        :imgHeight="img.imgHeight"
                         />
 
                         
@@ -53,14 +56,13 @@ export default {
             //每一列的宽度
             imageWidth: 200,
             //卡片高度
-            cardHeight:100,
-
+            cardHeight:180,
             //多少列
-            waterfallImgCol: 5,
+            waterfallImgCol: 4,
             //右边距
             waterfallImgRight: 50,
             //下边距
-            waterfallImgBottom: 50,
+            waterfallImgBottom: 0,
 
             //存放瀑布流各个列的高度
             waterfallColHeight: [],
@@ -80,6 +82,8 @@ export default {
             
             //随机占位色卡的颜色
             suijicolour: ['#b4ffe3','#66CDAA','#acc2e6','#d7b0d8','#95abe6','#ffc47b','#b6d288','#f49586','#bcaf7a'],
+
+            
         };
     },
     created()
@@ -133,6 +137,7 @@ export default {
         },
         // 获取数据
         getMoreData() {
+            console.log("正在继续加载数据")
             //表单数据
             let param = {
                 pageNo: this.currentPage++,
@@ -140,71 +145,46 @@ export default {
                 orderBy: 'updateTime desc'
             };
 
-            //此处应有查广场默认图片的api
-            // let search = this.$store.state.searchText;
-            // console.log('查询参数：' + search);
-            // if (search.trim().length > 0) {
-            //     param.title = search.trim();
-            // }
-
-            //console.log('查询参数：' + JSON.stringify(param));
-
             if(param.pageNo>10){
                 this.noMore=true;
                 return;
             }
-            // this.$axios.get('/api/pic/query', {
-            //     params: param
-            // }).then(response => {
-            //     // console.log('获取数据', response.data);
-            //     if (response.data.success) {
-            //     if (response.data.data.rows.length == 0) {
-            //         this.noMore = true;
-            //     } else {
-            //         this.imgPreloading(response.data.data.rows);
-            //         this.noMore = false;
-            //     }
-            //     } else {
-            //     this.$message.error(response.data.msg);
-            //     this.noMore = true;
-            //     }
-            // }, response => {
-            //     this.$message.error('错误');
-            //     this.noMore = true;
-            // });
 
 
             let pic=[]
 
-            for(let i=0;i<10;i++)
+            for(let i=0;i<12;i++)
             {
+                // 高度随机为100-360
+                let height = 100 + Math.floor(Math.random()*7)*40
+
                 pic.push({
-                    width: 200,
-                    height: 400,
+                    width: 300,
+                    height: height,
+                    imgHeight:height,
                     id: i,
                     imgUrl:require("@/assets/postimg/"+String(i)+".jpg"),
                     text: "这是第"+i.toString()+"张图片",
                     labels: ['生活','娱乐','萌宠','美食'],
                     postId: 1,
                     postTheme:'这家民宿真的绝绝子',
-                    postContent:'姐妹们，我今天给大家介绍一个很好的民宿。这家民宿特别好的一个地方就是你可以在床旁边的窗户就能看到很多在野外节目才能看到的东西',
+                    postContent:'姐妹们，我今天给大家介绍一个很好的民宿。\
+                    这家民宿特别好的一个地方就是你可以在床旁边的窗户就能看到\
+                    很多在野外节目才能看到的东西',
                     replyCount: 3,
                     likeCount:2014,
                     userAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7%E7%99%BD%E5%90%8D%E5%8D%95.png',
                     postPhotos: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
                     postTime: '2021-11-19T14:16:09.000+00:00',
-                }
-                );
+                });
             }
-            this.noMore=true;
+            this.noMore=false;
             this.imgPreloading(pic);
-            
         },
 
         //图片预加载
         imgPreloading(moreList) {
             //此处应有按照标签筛选帖子
-
             let listLen = this.waterfallList.length;
             for (let i = 0; i < moreList.length; i++) {
 
@@ -213,7 +193,7 @@ export default {
                 //图片渲染列表，先把高宽和占位颜色赋值直接push到waterfallList，图片的实际url等图片加载上了在赋值
                 let imgData = {};
                 imgData.height = this.imageWidth / moreList[i].width * moreList[i].height;
-
+                
                 imgData.id = moreList[i].id;
                 //获取随机占位背景色
                 imgData.colour=this.suijicolour[i%9];
@@ -223,7 +203,7 @@ export default {
                 aImg.onload = (e) => {
                     //console.log("img width height",aImg.width,aImg.height);
                     imgData.width=this.imageWidth;
-                    imgData.height=aImg.height*this.imageWidth/aImg.width;
+                    imgData.height=moreList[i].imgHeight;
                     imgData=this.rankImg(imgData);
                     imgData.src = moreList[i].imgUrl;
                     imgData.text=moreList[i].text;
@@ -237,7 +217,7 @@ export default {
                     imgData.userAvatar = moreList[i].userAvatar
                     imgData.postPhotos = moreList[i].postPhotos
                     imgData.postTime = moreList[i].postTime
-
+                    imgData.imgHeight = moreList[i].imgHeight
                     
                     this.waterfallList.push(imgData);
 
@@ -249,19 +229,17 @@ export default {
         },
         //瀑布流布局核心，计算高度和左偏移
         rankImg(imgData) {
-
             //找出当前最短列的索引
             let minIndex = this.waterfallColHeight.findIndex((value)=>value===Math.min.apply(null, this.waterfallColHeight));
 
-            //console.log("minindex",minIndex);
+            // console.log("minindex",minIndex);
             //获取最短列底部高度，既下一张图片的顶部高度
             imgData.top = this.waterfallColHeight[minIndex];
             //计算左侧偏移，最短列索引*（右边距+列宽度）
             imgData.left = minIndex * (this.waterfallImgRight + this.imageWidth) + this.colLeft;
             //改变当前列高度
-
-            this.waterfallColHeight[minIndex] += imgData.height +this.cardHeight+this.waterfallImgBottom;
-
+            this.waterfallColHeight[minIndex] += 
+            imgData.height +this.cardHeight+this.waterfallImgBottom;
             return imgData;
         },
         //打开图片详情
