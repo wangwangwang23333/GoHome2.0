@@ -70,13 +70,9 @@ export default {
 
     methods:{
         del_button_click(){
-            // this.$parent.delete_stay();
             console.log(this.id);
             this.$emit('deleteStay',this.id);
         },
-        // on_card_clicked(){
-        //     this.$router.push({path:"/StayInfo",query:{stayId:this.id}});
-        // }
         clickStay(){
             this.$router.push({path:"/StayInfo",query:{stayId:this.stay_id}});
         }

@@ -4,12 +4,15 @@
             <el-header>
                 <p>这里应该是搜索框和标签筛选</p>
             </el-header>
+            <PostCard />
             <!-- 主体瀑布流区域，无限滚动 -->
             <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:100px;">
                 <div class="v-waterfall-content" v-infinite-scroll="getMoreData" infinite-scroll-disabled="disabled"
                     infinite-scroll-distance="10" style="overflow:auto" >
                     <div v-for="img in waterfallList" :key="img.id" class="v-waterfall-item" 
                     :style="{border:'2px',position:'absolute',left:img.left.toString()+'px',top:img.top.toString()+'px',width:imageWidth.toString()+'px'}" @click="openDialog(img.id)">
+                        
+
                         <!-- 图片卡片 -->
                         <el-card shadow="hover" :body-style="{'padding':'0px','border-radius':'10px'}" lazy>
                         <!-- 图片懒加载 -->
@@ -41,9 +44,12 @@
 </template>
 
 <script>
-
+import PostCard from "../components/PostCard";
 export default {
     name: 'v-waterfall',
+    components:{
+        PostCard
+    },
     data() {
         return {
             //存放计算好的数据

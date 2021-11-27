@@ -53,7 +53,7 @@
                 
                 
                 <el-tag  :color="labelColor[index]" 
-                v-for="(stayLabel,index) in stayLabels" 
+                v-for="(stayLabel,index) in stayLabels.slice(0,3)" 
                 :key="index" effect="dark" :hit="true" v-if="stayLabels.length>0" >
                 {{stayLabel}}
                 </el-tag>
