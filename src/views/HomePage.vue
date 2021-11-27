@@ -7,6 +7,17 @@
         CardTitle="精品房源"
         CardDescription="高分房源，肆意探索！"
         :cardType="1"
+        style="margin-top: 5%;"
+        >
+
+    </HomeStayCard>
+
+    <!--热销房源-->
+    <HomeStayCard
+       
+        CardTitle="热销房源"
+        CardDescription="爆款房源，速来体验！"
+        :cardType="2"
         >
 
     </HomeStayCard>
@@ -16,7 +27,7 @@
         
         CardTitle="特惠房源"
         CardDescription="低价优质房源等你来挑！"
-        :cardType="2"
+        :cardType="3"
         >
 
     </HomeStayCard>

@@ -19,11 +19,22 @@
              @mouseenter="changeCardStyle($event)"
              @mouseleave="removeCardStyle($event)">
         <!---->
-          <el-image
+          <!-- <el-image
               fit="cover"
               style="width: 100%;height:55%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
               :src="stayInfoList[index].StayPic">
-          </el-image>
+          </el-image> -->
+          <!--走马灯-->
+          <el-carousel trigger="click" height="165px" indicator-position="none">
+            <el-carousel-item v-for="(stayPhoto,index) in stayInfoList[index].StayPic" :key="index">                           
+              <el-image
+              fit="cover"
+              style="width: 100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+              :src="stayPhoto">
+            </el-image>
+          </el-carousel-item>
+          </el-carousel>
+
           <h5 style="font-size:5px;font-weight: revert;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;margin-bottom: 0">
             {{stayInfoList[index].StayType}}
           </h5>
@@ -52,7 +63,7 @@
             <el-col :span="10">
               <el-divider
                   direction="vertical"
-                  style="float: left;margin-right: 0"
+                  style="float: left;margin-right: 0;"
                   class="el-divider--vertical"></el-divider>
               <el-image class="UserAvatar"
                         :src="stayInfoList[index].UserAvatar"
@@ -71,6 +82,8 @@
 
 <script>
 import {GetHighestScoreList} from '@/api/homepage.js'
+import {GetDetailedStay} from '@/api/staysView.js'
+
 export default {
   name:'HomeStayCard',
   components:{
@@ -88,7 +101,7 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
         },
         {
           StayType: '房源类型',
@@ -98,9 +111,8 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-        },
-        {
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
+        },{
           StayType: '房源类型',
           StayName: '房源名称加载中...',
           UserAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/用户白名单.png',
@@ -108,9 +120,8 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-        },
-        {
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
+        },{
           StayType: '房源类型',
           StayName: '房源名称加载中...',
           UserAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/用户白名单.png',
@@ -118,9 +129,8 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-        },
-        {
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
+        },{
           StayType: '房源类型',
           StayName: '房源名称加载中...',
           UserAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/用户白名单.png',
@@ -128,9 +138,8 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-        },
-        {
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
+        },{
           StayType: '房源类型',
           StayName: '房源名称加载中...',
           UserAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/用户白名单.png',
@@ -138,9 +147,8 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-        },
-        {
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
+        },{
           StayType: '房源类型',
           StayName: '房源名称加载中...',
           UserAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/用户白名单.png',
@@ -148,9 +156,8 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-        },
-        {
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
+        },{
           StayType: '房源类型',
           StayName: '房源名称加载中...',
           UserAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/用户白名单.png',
@@ -158,9 +165,11 @@ export default {
           UserId: 11111,
           StayCommentRate: 4.9,
           StayCommentNum:0,
-          StayPic:'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
+          StayPic:['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
         },
-      ]
+      ],
+      stayIdList: [10059,10200,10062,10147,10183,10192,10199,10201],
+      
     }
   },
   props:{
@@ -170,24 +179,40 @@ export default {
   },
   created:function() {
     if (this.cardType == 1){
+      this.getStayInfoFromStayIdList()
       // 评分最高的8个房源
       GetHighestScoreList().then(response=>{
-        let stayList = response.data.stayList
-        for(let i=0;i<stayList.length;++i){
-          // 调用8次
-          
-        }
+        this.stayIdList = response.data.stayList
       })
     }
+
   },
   methods:{
-        changeCardStyle(e){
-          e.currentTarget.className='activeMe';
-        },
-        removeCardStyle(e){
-          e.currentTarget.className='CardType';
-        }
-
+    changeCardStyle(e){
+      e.currentTarget.className='activeMe';
+    },
+    removeCardStyle(e){
+      e.currentTarget.className='CardType';
+    },
+    getStayInfoFromStayIdList(){
+      for(let i = 0;i<8 && i < this.stayIdList.length; ++i){
+        GetDetailedStay(this.stayIdList[i]).then(response=>{
+          console.log(response.data.stayPositionInfo)
+          let stayData = response.data.stayPositionInfo
+          this.stayInfoList[i].StayType = stayData.stayDescribe
+          this.stayInfoList[i].StayName = stayData.stayName
+          this.stayInfoList[i].UserAvatar = stayData.hostAvatar
+          this.stayInfoList[i].StayPrice = stayData.stayPrice
+          this.stayInfoList[i].UserId = 0 //TODO: update it
+          this.stayInfoList[i].StayCommentRate = stayData.stayScore
+          this.stayInfoList[i].StayCommentNum = stayData.stayCommentNum
+          
+          if (stayData.stayPhoto.length != 0){
+            this.stayInfoList[i].StayPic = stayData.stayPhoto
+          }
+        })
+      }
+    },
 
   },
   filters: {
@@ -252,10 +277,14 @@ export default {
   margin-left: 30%;
 }
 
+
+
+
+</style>
+
+<style scoped>
 .el-divider--vertical{
   height: 4em!important;
   width: 1.5px!important;
 }
-
-
 </style>
