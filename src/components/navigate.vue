@@ -61,7 +61,7 @@
 
         </el-menu-item>
         
-        <el-menu-item style="margin-left:10%;">
+        <el-menu-item style="margin-left:5%;">
           <el-divider direction="vertical" >  </el-divider>
         </el-menu-item>
 
@@ -92,6 +92,7 @@
           帮助
 
         </el-menu-item>
+
 
         <!--房东个人信息-->
         <el-submenu index="5" v-if="loginState==2" style="float: right;">
@@ -136,6 +137,23 @@
             <i class="el-icon-remove"></i>
             退出登录</el-menu-item>
         </el-submenu>
+
+        <el-submenu index="6" style="padding-left:0% ;">
+            <template #title>
+                <i class="el-icon-s-comment"></i>
+                论坛
+            </template>
+            <el-menu-item index="6-1" @click="routerToPostSquare">
+                广场
+            </el-menu-item>
+            <el-menu-item index="6-2" @click="routerToPostSearch">
+                搜索
+            </el-menu-item>
+            <el-menu-item index="6-3" @click="routerToMyPost">
+                我的帖子
+            </el-menu-item>
+        </el-submenu>
+
         <el-menu-item  v-if="loginState==0" style="float: right;" >
           <el-link :underline="false" @click="login">登录</el-link>
           <el-dialog  
@@ -257,6 +275,21 @@ export default {
       console.log("进入个人")
       this.$router.replace('/userInfoPage');
     },
+    routerToPostSquare:function ()
+    {
+      console.log("进入论坛广场")
+      this.$router.replace('/postSquare');
+    },
+    routerToPostSearch:function ()
+    {
+      console.log("进入帖子搜索")
+      this.$router.replace('/postSearch');
+    },
+    routerToMyPost:function ()
+    {
+      console.log("进入个人发帖")
+      this.$router.replace('/myPost');
+    },
     // add@Lq
     routerToHostPage:function ()
     {
@@ -287,7 +320,25 @@ export default {
       }
       if(key==='4'){
         this.$router.push({path:'/help'});
+        return;
       }
+      if(key==='6-1')
+      {
+          this.$router.push({path:'/postSquare'});
+          return;
+      }
+      if(key==='6-2')
+      {
+          this.$router.push({path:'/postSearch'});
+          return;
+      }
+      if(key==='6-3')
+      {
+          this.$router.push({path:'/myPost'});
+          return;
+      }
+
+
       if (this.loginState==1){
         if (keyPath[1]==='5-4'){
           console.log('正在退出登录')
@@ -344,7 +395,7 @@ export default {
             
       }
       else{
-        if (key=='5'){
+        if (key==='5'){
           console.log('打开登录界面')
         }
       }

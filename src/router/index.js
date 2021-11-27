@@ -72,6 +72,21 @@ const routes = [
     path: '/hostinfopage',
     name: 'HostInfoPage',
     component: () =>import('../views/HostInfoPage.vue')
+    },
+  {
+    path: '/postSquare',
+    name: 'PostSquare',
+    component: () =>import('../views/PostSquarePage.vue')
+  },
+  {
+    path: '/postSearch',
+    name: 'PostSearch',
+    component: () =>import('../views/PostSearchPage.vue')
+    },
+  {
+    path: '/myPost',
+    name: 'MyPost',
+    component: () =>import('../views/MyPostPage.vue')
   },
   {
     path: '/',
