@@ -1,10 +1,10 @@
 <template>
     <div class="CardType" @mouseenter="changeCardStyle($event)" @mouseleave="removeCardStyle($event)">
         <!--走马灯-->
-        <el-carousel trigger="click" height="150px" indicator-position="none">
-            <el-carousel-item v-for="(stayPhoto,index) in postPhotos" :key="index">
+        <el-carousel trigger="click" :height="'100'+'px'" indicator-position="none">
+            <el-carousel-item v-for="(stayPhoto,index) in [postPhotos]" :key="index">
                 <el-image fit="cover"
-                    style="width: 100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                    style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
                     :src="stayPhoto">
                 </el-image>
             </el-carousel-item>
@@ -39,24 +39,23 @@
             
         </el-row>
         <h5 style="font-size:5px;font-weight: revert;width:90%;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;
-                overflow: hidden; white-space:nowrap;  text-overflow:ellipsis;">
-                    姐妹们，我今天给大家介绍一个很好的民宿。这家民宿特别好的一个地方
-                    就是你可以在床旁边的窗户就能看到很多在野外节目才能看到的东西
+                overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                    {{postContent}}
                 </h5>
                 
         <h5 style="margin-top: 0;margin-bottom:5px;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
             <el-row>
                 <!--评论数 点赞数-->
-            <el-col :span="6">
+            <el-col :span="5">
                 <i class="el-icon-chat-line-square"></i>
                 {{replyCount}}
             </el-col>
             
-            <el-col :span="6">
+            <el-col :span="5">
                 <i class="el-icon-thumb"></i>
                 {{likeCount}}
             </el-col>
-            <el-col :span="12">
+            <el-col :span="14">
                 <i class="el-icon-time"></i>
                 {{postTime.replace('T',' ').substring(0,16)}}
             </el-col>
@@ -68,18 +67,43 @@
 <script>
     export default {
         name: 'PostCard',
+        props:{
+            labels:{
+                type:Array,
+            },
+            postId:{
+                type:Number,
+            },
+            postTheme:{
+                type:String,
+            },
+            postContent:{
+                type:String
+            },
+            replyCount:{
+                type:Number,
+            },
+            likeCount:{
+                type:Number,
+            },
+            userAvatar:{
+                type:String
+            },
+            postPhotos:{
+                type:String
+            },
+            postTime:{
+                type:String
+            },
+            height:{
+                type:Number
+            }
+        },
         data() {
             return {
                 colors: ['#a3c6ea', '#70a8c4', '#559bcb'],
-                labels: ['生活','娱乐','萌宠','美食'],
-                postId: 1,
-                postTheme:'这家民宿真的绝绝子',
-                replyCount: 3,
-                likeCount:201,
-                userAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7%E7%99%BD%E5%90%8D%E5%8D%95.png',
-                postPhotos: ['https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png'],
                 labelColor:["#77C9D4","#57BC90","#015249"],
-                postTime: '2021-11-19T14:16:09.000+00:00',
+
             }
         },
         methods: {

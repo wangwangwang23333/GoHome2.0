@@ -4,35 +4,31 @@
             <el-header>
                 <p>这里应该是搜索框和标签筛选</p>
             </el-header>
-            <PostCard />
+            <!-- <PostCard /> -->
             <!-- 主体瀑布流区域，无限滚动 -->
             <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:100px;">
                 <div class="v-waterfall-content" v-infinite-scroll="getMoreData" infinite-scroll-disabled="disabled"
                     infinite-scroll-distance="10" style="overflow:auto" >
-                    <div v-for="img in waterfallList" :key="img.id" class="v-waterfall-item" 
-                    :style="{border:'2px',position:'absolute',left:img.left.toString()+'px',top:img.top.toString()+'px',width:imageWidth.toString()+'px'}" @click="openDialog(img.id)">
+                    <div v-for="img in waterfallList" 
+                    :key="img.id" 
+                    class="v-waterfall-item" 
+                    :style="{border:'2px',position:'absolute',left:img.left.toString()+'px',top:img.top.toString()+'px',width:imageWidth.toString()+'px'}" 
+                    @click="openDialog(img.postId)">
+            
+                        <!-- 帖子卡片-->
+                        <PostCard
+                        :labels="img.labels"
+                        :postId="img.postId"
+                        :postTheme="img.postTheme"
+                        :postContent="img.postContent"
+                        :replyCount="img.replyCount"
+                        :likeCount="img.likeCount"
+                        :userAvatar="img.userAvatar"
+                        :postPhotos="img.postPhotos"
+                        :postTime="img.postTime"
+                        />
+
                         
-
-                        <!-- 图片卡片 -->
-                        <el-card shadow="hover" :body-style="{'padding':'0px','border-radius':'10px'}" lazy>
-                        <!-- 图片懒加载 -->
-                            <el-image :src='img.src' class='image' :key='img.src' >
-                                <!-- 加载前占位 -->
-                                <div slot="placeholder" class="image-slot">
-                                    <div :style="{width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
-                                </div>
-                                <!-- 加载失败占位 -->
-                                <div slot="error" class="image-slot">
-                                    <div :style="{height:img.height.toString()+'px',width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
-                                </div>
-                            </el-image>
-
-                            <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" :style="{height:cardHeight.toString()+'px'}">
-                                <p>{{img.text}}</p>
-
-                                
-                            </el-card>
-                        </el-card>
                     </div>
                 </div>
             </div>
@@ -62,9 +58,9 @@ export default {
             //多少列
             waterfallImgCol: 5,
             //右边距
-            waterfallImgRight: 30,
+            waterfallImgRight: 50,
             //下边距
-            waterfallImgBottom: 30,
+            waterfallImgBottom: 50,
 
             //存放瀑布流各个列的高度
             waterfallColHeight: [],
@@ -128,7 +124,6 @@ export default {
         //搜索，从其他组件传值放到$store中的
         search() {
             //点击查询重置页数和瀑布流每列高度
-
             this.currentPage = 1;
             for (let i = 0; i < this.waterfallColHeight.length; i++) {
                 this.waterfallColHeight[i] = 0;
@@ -188,7 +183,16 @@ export default {
                     height: 400,
                     id: i,
                     imgUrl:require("@/assets/postimg/"+String(i)+".jpg"),
-                    text: "这是第"+i.toString()+"张图片"
+                    text: "这是第"+i.toString()+"张图片",
+                    labels: ['生活','娱乐','萌宠','美食'],
+                    postId: 1,
+                    postTheme:'这家民宿真的绝绝子',
+                    postContent:'姐妹们，我今天给大家介绍一个很好的民宿。这家民宿特别好的一个地方就是你可以在床旁边的窗户就能看到很多在野外节目才能看到的东西',
+                    replyCount: 3,
+                    likeCount:2014,
+                    userAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7%E7%99%BD%E5%90%8D%E5%8D%95.png',
+                    postPhotos: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
+                    postTime: '2021-11-19T14:16:09.000+00:00',
                 }
                 );
             }
@@ -199,8 +203,6 @@ export default {
 
         //图片预加载
         imgPreloading(moreList) {
-
-
             //此处应有按照标签筛选帖子
 
             let listLen = this.waterfallList.length;
@@ -225,16 +227,24 @@ export default {
                     imgData=this.rankImg(imgData);
                     imgData.src = moreList[i].imgUrl;
                     imgData.text=moreList[i].text;
+
+                    imgData.labels = moreList[i].labels
+                    imgData.postId = moreList[i].postId
+                    imgData.postTheme = moreList[i].postTheme
+                    imgData.postContent = moreList[i].postContent
+                    imgData.replyCount = moreList[i].replyCount
+                    imgData.likeCount = moreList[i].likeCount
+                    imgData.userAvatar = moreList[i].userAvatar
+                    imgData.postPhotos = moreList[i].postPhotos
+                    imgData.postTime = moreList[i].postTime
+
                     
                     this.waterfallList.push(imgData);
 
                     //console.log("pic top left",imgData.id,imgData.top,imgData.left);
                 };
                 
-                
-                
-
-                
+       
             }
         },
         //瀑布流布局核心，计算高度和左偏移
@@ -267,6 +277,26 @@ export default {
     }
 };
 
+// <!-- 图片卡片 -->
+// <el-card shadow="hover" :body-style="{'padding':'0px','border-radius':'10px'}" lazy>
+//     <!-- 图片懒加载 -->
+//         <el-image :src='img.src' class='image' :key='img.src' >
+//             <!-- 加载前占位 -->
+//             <div slot="placeholder" class="image-slot">
+//                 <div :style="{width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
+//             </div>
+//             <!-- 加载失败占位 -->
+//             <div slot="error" class="image-slot">
+//                 <div :style="{height:img.height.toString()+'px',width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
+//             </div>
+//         </el-image>
+
+//         <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" :style="{height:cardHeight.toString()+'px'}">
+//             <p>{{img.text}}</p>
+
+            
+//         </el-card>
+//     </el-card>
 
 
 </script>
