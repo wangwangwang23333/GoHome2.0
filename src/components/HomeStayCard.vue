@@ -203,7 +203,7 @@ export default {
           this.stayInfoList[i].StayName = stayData.stayName
           this.stayInfoList[i].UserAvatar = stayData.hostAvatar
           this.stayInfoList[i].StayPrice = stayData.stayPrice
-          this.stayInfoList[i].UserId = 0 //TODO: update it
+          this.stayInfoList[i].UserId = stayData.hostId
           this.stayInfoList[i].StayCommentRate = stayData.stayScore
           this.stayInfoList[i].StayCommentNum = stayData.stayCommentNum
           

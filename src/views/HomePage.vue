@@ -1,6 +1,10 @@
 <template>
   <div class="newHome">
     <HomeBlock></HomeBlock>
+
+    <!--当前定位-->
+    
+
     <!--精品房源-->
     <HomeStayCard
        

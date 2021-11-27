@@ -6,31 +6,33 @@
           @mouseenter="removeActiveClasses()"
       style="background-image:url('https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/a.gif') ">
         <h3
-            style="bottom: 90%;font-size:2vw;font-family: 'PingFang SC'">Explore The Home you want!</h3>
+            style="bottom: 90%;font-size:2vw;font-family: 'PingFang SC'">
+            探索你想要的归宿！
+          </h3>
       </div>
       <div
           class="panel"
           @mouseenter="removeActiveClasses()"
           style="background-image: url('https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/mixkit-woman-lying-on-a-couch-looking-at-her-mobile-phone-65-original.png')">
-        <h3>Live like at Home</h3>
+        <h3>像在家中一样悠闲  </h3>
       </div>
       <div
           class="panel"
           @mouseenter="removeActiveClasses()"
           style="background-image: url('https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/mixkit-person-cooking-on-a-stovetop-in-the-kitchen-11-original.png')">
-        <h3>Cook at the homestay!</h3>
+        <h3>在民宿中体验烹饪的快乐</h3>
       </div>
       <div
           class="panel"
           @mouseenter="removeActiveClasses()"
           style="background-image: url('https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/mixkit-man-sitting-in-front-of-a-fire-reading-from-a-66-original.png')">
-        <h3>Enjoy the comfort at home!</h3>
+        <h3>享受特别的舒适感</h3>
       </div>
       <div
           class="panel"
           @mouseenter="removeActiveClasses()"
           style="background-image: url('https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/mixkit-person-reading-a-book-while-wrapped-in-warm-blankets-with-75-original.png')">
-        <h3>Enjoy the Warmth at GoHome</h3>
+        <h3>享受归宿的温暖</h3>
       </div>
     </div>
 
