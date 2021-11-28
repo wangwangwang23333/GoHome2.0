@@ -4,6 +4,9 @@
             <el-header>
                 <p>这里应该是搜索框和标签筛选</p>
             </el-header>
+
+            <!--此处仍然是词云图-->
+
             <!-- <PostCard /> -->
             <!-- 主体瀑布流区域，无限滚动 -->
             <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:100px;">
