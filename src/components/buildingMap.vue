@@ -7,7 +7,7 @@
       mapStyle="fresh" 
       :plugin="plugins"
       animateEnable = "true" 
-
+      :zooms="[10,15]"
       :events="mapEvents">
       <div v-for="(marker,index) in markerGroups" :key="marker.stayID">
        <el-amap-marker :extData="index" :position="marker.stayPosition" :label="marker.label" 
