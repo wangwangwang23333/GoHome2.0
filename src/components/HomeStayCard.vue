@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import {GetHighestScoreList} from '@/api/homepage.js'
+import {GetHighestScoreList,GetHottestList,GetCheapestList} from '@/api/homepage.js'
 import {GetDetailedStay} from '@/api/staysView.js'
 
 export default {
@@ -179,12 +179,27 @@ export default {
   },
   created:function() {
     if (this.cardType == 1){
-      this.getStayInfoFromStayIdList()
       // 评分最高的8个房源
       GetHighestScoreList().then(response=>{
         this.stayIdList = response.data.stayList
+        this.getStayInfoFromStayIdList()
       })
     }
+    else if (this.cardType == 2){
+      // 订单数最多的8个房源
+      GetHottestList().then(response=>{
+        this.stayIdList = response.data.stayList
+        this.getStayInfoFromStayIdList()
+      })
+    }
+    else if (this.cardType == 3){
+      // 价格最便宜的8个房源
+      GetCheapestList().then(response=>{
+        this.stayIdList = response.data.stayList
+        this.getStayInfoFromStayIdList()
+      })
+    }
+
 
   },
   methods:{
