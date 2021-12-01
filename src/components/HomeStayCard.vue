@@ -17,7 +17,8 @@
         <!--房源卡片-->
         <div class="CardType"
              @mouseenter="changeCardStyle($event)"
-             @mouseleave="removeCardStyle($event)">
+             @mouseleave="removeCardStyle($event)"
+             @click="clickCard(index)">
         <!---->
           <!-- <el-image
               fit="cover"
@@ -29,7 +30,7 @@
             <el-carousel-item v-for="(stayPhoto,index) in stayInfoList[index].StayPic" :key="index">                           
               <el-image
               fit="cover"
-              style="width: 100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+              style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
               :src="stayPhoto">
             </el-image>
           </el-carousel-item>
@@ -81,7 +82,7 @@
 </template>
 
 <script>
-import {GetHighestScoreList} from '@/api/homepage.js'
+import {GetHighestScoreList,GetHottestList,GetCheapestList} from '@/api/homepage.js'
 import {GetDetailedStay} from '@/api/staysView.js'
 
 export default {
@@ -179,12 +180,27 @@ export default {
   },
   created:function() {
     if (this.cardType == 1){
-      this.getStayInfoFromStayIdList()
       // 评分最高的8个房源
       GetHighestScoreList().then(response=>{
         this.stayIdList = response.data.stayList
+        this.getStayInfoFromStayIdList()
       })
     }
+    else if (this.cardType == 2){
+      // 订单数最多的8个房源
+      GetHottestList().then(response=>{
+        this.stayIdList = response.data.stayList
+        this.getStayInfoFromStayIdList()
+      })
+    }
+    else if (this.cardType == 3){
+      // 价格最便宜的8个房源
+      GetCheapestList().then(response=>{
+        this.stayIdList = response.data.stayList
+        this.getStayInfoFromStayIdList()
+      })
+    }
+
 
   },
   methods:{
@@ -214,6 +230,10 @@ export default {
       }
     },
 
+    clickCard(index){
+      console.log(this.stayIdList[index])
+      this.$router.push({path:"/StayInfo",query:{stayId:this.stayIdList[index]}});
+    }
   },
   filters: {
     ellipsis(value) {

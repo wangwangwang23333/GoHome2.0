@@ -36,6 +36,17 @@
 
     </HomeStayCard>
 
+    <h1 style="text-align: center;margin-bottom: 0">
+      <i class="el-icon-chat-line-round"></i>
+      论坛
+     
+    </h1>
+   
+    <el-divider >
+      <div style="color:#bebaba;">从点击你感兴趣的一个话题开始吧！</div>
+      </el-divider>
+      
+
     <!--词云图-->
     <wordcloud
       :data="defaultWords"
@@ -49,6 +60,10 @@
     
     <!--瀑布流-->
 
+    <h4 style="text-align: center;color:#bebaba;font-weight: normal;margin-top: 10vh;">
+      无限精彩，等着你的到来......
+     </h4>
+     
   </div>
 </template>
 

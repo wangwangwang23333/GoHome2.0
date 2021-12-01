@@ -8,14 +8,15 @@ axios.defaults.withCredentials = true
 
 // create an axios instance
 const service = axios.create({
-    // baseURL:'https://api.guisu.fun:6001/api/',
-    baseURL: 'http://localhost:8080/api',
-    //   baseURL:'',
-    // withCredentials: true, // send cookies when cross-domain requests
-    timeout: 50000, // request timeout
-    //withCredentials: true
-    async: true,
-    crossDomain: true,
+
+  // baseURL:'https://api.guisu.fun:6001/api/',
+  baseURL: 'http://localhost:8080/api',
+  // withCredentials: true, // send cookies when cross-domain requests
+  timeout: 50000, // request timeout
+  //withCredentials: true
+  async:true,
+  crossDomain:true,
+
 })
 
 // request interceptor

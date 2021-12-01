@@ -1,8 +1,14 @@
 <template>
   <div class="amap-page-container">
     <div class="amap-wrapper">
-      <el-amap vid="ABuildingMap" ref="ABuildingMap" :center="centerPosition" mapStyle="fresh" :plugin="plugins"
-      animateEnable = "true" :events="mapEvents">
+      <el-amap vid="ABuildingMap" 
+      ref="ABuildingMap" 
+      :center="centerPosition" 
+      mapStyle="fresh" 
+      :plugin="plugins"
+      animateEnable = "true" 
+      :zooms="[10,15]"
+      :events="mapEvents">
       <div v-for="(marker,index) in markerGroups" :key="marker.stayID">
        <el-amap-marker :extData="index" :position="marker.stayPosition" :label="marker.label" 
        icon="https://z3.ax1x.com/2021/07/04/Rf6PFx.png" :events="markerEvents">
@@ -59,7 +65,8 @@ export default {
       const self = this;
       return {
         hearts:[
-                'https://z3.ax1x.com/2021/07/11/W9W78g.png','https://z3.ax1x.com/2021/07/11/W9WH2Q.png'
+                'https://z3.ax1x.com/2021/07/11/W9W78g.png',
+                'https://z3.ax1x.com/2021/07/11/W9WH2Q.png'
             ],
         //地图属性变量;       
         plugins:[                          //地图复用的插件
@@ -79,7 +86,11 @@ export default {
           dragend(){
             self.updateMarkerGroups(1);
             
-          }
+          },
+          complete(){
+            console.log("地图组件加载完毕")
+            self.mapLoadFinish=true
+          },
         },      
         //表示当前地图范围内获得的点信息.
         markerGroups:[],
@@ -91,11 +102,13 @@ export default {
         curHostAvatar:"",
         curStayScore:0,
         isLike:false,
+        mapLoadFinish:false,
         //地图上点的事件合集;
         markerEvents:{
           click(e){
             let curMarker=e.target;
-            let MarkerID=curMarker.Ce.extData;
+            console.log("点击的点为",curMarker)
+            let MarkerID=curMarker.De.extData;
             self.curStayID=self.markerGroups[MarkerID].stayID;
 
             if(self.markerGroups[MarkerID].window==true){
@@ -123,6 +136,7 @@ export default {
       clickStay(){
         this.$router.push({path:"/StayInfo",query:{stayId:this.curStayID}});
       },
+ 
       getMapCeAndBo(value){
         //获得当前地图的中心点与边界点，然后调用API得到相应范围内的房屋然后Marker
         //
@@ -208,7 +222,19 @@ export default {
       centerPosition(val,odlVal){
         console.log("val",val);
         console.log("updateMarker",this.markerGroups)
-        this.updateMarkerGroups(0);
+        //this.updateMarkerGroups(0);
+        var func=(()=>{ 
+          console.log("看一看这个变量：",this.mapLoadFinish)
+          if(this.mapLoadFinish){
+            
+            console.log("导入地图点")
+            this.updateMarkerGroups(0)
+          }
+          else{
+            setTimeout(func, 500)
+          }
+        })
+        setTimeout(func, 500);
         
       }
     }, 

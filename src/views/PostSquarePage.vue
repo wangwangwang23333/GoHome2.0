@@ -1,12 +1,22 @@
 <template>
     <div>
+        <!--此处仍然是词云图-->
+        <wordcloud :data="defaultWords" nameKey="标签" valueKey="热度" :color="cloudColors" :showTooltip="true"
+            :wordClick="wordClickHandler" style="width: 90vw;">
+        </wordcloud>
+        <el-divider>
+            <div style="color:#bebaba;">从点击你感兴趣的一个话题开始吧！</div>
+        </el-divider>
         <el-container id="index">
-            <el-header>
+            <!-- <el-header>
                 <p>这里应该是搜索框和标签筛选</p>
             </el-header>
+
+             -->
+
             <!-- <PostCard /> -->
             <!-- 主体瀑布流区域，无限滚动 -->
-            <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:100px;">
+            <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:50px;">
                 <div class="v-waterfall-content" 
                 v-infinite-scroll="getMoreData" 
                 infinite-scroll-disabled="disabled"
@@ -35,7 +45,19 @@
                     </div>
                 </div>
             </div>
+            <el-button
+            style="position: fixed;border-radius: 100%;height: 10vh;
+            right: 5vw;bottom: 12vh;"
+            plain
+            @click="getMoreData()"
+            >More</el-button>
+            <el-button
+            style="position: fixed;border-radius: 100%;height: 9vh;
+            right: 5vw;bottom: 1vh;"
+            @click="backToTop()"
+            >Top</el-button>
         </el-container>
+        
     </div>
 
 
@@ -44,10 +66,12 @@
 
 <script>
 import PostCard from "../components/PostCard";
+import wordcloud from 'vue-wordcloud'
 export default {
     name: 'v-waterfall',
     components:{
-        PostCard
+        PostCard,
+        wordcloud
     },
     data() {
         return {
@@ -82,12 +106,62 @@ export default {
             
             //随机占位色卡的颜色
             suijicolour: ['#b4ffe3','#66CDAA','#acc2e6','#d7b0d8','#95abe6','#ffc47b','#b6d288','#f49586','#bcaf7a'],
-
+            
+            //词云图
+            cloudColors: ['#1f77b4', '#629fc9', '#94bedb',
+            '#c9e0ef', "#77C9D4", "#57BC90", "#015249",
+            '#409EFF', '#909399', '#F56C6C', '#E6A23C',
+            '#67C23A'],
+            defaultWords: [{
+                "标签": "萌宠",
+                "热度": 26
+                },
+                {
+                "标签": "生活",
+                "热度": 19
+                },
+                {
+                "标签": "美食",
+                "热度": 18
+                },
+                {
+                "标签": "电影",
+                "热度": 16
+                },
+                {
+                "标签": "交通",
+                "热度": 15
+                },
+                {
+                "标签": "民宿",
+                "热度": 9
+                },
+                {
+                "标签": "特价",
+                "热度": 9
+                },
+                {
+                "标签": "曝光",
+                "热度": 9
+                },
+                {
+                "标签": "可行",
+                "热度": 6
+                }
+            ]
             
         };
     },
     created()
     {
+        // 词云图
+        for(let i=1;i<=100;++i){
+            this.defaultWords.push({
+                "标签": "萌宠",
+                "热度": i
+                })
+            }
+
         //计算可视区域能够容纳的最大列数,向下取整
         let fullWidth = document.body.clientWidth;
         if (fullWidth > 1500) 
@@ -144,16 +218,15 @@ export default {
                 pageSize: 10,
                 orderBy: 'updateTime desc'
             };
-
+            console.log("当前页码",param.pageNo)
             if(param.pageNo>10){
-                this.noMore=true;
+                this.noMore=false;
                 return;
             }
 
-
             let pic=[]
 
-            for(let i=0;i<12;i++)
+            for(let i=0;i<18;i++)
             {
                 // 高度随机为100-360
                 let height = 100 + Math.floor(Math.random()*7)*40
@@ -245,7 +318,17 @@ export default {
         //打开图片详情
         openDialog(imgID)
         {
+            console.log("跳转到帖子",imgID)
             console.log("click id left top",this.waterfallList[imgID].id,this.waterfallList[imgID].left,this.waterfallList[imgID].top)
+        },
+        wordClickHandler(name, 热度, vm) {
+            console.log('wordClickHandler', name, 热度, vm);
+        },
+        backToTop(){
+            window.scrollTo({
+                top:0,
+                behavior:'smooth'
+            });
         }
     },
     computed: {

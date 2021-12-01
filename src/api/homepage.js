@@ -21,14 +21,14 @@ export function GetHighestScoreList() {
 
 export function GetCheapestList() {
     return request({
-      url: 'Stay/getStayByPrice',
+      url: '/v1/statistics/stay/price',
       method: 'get',
     })
 }
 
 export function GetHottestList() {
     return request({
-      url: '/Stay/getStayByHot',
+      url: '/v1/statistics/stay/order',
       method: 'get',
     })
 }

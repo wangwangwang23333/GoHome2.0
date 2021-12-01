@@ -21,7 +21,7 @@
         <div v-loading="!dataReady">
           <el-carousel-item v-for="(item,index) of data.stayImages" :key="index">
           <!--        <h5 class="medium">{{ item }}</h5>-->
-          <el-image :src="item" :alt="item" height="300px" fit="contain" />
+          <el-image :src="item" :alt="item" style="width: 100%;height:80%;" fit="cover" />
           </el-carousel-item> 
         </div>  
       </el-carousel>
@@ -73,6 +73,10 @@
           <div>
             <location id="location" v-if="data.stayPosition" :centerPosition="data.stayPosition"></location>
           </div>
+
+          <div>
+            <advertisement></advertisement>
+          </div>
         </div>
 
       </div>
@@ -97,6 +101,7 @@ import detail from '@/components/StayInfo/detail.vue'
 import rooms from '@/components/StayInfo/rooms.vue'
 import comments from '@/components/StayInfo/comments.vue'
 import location from '@/components/StayInfo/location.vue'
+import advertisement from '@/components/StayInfo/advertisement.vue'
 import CollectionDialog from '@/components/collectionDialog.vue'
 // import html2canvas from "html2canvas";
 import {getStayDetails} from '@/api/stay.js'
@@ -112,6 +117,7 @@ export default {
     comments,
     location,
     CollectionDialog,
+    advertisement
   },
   created() {
     
