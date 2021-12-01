@@ -13,7 +13,18 @@
       </div>
     <div>
       <!--广告-->
-      这里是广告
+      <el-carousel trigger="click" height="400px" indicator-position="none">
+        <el-carousel-item v-for="(advertise,index) in advertiseInfo" :key="index">                           
+          <el-image
+          fit="cover"
+          style="width: 100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+          cursor: pointer;"
+          :src="advertise.image"
+          @click="clickAvertise(advertise)"
+          >
+        </el-image>
+      </el-carousel-item>
+      </el-carousel>
     </div>
     
     
@@ -32,12 +43,34 @@ export default {
   },
   data() {
     return{
-      
+      advertiseInfo:[
+        {
+          image:'https://tongjigohome.oss-cn-shanghai.aliyuncs.com/advertisement/1.png',
+          url:'https://www.snowbeer.com.cn/'
+        },{
+          image:'https://tongjigohome.oss-cn-shanghai.aliyuncs.com/advertisement/2.png',
+          url:'http://www.jiangzhongshiliao.com/'
+        },{
+          image:'https://tongjigohome.oss-cn-shanghai.aliyuncs.com/advertisement/3.jpg',
+          url:'https://www.tongji.edu.cn/'
+        },{
+          image:'https://tongjigohome.oss-cn-shanghai.aliyuncs.com/advertisement/4.png',
+          url:'http://www.naige.net/'
+        },
+      ]
     }
   },
   props:{
     
   },
+
+  methods:{
+    clickAvertise(advertise){
+      //TODO: 获取新的礼券
+      
+      window.open(advertise.url, "_blank");
+    }
+  }
   
 }
 </script>

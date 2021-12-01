@@ -21,7 +21,7 @@
         <div v-loading="!dataReady">
           <el-carousel-item v-for="(item,index) of data.stayImages" :key="index">
           <!--        <h5 class="medium">{{ item }}</h5>-->
-          <el-image :src="item" :alt="item" height="300px" fit="contain" />
+          <el-image :src="item" :alt="item" style="width: 100%;height:80%;" fit="cover" />
           </el-carousel-item> 
         </div>  
       </el-carousel>
