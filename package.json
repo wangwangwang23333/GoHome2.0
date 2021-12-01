@@ -9,7 +9,7 @@
     "dependencies": {
         "@amap/amap-vue": "^2.0.13",
         "animate.css": "^4.1.1",
-        "axios": "^0.21.1",
+        "axios": "^0.21.4",
         "core-js": "^3.6.5",
         "echarts": "^4.9.0",
         "element-china-area-data": "^5.0.2",
