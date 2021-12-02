@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <div >
     <!--特惠房源板块-->
     <h2 style="text-align: left;padding-left: 8vw;margin-bottom: 0">
       {{CardTitle}}
@@ -10,7 +11,7 @@
     <el-divider style="width: 80%!important;">
 
     </el-divider>
-      <div style="width: 85%;height: 100vh;margin:0 auto"
+      <div style="width: 85%;margin:0 auto"
         class="containerFlex">
       <!--使用flex布局-->
       <div class="CardContainer" v-for="(item,index) in stayInfoList" >
@@ -73,10 +74,12 @@
               </el-image>
             </el-col>
           </el-row>
+
         </div>
       </div>
+        <div class="clear"></div>
       </div>
-
+    </div>
 
   </div>
 </template>
@@ -296,6 +299,7 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   margin-left: 30%;
 }
+
 
 
 
