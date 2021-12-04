@@ -35,6 +35,8 @@ import HostInfoBlock from "../components/HostInfoBlock";
 import HostInfoMessage from "../components/HostInfoMessage";
 import {getHostPageInfo, updateHostNickName} from "../api/host";
 import {getCustomerInfo, uploadBasicInfo} from "../api/customerInfo";
+import {getHostStayInfo} from "../api/stay";
+
 export default {
   name: "HostInfoPage",
   components: {HostInfoBlock,
@@ -68,14 +70,8 @@ export default {
       this.hostScore=response.data.hostScore;
       this.hostSex=response.data.hostSex;
       this.AuthenticationTag=response.data.authenticationTag==true?1:0;
-      this.pendingReviewNum=response.data.pendingReviewNum;
-      this.pendingStayInfo=response.data.pendingStayInfo;
       this.PhoneTag=response.data.phoneTag==true?1:0;
-      this.publishedHouseInfo=response.data.publishedHouseInfo;
-      this.unpublishedStayInfo=response.data.unpublishedStayInfo;
-      this.publishedNum=response.data.publishedNum;
       this.reviewNum=response.data.reviewNum;
-      this.unpublishedNum=response.data.unpublishedNum;
       this.hostLevelName=response.data.hostLevelName;
       console.log("待发布的房源",this.unpublishedNum);
       loading.close();
@@ -88,6 +84,24 @@ export default {
       return;
     })
 
+    getHostStayInfo().then(response=>{
+      //console.log(response)
+      //获取相应的房东数据
+      this.pendingReviewNum=response.data.pendingReviewNum;
+      this.pendingStayInfo=response.data.pendingStayInfo;
+      this.publishedHouseInfo=response.data.publishedHouseInfo;
+      this.unpublishedStayInfo=response.data.unpublishedStayInfo;
+      this.publishedNum=response.data.publishedNum;
+      this.unpublishedNum=response.data.unpublishedNum;
+      loading.close();
+
+    }).catch((error)=>{
+      this.$message({
+        message:error,
+        type:'warning'
+      });
+      return;
+    })
   },
   methods:
   {
