@@ -123,9 +123,9 @@ export default {
     
     let stayId = this.$route.query.stayId;
     this.stayId = stayId;
-    let params = {"stayId": stayId};
 
-    getStayDetails(params)
+
+    getStayDetails(stayId)
       .then((response)=>{
         // 房源不存在
         if(response.data.stayId == null){
