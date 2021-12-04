@@ -73,15 +73,14 @@ export function getHostPageInfo(data){
 
 export function updateHostNickName(data) {
     /*
-    房东更改昵称
-    */
-
-    let param = new URLSearchParams(data)
+    房东修改昵称
+     */
+    console.log("房东昵称",data)
 
     return request({
-        url: '/Host/hostNickName',
+        url: '/v1/personinfo/host/nickName',
         method: 'put',
-        data:param
+        data:data
     })
 }
 
@@ -91,21 +90,20 @@ export function updateHostAvatar(data) {
     房东更改昵称
     */
 
-    let param = new URLSearchParams(data)
-
     return request({
-        url: '/Host/hostAvatar',
+        url: '/v1/personinfo/host/avatar',
         method: 'put',
-        data:param
+        data:data
     })
 }
 
 export function DeleteStay(data) {
-    console.log("进入删除房源的调用")
+    console.log("进入删除房源的调用",data)
+    data = data.toLong
     return request({
-        url: '/Stay/delStayById',
+        url: '/v1/stay',
         method: 'delete',
-        params:{stayId:data}
+        data:data
     })
 }
 

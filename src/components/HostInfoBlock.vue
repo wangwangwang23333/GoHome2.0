@@ -171,7 +171,7 @@ export default {
       let newimg=this.new_img;
       this.$emit("UpdateAvatar",newimg);
       let param= {
-        hostAvatar:this.new_img
+        base64Data:this.new_img
       };
       updateHostAvatar(param).then(response=>{
         this.loading=false;
