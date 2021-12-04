@@ -1,17 +1,22 @@
 <template>
   <div id="app">
     <navigate />
+    <!--
     <router-view
     style="padding-top: 60px;"
     />
+    -->
+    <HostInfoPage></HostInfoPage>
   </div>
 </template>
 
 <script>
 import navigate from '@/components/navigate.vue';
+import HostInfoPage from "@/views/HostInfoPage";
 export default {
   name: 'App',
   components: {
+    HostInfoPage,
     navigate
   }
 }
