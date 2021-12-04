@@ -3,46 +3,64 @@ import request from '@/utils/request'
 
 export function GetHostOrderInfo() {
     return request({
-        url: '/order/HostOrderInfo',
+        url: '/v1/orders/host',
         method: 'get'
     })
 }
 
-export function GetCustomerOrderInfo() {
+export function GetCustomerOrderInfo(currentPage, pageSize) {
     return request({
-        url: '/order/CustomerOrderInfo',
-        method: 'get'
+        url: '/v1/orders/customer',
+        method: 'get',
+        params: {currentPage: currentPage, pageSize: pageSize}
+    })
+}
+export function GetCustomerOrderInfoByStatus(currentPage, pageSize, orderStatus){
+    return request({
+        url: '/v1/orders/customer',
+        method: 'get',
+        params: {currentPage:currentPage,pageSize:pageSize,orderStatus:orderStatus}
     })
 }
 
-export function AddCustomerComment(data1,data2,data3) {
-    let param=new URLSearchParams({orderId:data1,commentStars:data2,commentText:data3})
+export function AddCustomerComment(orderId, commentScore, commentContent) {
     return request({
-        url: '/order/addCustomerComment',
+        url: '/v1/order/comment/customer',
         method: 'post',
-        data: param
+        data: {orderId: orderId, commentScore: commentScore,
+            commentContent: commentContent},
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 }
 
-export function AddHostComment(data1,data2,data3) {
-    let param=new URLSearchParams({orderId:data1,commentStars:data2,commentText:data3})
+export function AddHostComment(orderId, commentScore, commentContent) {
+
     return request({
-        url: '/order/addHostComment',
+        url: '/v1/order/comment/host',
         method: 'post',
-        data: param
+        data: {orderId: orderId, commentScore: commentScore,
+            commentContent: commentContent},
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 }
 
-export function ReportCustomerOrder(data1,data2) {
-    let param=new URLSearchParams({orderId:data1,reportReason:data2})
+export function ReportCustomerOrder(orderId, reportReason) {
+
     return request({
-        url: '/order/reportCustomerOrder',
+        url: '/v1/order/report',
         method: 'post',
-        data: param
+        data: {orderId: orderId, reportReason: reportReason},
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 }
 
-export function addOrder(data){
+export function addOrder(data) {
     let param = new URLSearchParams(data);
     return request({
         url: '/order/addOrder',
