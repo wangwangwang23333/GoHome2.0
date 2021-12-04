@@ -203,9 +203,9 @@ created() {
     {
       this.user_img=this.new_img;
       let param= {
-        avatarCode:this.new_img
+        base64Data:this.new_img.toString()
       };
-      console.log('参数为',param.avatarCode)
+      console.log('参数为',param.base64Data)
       uploadAvatar(param).then(response=>{
  
         //刷新

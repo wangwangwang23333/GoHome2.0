@@ -3,7 +3,7 @@
 */
 import request from '@/utils/request'
 
-export function getCustomerInfo(data) {
+export function getCustomerInfo() {
     /*
     检验顾客账号是否存在
     */
@@ -11,29 +11,27 @@ export function getCustomerInfo(data) {
     //一定要用这个格式
 
     return request({
-        url: '/customer/details',
+        url: '/v1/personinfo/customer/details',
         method: 'get',
-        params:data
     })
 }
 
 export function  uploadAvatar(data){
-    let param = new URLSearchParams(data)
-
     return request({
-        url:'/customer/avatar',
+        url:'/v1/personinfo/customer/avatar',
         method:'put',
-        data:param
+        data:data
     })
 
 }
 
 export function uploadBasicInfo(data)
 {
-    let param = new URLSearchParams(data)
     return request({
-        url: '/customer/basicinfo',
+        url: '/v1/personinfo/customer/info',
         method: 'put',
-        data:param
+        data:data
     })
 }
+
+

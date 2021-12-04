@@ -240,7 +240,7 @@
         <el-image src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/image-20210704194410567.png"
                   style="width: 35px;height: 35px ;float:left;" >
         </el-image>
-        <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%" > 房客评价</span>
+        <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%" > 房东评价</span>
         <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%">{{this.commentNum}}条</span>
         <br><br><br>
         <!--若干个评价模块-->

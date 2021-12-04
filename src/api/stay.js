@@ -64,3 +64,10 @@ export function getPrice(data){
     })
 }
 
+export function getHostStayInfo(){
+    return request({
+        url: 'v1/stay/host',
+        method: 'get',
+    })
+}
+

@@ -264,7 +264,7 @@
            style="position:relative;left:140px;top:-285px;text-align: left;font-size: 12px">
           共{{publishedHouseInfo[(publishedCurrentPage-1)*publishedPageSize+i-1].reviewNum}}条评价
         </p>
-        <el-rate v-model="publishedHouseInfo[(publishedCurrentPage-1)*publishedPageSize+i-1].reviewScore.toFixed(1)" disabled
+        <el-rate v-model="publishedHouseInfo[(publishedCurrentPage-1)*publishedPageSize+i-1].reviewScore.toFixed()" disabled
                  show-text
                  show-score
                  text-color="#ff9900"
@@ -300,7 +300,7 @@
 
 <!--      已经发布的房源分页-->
         <div class="newPagination" >
-      <el-pagination v-if="publishedNum<4?false:true"
+      <el-pagination v-if="publishedNum>=4"
                      layout="prev, pager, next"
                      :page-size="publishedPageSize"
                      :pager-count="5"
@@ -392,7 +392,7 @@ position: relative;left: 680px;top:-665px">
         <br><br><br><br>
 
         <div v-for="i in pendingReviewNum<=2?pendingReviewNum:((this.pendingReviewNum-this.pendingPageSize*(this.pendingCurrentPage-1))>2?2:(this.pendingReviewNum-this.pendingPageSize*(this.pendingCurrentPage-1)))"
-             v-if="pendingReviewNum===0?false:true">
+             v-if="pendingReviewNum!==0">
           <el-card shadow="hover" class="card-class" style="float: left">
             <!--放置一个图片走马灯-->
             <div class="imgBox"
