@@ -40,11 +40,11 @@ export function putStayInfo(data){
     })
 }
 
-export function getStayDetails(data){
+export function getStayDetails(stayId){
     return request({
         url: '/v1/stay',
         method: 'get',
-        params: data,
+        params: {'stayId':stayId},
     })
 }
 

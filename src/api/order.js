@@ -60,11 +60,22 @@ export function ReportCustomerOrder(orderId, reportReason) {
     })
 }
 
-export function addOrder(data) {
-    let param = new URLSearchParams(data);
+export function AddOrder(data) {
+
     return request({
-        url: '/order/addOrder',
+        url: '/v1/trade/order',
         method: 'post',
-        data: param,
+        data: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function UseCouponForOrder(couponId){
+    return request({
+        url: '/v1/order/coupon',
+        method: 'put',
+        params: {'couponId':couponId,'couponStatus':1}
     })
 }
