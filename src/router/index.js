@@ -89,7 +89,7 @@ const routes = [
     component: () =>import('../views/MyPostPage.vue')
   },
   {
-    path: '/',
+    path: '/UserInfoMessage',
     name: 'UserInfoMesssage',
     component: ()=>import(UserInfoMessage)
   },

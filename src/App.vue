@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <navigate />
-    <!--
+    
     <router-view
     style="padding-top: 60px;"
     />
-    -->
-    <HostInfoPage></HostInfoPage>
+   
+    <!-- <HostInfoPage></HostInfoPage> -->
   </div>
 </template>
 
