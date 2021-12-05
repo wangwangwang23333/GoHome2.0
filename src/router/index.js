@@ -88,11 +88,11 @@ const routes = [
     name: 'MyPost',
     component: () =>import('../views/MyPostPage.vue')
   },
-  {
-    path: '/UserInfoMessage',
-    name: 'UserInfoMesssage',
-    component: ()=>import(UserInfoMessage)
-  },
+  // {
+  //   path: '/UserInfoMesssage',
+  //   name: 'UserInfoMesssage',
+  //   component: ()=>import(UserInfoMessage)
+  // },
   // 展示房源详细信息路由
   {
     path:'/StayInfo',
