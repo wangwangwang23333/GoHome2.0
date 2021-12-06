@@ -553,12 +553,8 @@ export default {
       this.dialogTableVisible = false;
       console.log('跳转至注册账号界面')
       //根据当前选项，跳转至不同界面
-      if (this.$refs.loginComponent.customerLogin) {
         this.$router.replace('/register')
-      } else {
-        this.$router.replace('/hostRegister')
-      }
-
+        // this.$router.replace('/hostRegister')
 
     },
     getCurrentTime() {
