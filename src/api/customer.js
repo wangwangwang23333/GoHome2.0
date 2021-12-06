@@ -37,6 +37,16 @@ export function customerLogin(data) {
     // })
 }
 
+export function userLogout() {
+    var config = {
+        method: 'get',
+        url: getDomainUrl() + '/sso/logout',
+        headers: { }
+    };
+
+    return axios(config)
+}
+
 export function getCustomerInfo() {
     return request({
         url: "/v1/login/userBriefInfo",
@@ -48,12 +58,13 @@ export function customerRegister(data) {
     /*
     顾客注册账号
     */
-    let param = new URLSearchParams(data)
-
     return request({
-        url: '/register/customer',
-        method: 'post',
-        data: param
+        url: '/v1/signup/customer',
+        method: 'POST',
+        data: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 }
 
@@ -66,9 +77,9 @@ export function customerPhoneUnique(data) {
     let param = new URLSearchParams(data)
 
     return request({
-        url: '/customer/phone',
-        method: 'post',
-        data: param
+        url: '/v1/signup/checkPhone',
+        method: 'GET',
+        params: param
     })
 }
 

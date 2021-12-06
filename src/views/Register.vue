@@ -196,6 +196,7 @@ export default {
     onSubmit() {
       console.log('submit!');
     },
+
     cookieTest(){
       //cookie test
       var params = new URLSearchParams();
@@ -209,9 +210,8 @@ export default {
       }).catch(function (response) {
         console.log(response);//发生错误时执行的代码
       })
-
-      return;
     },
+
     submitForm(){
       /*
       各种检验环节
@@ -254,7 +254,8 @@ export default {
       console.log('你提交了注册申请！')
 
       //检验是否完成发送验证码的步骤
-      if (!this.messageIsSend){
+      // if (!this.messageIsSend){
+      if (false) {
         this.$message({
           message: '请先发送验证码',
           type: 'warning'
@@ -263,7 +264,9 @@ export default {
       }
 
       //判断验证码是否正确
-      if(this.correctCode!=this.verifyCode){
+      // TODO: resume this when sms code is ready
+      // if(this.correctCode!==this.verifyCode){
+      if (false) {
         this.$message({
           message: '验证码输入错误',
           type: 'warning'
@@ -273,10 +276,10 @@ export default {
 
       //获取注册信息
       let param={
-        prenumber:'+86',
-        phonenumber:this.phone,
-        password:this.password,
-        username:this.name
+        "phoneCode": '+86',
+        "phone": this.phone,
+        "password": this.password,
+        "username": this.name
       }
 
       //判断完成，注册
@@ -293,8 +296,7 @@ export default {
 
             //打开登录界面
             startLogin();
-        }
-        else{
+        } else{
             this.$message({
                 message: '注册失败，请稍后再试',
                 type: 'warning'
@@ -306,11 +308,12 @@ export default {
           return;
       })
     },
+
     isLegalPhone(){
         /*
         判断输入的手机号是否合法
         */
-        var myreg = /^1[3|4|5|7|8|9][0-9]{9}$/;
+        var myreg = /^1[345789][0-9]{9}$/;
         if (!myreg.test(this.phone)) {
             console.log('手机号格式不正确')
             return false;
@@ -320,7 +323,8 @@ export default {
             return true;
         }
     },
-    getCode(){
+
+    getCode() {
       /*
       发送验证码
       */
@@ -335,15 +339,15 @@ export default {
       }
       //首先判断手机号是否已被注册
       let param= {
-        prenumber:'+86',
-        phonenumber:this.phone,
+        phoneCode:'+86',
+        phone:this.phone,
       }
       
       console.log('param',param);
       customerPhoneUnique(param).then(response=>{
-        console.log('状态：',response.data.phoneunique)
+        console.log('状态：',response)
         //判断手机号是否被注册过
-        if (response.data.phoneunique){
+        if (response.data.phoneUnique){
           console.log('该手机号尚未被注册过')
 
           //暂时禁止发短信
@@ -362,30 +366,32 @@ export default {
           
           //更新参数
           param= {
-            prenumber:'+86',
-            phonenumber:this.phone,
+            phoneCode:'+86',
+            phone:this.phone,
             state:'0'
           }
 
           //手机号未被注册过，则发送验证码
-          sendMessage(param).then(response=>{
-            if(response.data.sendstate){
-              console.log('成功发送验证码')
-
-              //读取回复中的验证码内容
-              this.correctCode=response.data.code;
-
-              //已经完成发送验证码步骤
-              this.messageIsSend=true;
-            }
-            else{
-              this.$message({
-                message: '发送失败，请稍后尝试重新发送',
-                type: 'error'
-              });
-            }
-
-          })
+          // TODO: write this when sms code is ready
+          this.messageIsSend=true;
+          // sendMessage(param).then(response=>{
+          //   if(response.data.sendstate){
+          //     console.log('成功发送验证码')
+          //
+          //     //读取回复中的验证码内容
+          //     this.correctCode=response.data.code;
+          //
+          //     //已经完成发送验证码步骤
+          //     this.messageIsSend=true;
+          //   }
+          //   else{
+          //     this.$message({
+          //       message: '发送失败，请稍后尝试重新发送',
+          //       type: 'error'
+          //     });
+          //   }
+          //
+          // })
         }
         else{
           console.log('该手机号已经被注册过')
