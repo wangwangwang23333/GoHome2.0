@@ -464,8 +464,6 @@ position: relative;left: 680px;top:-665px">
         </div>
       </el-card>
 
-
-
       <!--      审核中的房源卡片,若没有房源则展示该默认展示页面-->
       <el-card class="bigCard" style="height:550px" v-if="tabValue==1&&unpublishedNum===0" >
         <p
@@ -693,20 +691,7 @@ export default {
       },
       orderSalesData:{
         columns: ['时间', '订单数量','评价数量','房源评价'],
-        rows: [
-    //       { '时间': '2021-1月', '订单数量': 33, '评价数量':12,'房源评价':4.3},
-    //   { '时间': '2021-2月', '订单数量': 31,'评价数量':10,'房源评价':4.1},
-    // { '时间': '2021-3月', '订单数量': 21 ,'评价数量':14,'房源评价':4.5},
-    // { '时间': '2021-4月', '订单数量': 41 ,'评价数量':12,'房源评价':4.6},
-    // { '时间': '2021-5月', '订单数量': 12 ,'评价数量':32,'房源评价':4.9},
-    //       { '时间': '2021-6月', '订单数量': 71,'评价数量':56,'房源评价':4.1 },
-    //       { '时间': '2021-7月', '订单数量': 77 ,'评价数量':12,'房源评价':4.3},
-    //       { '时间': '2021-8月', '订单数量': 100 ,'评价数量':17,'房源评价':4.4},
-    //       { '时间': '2021-9月', '订单数量': 140,'评价数量':18,'房源评价':4.3},
-    //       { '时间': '2021-10月', '订单数量': 145 ,'评价数量':52,'房源评价':4.1},
-    //       { '时间': '2021-11月', '订单数量':  233,'评价数量':12,'房源评价':4.3},
-    //       { '时间': '2021-12月', '订单数量': 71 ,'评价数量':12,'房源评价':4.3}
-        ]
+        rows: []
       },
       scoreImgList:["https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/一般.png",
       "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/微笑.png",
@@ -879,6 +864,7 @@ export default {
 
       this.orderDialogVisible=true;//对话框可见
       this.orderIdNow=stayId;//修改当前的订单id
+      this.OrderRate=this.publishedHouseInfo[index].reviewScore;
       //开始调用获取订单数据API
       let param={
         stayId:stayId
@@ -976,25 +962,6 @@ export default {
           
         }
 
-
-
-        // for(let i=0;i<result.length;++i){
-          
-        //   this.orderSalesData.rows.push({
-        //     "时间":result[i].date,
-        //     "订单数量":result[i].orderNum,
-        //     "评价数量":result[i].commentNum,
-        //     "房源评价":result[i].commentScore
-        //   })
-        // }
-        
-        // this.OrderRate=response.data.averageScore;
-        // for(let i =1;i<=12;i++) {
-        //   this.orderSalesData.rows[i-1].时间 = response.data.orderInfoOfDateList[i-1].data;
-        //   this.orderSalesData.rows[i-1].订单数量=response.data.orderInfoOfDateList[i-1].orderNum;
-        //   this.orderSalesData.rows[i-1].评价数量=response.data.orderInfoOfDateList[i-1].reviewNum;
-        //   this.orderSalesData.rows[i-1].房源评价=response.data.orderInfoOfDateList[i-1].averageScore.toFixed(1);
-        // }
         
       }).catch((error)=>{
         this.$message({
