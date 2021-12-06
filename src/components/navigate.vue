@@ -231,7 +231,7 @@
 import ref from 'vue';
 import LoginName from '@/components/login.vue'
 import {mapMutations} from 'vuex';
-import {getFavorite, customerLogin} from '@/api/customer'
+import {getFavorite, customerLogin, userLogout} from '@/api/customer'
 import {hostLogin} from '@/api/host'
 import movingCloud from '@/components/movingCloud.vue';
 import md5 from 'js-md5';
@@ -347,13 +347,22 @@ export default {
           this.delLogin();
           this.loginState = 0;
 
-          //前往主页
-          this.$router.push({path: '/'});
+          userLogout().then(response => {
+            //前往主页
+            // this.$router.push({path: '/'});
 
-          this.$message({
-            message: '注销成功',
-            type: 'success'
-          });
+            this.$message({
+              message: '注销成功',
+              type: 'success'
+            });
+          }, error => {
+            this.$message({
+              message: '注销失败',
+              type: 'warning'
+            });
+          })
+
+
         } else if (keyPath[1] === '5-1') {
           console.log('查看顾客个人信息')
           this.routerToUserPage();
@@ -468,7 +477,7 @@ export default {
       //判断当前登录对象
       customerLogin(param).then(response => {
         //判断是否登录成功
-        if (response.status === 200) {
+        if (response.data.code === 200) {
           getCustomerInfo().then(response => {
 
                 if (response.status === 200) {
@@ -544,12 +553,8 @@ export default {
       this.dialogTableVisible = false;
       console.log('跳转至注册账号界面')
       //根据当前选项，跳转至不同界面
-      if (this.$refs.loginComponent.customerLogin) {
         this.$router.replace('/register')
-      } else {
-        this.$router.replace('/hostRegister')
-      }
-
+        // this.$router.replace('/hostRegister')
 
     },
     getCurrentTime() {
