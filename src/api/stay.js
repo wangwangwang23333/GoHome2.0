@@ -28,6 +28,15 @@ export function getHostStayDetailedInfo(stayID){
     })
 }
 
+export function isHostSameWithCustomer(stayID){
+    let param=new URLSearchParams({stayId:stayID});
+    return request({
+        url:'v1/stay/host/equal',
+        method:'get',
+        params:param
+    })
+}
+
 export function postStayInfo(data) {
     return request({
         url: '/v1/stay',

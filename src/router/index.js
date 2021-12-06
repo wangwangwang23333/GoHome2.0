@@ -234,6 +234,8 @@ router.beforeEach((to, from, next) => {
   ) {
     next();
   } else {
+    next(); // TODO: reomove it
+    return;
     let token = localStorage.getItem('Authorization');
 
     if (token === null || token === '') {

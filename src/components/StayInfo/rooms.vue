@@ -48,7 +48,6 @@
       </div>
     
     <div class="block" style="margin:10px 0 10px 0;">
-<!--      <span class="demonstration">默认</span>-->
       <el-date-picker
       style="width:300px;"
           v-model="value1"
@@ -63,7 +62,7 @@
     </div>
     <div class="book-button">
       <el-button class="buttonStyle" type="primary" @click="handleBook" 
-      :disabled="!isCustomer"
+      :disabled="true"
       plain>
         开始预定
       </el-button>
@@ -77,6 +76,7 @@
 </template>
 
 <script>
+import { isHostSameWithCustomer} from '@/api/stay.js'
 export default {
   name: "rooms",
   props: {
@@ -85,8 +85,9 @@ export default {
   },
   data() {
       return{
-      value1: null,
-      isCustomer:true
+        value1: null,
+        isCustomer:true,
+        hostIsEqual:false,
       }
   },
   methods: {
@@ -108,13 +109,16 @@ export default {
 
   },
   created(){
-    let token = localStorage.getItem('userIdentity');
-    if(token==='Customer'){
-      this.isCustomer=true;
-    }
-    else{
-      this.isCustomer=false;
-    }
+    // 判断该房源是不是自己的
+    isHostSameWithCustomer(stayId).then(response=>{
+      this.hostIsEqual=response.data.isEqual
+    })
+    .catch((error) => {
+        this.$message({
+          message: error,
+          type: "warning",
+        });
+      });
   },
   computed: {
     pickerOptions(){

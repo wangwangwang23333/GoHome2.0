@@ -625,6 +625,8 @@ position: relative;left: 680px;top:-665px">
 <script>
 import {DeleteStay, getAllStayData, getStayOrderChart, updateHostNickName} from "../api/host";
 
+import {getHostStayAge, getHostStayGender} from '../api/statistics'
+
 export default {
   name: "HostInfoMessage",
   props:{
@@ -658,38 +660,35 @@ export default {
       sexRingData:{
         columns:['房客性别','订单数量'],
         rows:[{
-          '房客性别':'男','订单数量':10
+          '房客性别':'男','订单数量':0
         },
           {
-            '房客性别':'女','订单数量':34
+            '房客性别':'女','订单数量':0
           },
           {
-            '房客性别':'未知','订单数量':20
+            '房客性别':'未知','订单数量':0
           },]
       },
       ageRingData:{
         columns:['房客年龄段','房客数量'],
         rows:[
           {
-            '房客年龄段':'未知年龄段','房客数量':1
+            '房客年龄段':'未知年龄段','房客数量':0
           },
           {
-          '房客年龄段':'10岁以下','房客数量':1
+          '房客年龄段':'18岁以下','房客数量':0
         },
           {
-            '房客年龄段':'10岁到20岁','房客数量':30
+            '房客年龄段':'18岁到30岁','房客数量':0
           },
           {
-            '房客年龄段':'20岁到30岁','房客数量':20
+            '房客年龄段':'30岁到40岁','房客数量':0
           },
           {
-            '房客年龄段':'30岁到40岁','房客数量':8
+            '房客年龄段':'40岁到00岁','房客数量':0
           },
           {
-            '房客年龄段':'40岁到50岁','房客数量':3
-          },
-          {
-            '房客年龄段':'50岁及以上','房客数量':1
+            '房客年龄段':'50岁及以上','房客数量':0
           },]
       },
       orderSalesData:{
@@ -868,12 +867,51 @@ export default {
       let index=(this.publishedCurrentPage-1)*this.publishedPageSize+i-1;//获取当前点击的索引值，从0开始
       let stayId=this.publishedHouseInfo[index].stayId;//获取到了当前房源的id
       console.log("当前房源的id：",stayId);
+      if(this.publishedHouseInfo[index].orderNum==0){
+        this.$message({
+          message:"该房源暂无订单记录！",
+          type:'warning'
+        });
+        return;
+      }
+
       this.orderDialogVisible=true;//对话框可见
       this.orderIdNow=stayId;//修改当前的订单id
       //开始调用获取订单数据API
       let param={
         stayId:stayId
       };
+
+      // 调用获取房源的顾客性别api
+      getHostStayAge(param).then(response=>{
+        this.ageRingData.rows[0].房客数量=response.data.unknown;
+        this.ageRingData.rows[1].房客数量=response.data.age18;
+        this.ageRingData.rows[2].房客数量=response.data.age30;
+        this.ageRingData.rows[3].房客数量=response.data.age40;
+        this.ageRingData.rows[4].房客数量=response.data.age50;
+        this.ageRingData.rows[5].房客数量=response.data.age100;
+      }).catch((error)=>{
+        this.$message({
+          message:error,
+          type:'warning'
+        });
+        return;
+      })
+
+      // 调用获取房源的顾客年龄api
+      getHostStayGender(param).then(response=>{
+        console.log("回复为",response)
+        this.sexRingData.rows[0].订单数量=response.data.male;
+        this.sexRingData.rows[1].订单数量=response.data.female;
+        this.sexRingData.rows[2].订单数量=response.data.unknown;
+      }).catch((error)=>{
+        this.$message({
+          message:error,
+          type:'warning'
+        });
+        return;
+      })
+
       getStayOrderChart(param).then(response=>{
         this.OrderRate=response.data.averageScore;
         for(let i =1;i<=12;i++) {
@@ -882,18 +920,7 @@ export default {
           this.orderSalesData.rows[i-1].评价数量=response.data.orderInfoOfDateList[i-1].reviewNum;
           this.orderSalesData.rows[i-1].房源评价=response.data.orderInfoOfDateList[i-1].averageScore.toFixed(1);
         }
-        //第二个报表
-        this.sexRingData.rows[0].订单数量=response.data.orderOfSexList.maleOrderNum;
-        this.sexRingData.rows[1].订单数量=response.data.orderOfSexList.femaleOrderNum;
-        this.sexRingData.rows[2].订单数量=response.data.orderOfSexList.unkownOrderNum;
-        //第三个报表
-          this.ageRingData.rows[0].房客数量=response.data.orderInfoOfAgeList.orderNum0;
-          this.ageRingData.rows[1].房客数量=response.data.orderInfoOfAgeList.orderNum1;
-        this.ageRingData.rows[2].房客数量=response.data.orderInfoOfAgeList.orderNum2;
-        this.ageRingData.rows[3].房客数量=response.data.orderInfoOfAgeList.orderNum3;
-        this.ageRingData.rows[4].房客数量=response.data.orderInfoOfAgeList.orderNum4;
-        this.ageRingData.rows[5].房客数量=response.data.orderInfoOfAgeList.orderNum5;
-        this.ageRingData.rows[6].房客数量=response.data.orderInfoOfAgeList.orderNum6;
+        
       }).catch((error)=>{
         this.$message({
           message:"网络错误，请稍后重试",

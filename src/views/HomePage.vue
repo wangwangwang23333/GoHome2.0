@@ -83,7 +83,6 @@ export default {
     wordcloud
   },
   created(){
-    console.log("首页初始化加载中")
     for(let i=1;i<=100;++i){
       this.defaultWords.push({
           "标签": "萌宠",
