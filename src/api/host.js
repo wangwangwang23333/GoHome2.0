@@ -99,11 +99,10 @@ export function updateHostAvatar(data) {
 
 export function DeleteStay(data) {
     console.log("进入删除房源的调用",data)
-    data = data.toLong
     return request({
         url: '/v1/stay',
         method: 'delete',
-        data:data
+        params:{"stayId":data}
     })
 }
 
@@ -117,11 +116,3 @@ export function getAllStayData(data){
     })
 }
 
-export function getStayOrderChart(data){
-    /*获取房源的订单可视化报表*/
-    return request({
-        url: '/Stay/StayOrderInfo',
-        method: 'get',
-        params:data
-    })
-}

@@ -19,6 +19,24 @@ export function getStayTagList(){
     })
 };
 
+export function getHostStayDetailedInfo(stayID){
+    let param=new URLSearchParams({stayId:stayID});
+    return request({
+        url:'v1/stay/host/brief',
+        method:'get',
+        params:param
+    })
+}
+
+export function isHostSameWithCustomer(stayID){
+    let param=new URLSearchParams({stayId:stayID});
+    return request({
+        url:'v1/stay/host/equal',
+        method:'get',
+        params:param
+    })
+}
+
 export function postStayInfo(data) {
     return request({
         url: '/v1/stay',
@@ -58,7 +76,7 @@ export function getComments(stayId){
 
 export function getPrice(data){
     return request({
-        url: '/stay/getPrice',
+        url: 'v1/stay/getPrice',
         method: 'get',
         params: data,
     })

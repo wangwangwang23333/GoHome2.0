@@ -283,11 +283,11 @@
             src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/查看.png"
         @click="viewChart(i)">
         </el-image>
-        <el-button class="smallButton"
+        <!-- <el-button class="smallButton"
                    style="position:relative;left:240px;top:-430px;text-align: left"
         @click="updateStay(i)">
           编辑房源
-        </el-button>
+        </el-button> -->
         <br>
         <el-button class="smallButton"
                    style="position:relative;left:252px;top:-425px;text-align: left "
@@ -433,11 +433,11 @@ position: relative;left: 680px;top:-665px">
                style="position:relative;left:470px;top:-250px;text-align: left;font-size: 20px">
               ￥{{pendingStayInfo[(pendingCurrentPage-1)*pendingPageSize+i-1].stayPrice}}
             </p>
-            <el-button class="smallButton"
+            <!-- <el-button class="smallButton"
                        style="position:relative;left:240px;top:-255px;text-align: left"
                       @click="updateStay(i)">
              编辑房源
-            </el-button>
+            </el-button> -->
             <br>
             <el-button class="smallButton"
                        style="position:relative;left:240px;top:-250px;text-align: left"
@@ -463,8 +463,6 @@ position: relative;left: 680px;top:-665px">
           </el-pagination>
         </div>
       </el-card>
-
-
 
       <!--      审核中的房源卡片,若没有房源则展示该默认展示页面-->
       <el-card class="bigCard" style="height:550px" v-if="tabValue==1&&unpublishedNum===0" >
@@ -530,11 +528,11 @@ position: relative;left: 680px;top:-665px">
               ￥{{unpublishedStayInfo[(unpublishedCurrentPage-1)*unpublishedPageSize+i-1].stayPrice}}
             </p>
 
-            <el-button class="smallButton"
+            <!-- <el-button class="smallButton"
                        style="position:relative;left:240px;top:-255px;text-align: left"
                        @click="updateStay(i)">
               编辑房源
-            </el-button>
+            </el-button> -->
             <br>
             <el-button class="smallButton"
                        style="position:relative;left:240px;top:-250px;text-align: left"
@@ -623,7 +621,9 @@ position: relative;left: 680px;top:-665px">
 </template>
 
 <script>
-import {DeleteStay, getAllStayData, getStayOrderChart, updateHostNickName} from "../api/host";
+import {DeleteStay, getAllStayData, updateHostNickName} from "../api/host";
+
+import {getStayOrderChart, getHostStayAge, getHostStayGender} from '../api/statistics'
 
 export default {
   name: "HostInfoMessage",
@@ -658,54 +658,40 @@ export default {
       sexRingData:{
         columns:['房客性别','订单数量'],
         rows:[{
-          '房客性别':'男','订单数量':10
+          '房客性别':'男','订单数量':0
         },
           {
-            '房客性别':'女','订单数量':34
+            '房客性别':'女','订单数量':0
           },
           {
-            '房客性别':'未知','订单数量':20
+            '房客性别':'未知','订单数量':0
           },]
       },
       ageRingData:{
         columns:['房客年龄段','房客数量'],
         rows:[
           {
-            '房客年龄段':'未知年龄段','房客数量':1
+            '房客年龄段':'未知年龄段','房客数量':0
           },
           {
-          '房客年龄段':'10岁以下','房客数量':1
+          '房客年龄段':'18岁以下','房客数量':0
         },
           {
-            '房客年龄段':'10岁到20岁','房客数量':30
+            '房客年龄段':'18岁到30岁','房客数量':0
           },
           {
-            '房客年龄段':'20岁到30岁','房客数量':20
+            '房客年龄段':'30岁到40岁','房客数量':0
           },
           {
-            '房客年龄段':'30岁到40岁','房客数量':8
+            '房客年龄段':'40岁到00岁','房客数量':0
           },
           {
-            '房客年龄段':'40岁到50岁','房客数量':3
-          },
-          {
-            '房客年龄段':'50岁及以上','房客数量':1
+            '房客年龄段':'50岁及以上','房客数量':0
           },]
       },
       orderSalesData:{
         columns: ['时间', '订单数量','评价数量','房源评价'],
-        rows: [{ '时间': '2021-1月', '订单数量': 33, '评价数量':12,'房源评价':4.3},
-    { '时间': '2021-2月', '订单数量': 31,'评价数量':10,'房源评价':4.1},
-    { '时间': '2021-3月', '订单数量': 21 ,'评价数量':14,'房源评价':4.5},
-    { '时间': '2021-4月', '订单数量': 41 ,'评价数量':12,'房源评价':4.6},
-    { '时间': '2021-5月', '订单数量': 12 ,'评价数量':32,'房源评价':4.9},
-          { '时间': '2021-6月', '订单数量': 71,'评价数量':56,'房源评价':4.1 },
-          { '时间': '2021-7月', '订单数量': 77 ,'评价数量':12,'房源评价':4.3},
-          { '时间': '2021-8月', '订单数量': 100 ,'评价数量':17,'房源评价':4.4},
-          { '时间': '2021-9月', '订单数量': 140,'评价数量':18,'房源评价':4.3},
-          { '时间': '2021-10月', '订单数量': 145 ,'评价数量':52,'房源评价':4.1},
-          { '时间': '2021-11月', '订单数量':  233,'评价数量':12,'房源评价':4.3},
-          { '时间': '2021-12月', '订单数量': 71 ,'评价数量':12,'房源评价':4.3}]
+        rows: []
       },
       scoreImgList:["https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/一般.png",
       "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/微笑.png",
@@ -868,35 +854,118 @@ export default {
       let index=(this.publishedCurrentPage-1)*this.publishedPageSize+i-1;//获取当前点击的索引值，从0开始
       let stayId=this.publishedHouseInfo[index].stayId;//获取到了当前房源的id
       console.log("当前房源的id：",stayId);
+      if(this.publishedHouseInfo[index].orderNum==0){
+        this.$message({
+          message:"该房源暂无订单记录！",
+          type:'warning'
+        });
+        return;
+      }
+
       this.orderDialogVisible=true;//对话框可见
       this.orderIdNow=stayId;//修改当前的订单id
+      this.OrderRate=this.publishedHouseInfo[index].reviewScore;
       //开始调用获取订单数据API
       let param={
         stayId:stayId
       };
-      getStayOrderChart(param).then(response=>{
-        this.OrderRate=response.data.averageScore;
-        for(let i =1;i<=12;i++) {
-          this.orderSalesData.rows[i-1].时间 = response.data.orderInfoOfDateList[i-1].data;
-          this.orderSalesData.rows[i-1].订单数量=response.data.orderInfoOfDateList[i-1].orderNum;
-          this.orderSalesData.rows[i-1].评价数量=response.data.orderInfoOfDateList[i-1].reviewNum;
-          this.orderSalesData.rows[i-1].房源评价=response.data.orderInfoOfDateList[i-1].averageScore.toFixed(1);
-        }
-        //第二个报表
-        this.sexRingData.rows[0].订单数量=response.data.orderOfSexList.maleOrderNum;
-        this.sexRingData.rows[1].订单数量=response.data.orderOfSexList.femaleOrderNum;
-        this.sexRingData.rows[2].订单数量=response.data.orderOfSexList.unkownOrderNum;
-        //第三个报表
-          this.ageRingData.rows[0].房客数量=response.data.orderInfoOfAgeList.orderNum0;
-          this.ageRingData.rows[1].房客数量=response.data.orderInfoOfAgeList.orderNum1;
-        this.ageRingData.rows[2].房客数量=response.data.orderInfoOfAgeList.orderNum2;
-        this.ageRingData.rows[3].房客数量=response.data.orderInfoOfAgeList.orderNum3;
-        this.ageRingData.rows[4].房客数量=response.data.orderInfoOfAgeList.orderNum4;
-        this.ageRingData.rows[5].房客数量=response.data.orderInfoOfAgeList.orderNum5;
-        this.ageRingData.rows[6].房客数量=response.data.orderInfoOfAgeList.orderNum6;
+
+      // 调用获取房源的顾客性别api
+      getHostStayAge(param).then(response=>{
+        this.ageRingData.rows[0].房客数量=response.data.unknown;
+        this.ageRingData.rows[1].房客数量=response.data.age18;
+        this.ageRingData.rows[2].房客数量=response.data.age30;
+        this.ageRingData.rows[3].房客数量=response.data.age40;
+        this.ageRingData.rows[4].房客数量=response.data.age50;
+        this.ageRingData.rows[5].房客数量=response.data.age100;
       }).catch((error)=>{
         this.$message({
-          message:"网络错误，请稍后重试",
+          message:error,
+          type:'warning'
+        });
+        return;
+      })
+
+      // 调用获取房源的顾客年龄api
+      getHostStayGender(param).then(response=>{
+        this.sexRingData.rows[0].订单数量=response.data.male;
+        this.sexRingData.rows[1].订单数量=response.data.female;
+        this.sexRingData.rows[2].订单数量=response.data.unknown;
+      }).catch((error)=>{
+        this.$message({
+          message:error,
+          type:'warning'
+        });
+        return;
+      })
+
+      getStayOrderChart(param).then(response=>{
+        
+        let result = response.data
+        var myDate=new Date()
+        myDate.getFullYear()
+        myDate.getMonth()
+        for(let i=myDate.getMonth()+1;i<=12;++i){
+          let curMonth = String(myDate.getFullYear()-1)+"-"+String(i)
+          
+          let res = null
+          for(let j=0;j<result.length;++j){
+            if(result[j].date==curMonth){
+              res=result[j]
+            }
+          }
+          if (res==null){
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":0,
+              "评价数量":0,
+              "房源评价":0
+            })
+          }
+          else{
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":res.orderNum,
+              "评价数量":res.commentNum,
+              "房源评价":res.commentScore
+            })
+          }
+          
+          
+        }
+        for(let i=1;i<=myDate.getMonth();++i){
+          let curMonth = String(myDate.getFullYear())+"-"+String(i)
+       
+          let res = null
+          for(let j=0;j<result.length;++j){
+            if(result[j].date==curMonth){
+              res=result[j]
+            }
+          }
+    
+          if (res==null){
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":0,
+              "评价数量":0,
+              "房源评价":0
+            })
+          }
+          else{
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":res.orderNum,
+              "评价数量":res.commentNum,
+              "房源评价":res.commentScore
+            })
+          }
+          
+        }
+
+        
+      }).catch((error)=>{
+        this.$message({
+          message:error,
           type:'warning'
         });
         return;

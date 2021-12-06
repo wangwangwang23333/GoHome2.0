@@ -35,7 +35,8 @@ import HostInfoBlock from "../components/HostInfoBlock";
 import HostInfoMessage from "../components/HostInfoMessage";
 import {getHostPageInfo, updateHostNickName} from "../api/host";
 import {getCustomerInfo, uploadBasicInfo} from "../api/customerInfo";
-import {getHostStayInfo} from "../api/stay";
+import {getHostStayInfo,getHostStayDetailedInfo} from "../api/stay";
+
 
 export default {
   name: "HostInfoPage",
@@ -73,7 +74,6 @@ export default {
       this.PhoneTag=response.data.phoneTag==true?1:0;
       this.reviewNum=response.data.reviewNum;
       this.hostLevelName=response.data.hostLevelName;
-      console.log("待发布的房源",this.unpublishedNum);
       loading.close();
 
     }).catch((error)=>{
@@ -83,14 +83,71 @@ export default {
       });
       return;
     })
-
+    // console.log("初始已发布房源信息为",this.publishedHouseInfo)
     getHostStayInfo().then(response=>{
-      //console.log(response)
       //获取相应的房东数据
+      // 调用具体api
+      let publishedStayIdList=response.data.publishedHouseInfo;
+      for(let i=0;i<publishedStayIdList.length;++i){
+        getHostStayDetailedInfo(publishedStayIdList[i]).then(response=>{
+          response=response.data
+          let newStay={
+            stayId:publishedStayIdList[i],
+            imgListNum:response.imgListNum,//房源照片的数量
+            stayType:response.stayType,
+            stayNickName:response.stayNickName,
+            stayPlace:response.stayPlace,
+            stayPrice:response.stayPrice,//房源的价格
+            stayImgList:response.stayImgList,
+            orderNum:response.orderNum,
+            reviewNum:response.reviewNum,
+            reviewScore:Number(response.reviewScore)
+          }
+          this.publishedHouseInfo.push(newStay)
+          
+        })
+      }
+
+      // 审核中的房源
+      let pendingStayIdList=response.data.pendingStayInfo;
+      for(let i=0;i<pendingStayIdList.length;++i){
+        getHostStayDetailedInfo(pendingStayIdList[i]).then(response=>{
+          response=response.data
+          let newStay={
+            stayId:pendingStayIdList[i],
+            imgListNum:response.imgListNum,//房源照片的数量
+            stayType:response.stayType,
+            stayNickName:response.stayNickName,
+            stayPlace:response.stayPlace,
+            stayPrice:response.stayPrice,//房源的价格
+            stayImgList:response.stayImgList,
+            reviewScore:Number(response.reviewScore)
+          }
+          this.pendingStayInfo.push(newStay)
+        })
+      }
+
+      // 待发布的房源
+      let unpublishedStayIdList=response.data.unpublishedStayInfo;
+      for(let i=0;i<unpublishedStayIdList.length;++i){
+        getHostStayDetailedInfo(unpublishedStayIdList[i]).then(response=>{
+          response=response.data
+          let newStay={
+            stayId:unpublishedStayIdList[i],
+            imgListNum:response.imgListNum,//房源照片的数量
+            stayType:response.stayType,
+            stayNickName:response.stayNickName,
+            stayPlace:response.stayPlace,
+            stayPrice:response.stayPrice,//房源的价格
+            stayImgList:response.stayImgList,
+            reviewScore:Number(response.reviewScore)
+          }
+          this.unpublishedStayInfo.push(newStay)
+        })
+      }
+
+      
       this.pendingReviewNum=response.data.pendingReviewNum;
-      this.pendingStayInfo=response.data.pendingStayInfo;
-      this.publishedHouseInfo=response.data.publishedHouseInfo;
-      this.unpublishedStayInfo=response.data.unpublishedStayInfo;
       this.publishedNum=response.data.publishedNum;
       this.unpublishedNum=response.data.unpublishedNum;
       loading.close();
@@ -132,196 +189,168 @@ export default {
     return{
       fullScreenTag:true,
       hostImage:'',
-      hostNickName:'假数据',
-      hostRealName:'假数据真名',
+      hostNickName:'加载中',
+      hostRealName:'加载中',
       hostSex:'男',
       hostLevel:0,//房东的用户组等级，默认为0
       hostScore:0,//房东的信誉积分，默认为0
-      publishedNum:5,//已经发布的房源数量
-      unpublishedNum:3,//未发布的，尚存草稿的房源数量
-      pendingReviewNum:3,//待审核的房源数量
+      publishedNum:0,//已经发布的房源数量
+      unpublishedNum:0,//未发布的，尚存草稿的房源数量
+      pendingReviewNum:0,//待审核的房源数量
       reviewNum:0,//评价数，默认为0
       EmailTag:0,//是否拥有电子邮箱标识
       PhoneTag:1,//是否进行了手机号认证标识
       TagimgList:["https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/错误.png","https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/正确.png"],
       AuthenticationTag:1,//是否进行了身份认证表示，0表示未认证，1表示认证
-      hostCreateTime:"2021-假数据",
-      averageRate:4.4,//假数据，房东的总评分
+      hostCreateTime:"2021-12-01",
+      averageRate:5.0,//假数据，房东的总评分
       hostLevelName:'',
       unpublishedStayInfo:[
-        {
-          stayId:1111111,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:1111111,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:1111111,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        }
+        // {
+        //   stayId:1111111,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整套房源',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   stayPrice:497,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // }
       ],
       pendingStayInfo:[
-        {
-          stayId:1111111,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:1111111,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:1111111,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        }
+        // {
+        //   stayId:1111111,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整套房源',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   stayPrice:497,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
+        // {
+        //   stayId:1111111,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整套房源',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   stayPrice:497,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
+        // {
+        //   stayId:1111111,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整套房源',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   stayPrice:497,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // }
       ],
       publishedHouseInfo:[
-        {
-          stayId:123456,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          orderNum:12,//订单的数量
-          reviewNum:10,//评价数量
-          reviewScore:4.7,//房源订单的平均评分
-          stayPrice:497,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:123457,
-          imgListNum:4,//房源照片的数量
-          stayType:'单个房间',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          orderNum:12,//订单的数量
-          reviewNum:10,//评价数量
-          reviewScore:4.7,//房源订单的平均评分
-          stayPrice:498,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:123458,
-          imgListNum:4,//房源照片的数量
-          stayType:'整套别墅',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          orderNum:12,//订单的数量
-          reviewNum:10,//评价数量
-          reviewScore:4.7,//房源订单的平均评分
-          stayPrice:499,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:123459,
-          imgListNum:4,//房源照片的数量
-          stayType:'整个房源',
-          stayNickName:"顾村公园旁的LOFT",
-          stayPlace:"所在区域",
-          orderNum:12,//订单的数量
-          reviewNum:10,//评价数量
-          reviewScore:4.7,//房源订单的平均评分
-          stayPrice:500,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
-        {
-          stayId:123423,
-          imgListNum:4,//房源照片的数量
-          stayNickName:"顾村公园旁的LOFT",
-          stayType:'整个房源',
-          stayPlace:"所在区域",
-          orderNum:12,//订单的数量
-          reviewNum:10,//评价数量
-          reviewScore:4.7,//房源订单的平均评分
-          stayPrice:1500,//房源的价格
-          stayImgList:[
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
-            "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
-          ]
-        },
+        // {
+        //   stayId:123456,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整套房源',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   orderNum:12,//订单的数量
+        //   reviewNum:10,//评价数量
+        //   reviewScore:4.7,//房源订单的平均评分
+        //   stayPrice:497,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
+        // {
+        //   stayId:123457,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'单个房间',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   orderNum:12,//订单的数量
+        //   reviewNum:10,//评价数量
+        //   reviewScore:4.7,//房源订单的平均评分
+        //   stayPrice:498,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
+        // {
+        //   stayId:123458,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整套别墅',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   orderNum:12,//订单的数量
+        //   reviewNum:10,//评价数量
+        //   reviewScore:4.7,//房源订单的平均评分
+        //   stayPrice:499,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
+        // {
+        //   stayId:123459,
+        //   imgListNum:4,//房源照片的数量
+        //   stayType:'整个房源',
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayPlace:"所在区域",
+        //   orderNum:12,//订单的数量
+        //   reviewNum:10,//评价数量
+        //   reviewScore:4.7,//房源订单的平均评分
+        //   stayPrice:500,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
+        // {
+        //   stayId:123423,
+        //   imgListNum:4,//房源照片的数量
+        //   stayNickName:"顾村公园旁的LOFT",
+        //   stayType:'整个房源',
+        //   stayPlace:"所在区域",
+        //   orderNum:12,//订单的数量
+        //   reviewNum:10,//评价数量
+        //   reviewScore:4.7,//房源订单的平均评分
+        //   stayPrice:1500,//房源的价格
+        //   stayImgList:[
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c6b642d770b2a2403f8a8047e878a8f1.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/215c3425ebcd3d28bd6c01c4cb768b9b.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/3f412a51e303e2446f9c50841b582860.jpeg",
+        //     "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/c07e0a87d3ab82352064b4be2d10fce4.jpeg"
+        //   ]
+        // },
 
 
       ]

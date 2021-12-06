@@ -63,7 +63,8 @@
         <div ref="imageDom">
           <div class="info" >
             <detail id="detail" :stay="data" ></detail>
-            <rooms v-for="(room, index) of data.rooms" :key="index" :room="room" :stayId="stayId"></rooms>
+            <rooms v-for="(room, index) of data.rooms" :key="index" :room="room" :stayId="stayId" 
+            ></rooms>
             <!--    </el-row>-->
           </div>
           <div>
@@ -120,31 +121,32 @@ export default {
     advertisement
   },
   created() {
-    
-    let stayId = this.$route.query.stayId;
-    this.stayId = stayId;
+
+        let stayId = this.$route.query.stayId;
+        this.stayId = stayId;
 
 
-    getStayDetails(stayId)
-      .then((response)=>{
-        // 房源不存在
-        if(response.data.stayId == null){
-          
-          return
-        }
-        this.data = response.data;
-        this.dataReady=true;
-        this.stayExisted = true
+        getStayDetails(stayId)
+          .then((response) => {
+            // 房源不存在
+            if (response.data.stayId == null) {
+
+              return
+            }
+            this.data = response.data;
+            this.dataReady = true;
+            this.stayExisted = true
+          })
+          .catch((error) => {
+            this.$message({
+              message: error,
+              type: "warning",
+            });
+          });
         
-        
-      })
-      .catch((error)=>{this.$message({
-        message: error,
-        type: "warning",
-      });
-      return;
-      });
-    },
+      
+
+      },
   methods:{
 
     //添加房源至收藏夹;
@@ -186,9 +188,10 @@ export default {
       dataReady:false,
       dialogVisible:false,
       isLike:false,
-       hearts:['https://z3.ax1x.com/2021/07/11/W9W78g.png',
+      hearts:['https://z3.ax1x.com/2021/07/11/W9W78g.png',
        'https://z3.ax1x.com/2021/07/11/W9WH2Q.png' ],
-       stayExisted: false
+      stayExisted: false,
+      hostIsEqual:false,
     }
   },
 }
