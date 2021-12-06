@@ -52,16 +52,24 @@
       
 
     <!--词云图-->
-    <wordcloud
-      :data="defaultWords"
-      nameKey="标签"
-      valueKey="热度"
-      :color="cloudColors"
-      :showTooltip="true"
-      :wordClick="wordClickHandler"
-      style="width: 80%;">
-      </wordcloud>
-    
+    <div>
+        <wordcloud
+        :data="defaultWords"
+        nameKey="标签"
+        valueKey="热度"
+        :color="cloudColors"
+        :showTooltip="true"
+        :wordClick="wordClickHandler"
+        style="width: 80%;">
+        </wordcloud>
+            <div class="block">
+                <el-pagination
+                    layout="prev, pager, next"
+                    :total="totalTags"
+                    @current-change="changeTags">
+                </el-pagination>
+            </div>
+    </div>
     <!--瀑布流-->
 
     <h4 style="text-align: center;color:#bebaba;font-weight: normal;margin-top: 10vh;">
@@ -75,6 +83,9 @@
 import HomeBlock from "../components/HomeBlock";
 import HomeStayCard from "../components/HomeStayCard";
 import wordcloud from 'vue-wordcloud'
+import {getDefaultTagList} from '@/api/post.js'
+
+
 export default {
   name:'HomePage',
   components:{
@@ -83,12 +94,8 @@ export default {
     wordcloud
   },
   created(){
-    for(let i=1;i<=100;++i){
-      this.defaultWords.push({
-          "标签": "萌宠",
-          "热度": i
-        })
-    }
+      this.changeTags(0,5);
+
   },
   data(){
     return{
@@ -178,48 +185,56 @@ export default {
         '#c9e0ef', "#77C9D4", "#57BC90", "#015249",
         '#409EFF', '#909399', '#F56C6C', '#E6A23C',
         '#67C23A'],
-      defaultWords: [{
-          "标签": "萌宠",
-          "热度": 26
-        },
+      defaultWords: [
         {
-          "标签": "生活",
-          "热度": 19
-        },
-        {
-          "标签": "美食",
-          "热度": 18
-        },
-        {
-          "标签": "电影",
-          "热度": 16
-        },
-        {
-          "标签": "交通",
-          "热度": 15
-        },
-        {
-          "标签": "民宿",
-          "热度": 9
-        },
-        {
-          "标签": "特价",
-          "热度": 9
-        },
-        {
-          "标签": "曝光",
-          "热度": 9
-        },
-        {
-          "标签": "可行",
-          "热度": 6
+        "标签": "萌宠",
+        "热度": 1
         }
-      ]
+      ],
+      currentTagPage:0,
+      tagPageSize:20,
+      totalTags: 0
     }
   },
   methods:{
-    wordClickHandler(name, 热度, vm) {
-      console.log('wordClickHandler', name, 热度, vm);
+    wordClickHandler(name) {
+        window.scrollTo({
+                top:0
+            });
+
+        this.$router.push({path: '/postSquare', query: {selectedTag:name}}
+      ).catch(err => {
+        console.log('输出报错', err)
+      });
+
+    },
+    changeTags(currentPage)
+    {
+        let that=this;
+        getDefaultTagList(currentPage,that.tagPageSize).then((response) => {
+            
+            let tags=response.data.tagList.content;
+
+            that.totalTags=response.data.tagList.totalElements;
+            console.log(tags)
+            let words=[]
+            tags.forEach(tag=>{
+                words.push(
+                        {
+                            "标签": tag,
+                            "热度": 100
+                        }
+                );
+            })
+            
+            that.defaultWords=words;
+        })
+        .catch((error) => {
+            this.$message({
+            message: error,
+            type: "warning",
+            });
+        });
     }
   }
 

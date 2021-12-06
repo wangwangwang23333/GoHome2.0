@@ -37,6 +37,10 @@ import VCharts from 'v-charts'
 Vue.use(ElementUI)
 Vue.use(VCharts)
 
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+Vue.use(Antd)
+
 
 import AmapVue from '@amap/amap-vue';
 AmapVue.config.version = '2.0'; // 默认2.0，这里可以不修改

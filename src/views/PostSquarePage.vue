@@ -1,9 +1,19 @@
 <template>
     <div>
         <!--此处仍然是词云图-->
-        <wordcloud :data="defaultWords" nameKey="标签" valueKey="热度" :color="cloudColors" :showTooltip="true"
-            :wordClick="wordClickHandler" style="width: 90vw;">
-        </wordcloud>
+        <div>
+            <wordcloud :data="defaultWords" nameKey="标签" valueKey="热度" :color="cloudColors" :showTooltip="true"
+                :wordClick="wordClickHandler" style="width: 90vw;">
+            </wordcloud>
+            <div class="block">
+                <el-pagination
+                    layout="prev, pager, next"
+                    :total="totalTags"
+                    @current-change="changeTags">
+                </el-pagination>
+                <el-button @click="setPostListByDefault()" round>取消筛选</el-button>
+            </div>
+        </div>
         <el-divider>
             <div style="color:#bebaba;">从点击你感兴趣的一个话题开始吧！</div>
         </el-divider>
@@ -17,10 +27,7 @@
             <!-- <PostCard /> -->
             <!-- 主体瀑布流区域，无限滚动 -->
             <div class="v-waterfall-area" id="waterfall-main" style="position:relative;top:50px;">
-                <div class="v-waterfall-content" 
-                v-infinite-scroll="getMoreData" 
-                infinite-scroll-disabled="disabled"
-                    infinite-scroll-distance="10" style="overflow:auto" >
+                <div class="v-waterfall-content" >
                     <div v-for="img in waterfallList" 
                     :key="img.stayId" 
                     class="v-waterfall-item" 
@@ -67,6 +74,10 @@
 <script>
 import PostCard from "../components/PostCard";
 import wordcloud from 'vue-wordcloud'
+import {getDefaultTagList} from '@/api/post.js'
+import {getDefaultPostList} from '@/api/post.js'
+import {getTagSelectedPostList} from '@/api/post.js'
+
 export default {
     name: 'v-waterfall',
     components:{
@@ -90,20 +101,8 @@ export default {
 
             //存放瀑布流各个列的高度
             waterfallColHeight: [],
-            imgList: [],
             //整体左偏移量，左右相同
             colLeft: 0,
-            currentPage: 1,
-
-            //是否还有数据
-            noMore: false,
-            //搜索内容
-            searchKey: '',
-
-            //图片详情弹窗可见
-            dialogVisible: false,
-
-            
             //随机占位色卡的颜色
             suijicolour: ['#b4ffe3','#66CDAA','#acc2e6','#d7b0d8','#95abe6','#ffc47b','#b6d288','#f49586','#bcaf7a'],
             
@@ -112,55 +111,27 @@ export default {
             '#c9e0ef', "#77C9D4", "#57BC90", "#015249",
             '#409EFF', '#909399', '#F56C6C', '#E6A23C',
             '#67C23A'],
-            defaultWords: [{
-                "标签": "萌宠",
-                "热度": 26
-                },
-                {
-                "标签": "生活",
-                "热度": 19
-                },
-                {
-                "标签": "美食",
-                "热度": 18
-                },
-                {
-                "标签": "电影",
-                "热度": 16
-                },
-                {
-                "标签": "交通",
-                "热度": 15
-                },
-                {
-                "标签": "民宿",
-                "热度": 9
-                },
-                {
-                "标签": "特价",
-                "热度": 9
-                },
-                {
-                "标签": "曝光",
-                "热度": 9
-                },
-                {
-                "标签": "可行",
-                "热度": 6
-                }
-            ]
-            
+            defaultWords: [
+            ],
+            currentTagPage:0,
+            tagPageSize:20,
+            totalTags: 0,
+
+            currentPostPage:-1,
+            postPageSize:18,
+            totalPosts:0,
+            totalPostPages:0,
+
+            selectedTag:null
         };
     },
     created()
     {
         // 词云图
-        for(let i=1;i<=100;++i){
-            this.defaultWords.push({
-                "标签": "萌宠",
-                "热度": i
-                })
-            }
+
+        this.selectedTag = this.$route.query.selectedTag;
+        
+        this.changeTags(0);
 
         //计算可视区域能够容纳的最大列数,向下取整
         let fullWidth = document.body.clientWidth;
@@ -193,13 +164,26 @@ export default {
             this.waterfallColHeight.push(0);
         }
 
-        this.getMoreData();
     },
     mounted() {
-        
+        this.currentPostPage=-1;
+        this.getMoreData();
+        backToTop();
     },
     methods: {
-        //搜索，从其他组件传值放到$store中的
+        setPostListByDefault()
+        {
+            this.selectedTag=null;
+            this.currentPostPage=-1;
+            this.getMoreData();
+        },
+        setPostListByTag(tag)
+        {
+            this.selectedTag=tag;
+            this.currentPostPage=-1;
+            this.getMoreData();
+
+        },
         search() {
             //点击查询重置页数和瀑布流每列高度
             this.currentPage = 1;
@@ -209,50 +193,49 @@ export default {
             this.waterfallList = [];
             this.getMoreData();
         },
-        // 获取数据
-        getMoreData() {
-            console.log("正在继续加载数据")
-            //表单数据
-            let param = {
-                pageNo: this.currentPage++,
-                pageSize: 10,
-                orderBy: 'updateTime desc'
-            };
-            console.log("当前页码",param.pageNo)
-            if(param.pageNo>10){
-                this.noMore=false;
-                return;
-            }
+        AppendData(posts)
+        {
+            let more=[]
 
-            let pic=[]
-
-            for(let i=0;i<18;i++)
-            {
+            console.log(posts);
+            posts.forEach(post=>{
                 // 高度随机为100-360
                 let height = 100 + Math.floor(Math.random()*7)*40
-
-                pic.push({
+                more.push({
                     width: 300,
                     height: height,
                     imgHeight:height,
-                    id: i,
-                    imgUrl:require("@/assets/postimg/"+String(i)+".jpg"),
-                    text: "这是第"+i.toString()+"张图片",
-                    labels: ['生活','娱乐','萌宠','美食'],
-                    postId: 1,
-                    postTheme:'这家民宿真的绝绝子',
-                    postContent:'姐妹们，我今天给大家介绍一个很好的民宿。\
-                    这家民宿特别好的一个地方就是你可以在床旁边的窗户就能看到\
-                    很多在野外节目才能看到的东西',
-                    replyCount: 3,
-                    likeCount:2014,
-                    userAvatar: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7%E7%99%BD%E5%90%8D%E5%8D%95.png',
-                    postPhotos: 'https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/房屋 (2).png',
-                    postTime: '2021-11-19T14:16:09.000+00:00',
+                    id: post.post.postId,
+                    labels: post.tags,
+                    postId: post.post.postId,
+                    postTheme: post.post.postTheme,
+                    postContent: post.post.postContent,
+                    replyCount: post.post.replyCount,
+                    likeCount:post.post.likeCount,
+                    userAvatar: post.author.customerAvatarLink,
+                    postPhotos: post.images,
+                    postTime: post.post.postTime,
                 });
+            });
+            this.imgPreloading(more);
+
+        },
+        getMoreData() {
+
+            if(!this.selectedTag)
+            {
+                if(this.currentPostPage+1<=this.totalPostPages)
+                {
+                    this.getPostListByDefault(this.currentPostPage+1);
+                }
             }
-            this.noMore=false;
-            this.imgPreloading(pic);
+            else
+            {
+                if(this.currentPostPage+1<=this.totalPostPages)
+                {
+                    this.getPostListByTag(this.selectedTag,this.currentPostPage+1);
+                }
+            }
         },
 
         //图片预加载
@@ -271,33 +254,23 @@ export default {
                 //获取随机占位背景色
                 imgData.colour=this.suijicolour[i%9];
 
-                aImg.src = moreList[i].imgUrl;
 
-                aImg.onload = (e) => {
-                    //console.log("img width height",aImg.width,aImg.height);
-                    imgData.width=this.imageWidth;
-                    imgData.height=moreList[i].imgHeight;
-                    imgData=this.rankImg(imgData);
-                    imgData.src = moreList[i].imgUrl;
-                    imgData.text=moreList[i].text;
-
-                    imgData.labels = moreList[i].labels
-                    imgData.postId = moreList[i].postId
-                    imgData.postTheme = moreList[i].postTheme
-                    imgData.postContent = moreList[i].postContent
-                    imgData.replyCount = moreList[i].replyCount
-                    imgData.likeCount = moreList[i].likeCount
-                    imgData.userAvatar = moreList[i].userAvatar
-                    imgData.postPhotos = moreList[i].postPhotos
-                    imgData.postTime = moreList[i].postTime
-                    imgData.imgHeight = moreList[i].imgHeight
-                    
-                    this.waterfallList.push(imgData);
-
-                    //console.log("pic top left",imgData.id,imgData.top,imgData.left);
-                };
+                imgData.width=this.imageWidth;
+                imgData.height=moreList[i].imgHeight;
+                imgData=this.rankImg(imgData);
+                imgData.labels = moreList[i].labels
+                imgData.postId = moreList[i].postId
+                imgData.postTheme = moreList[i].postTheme
+                imgData.postContent = moreList[i].postContent
+                imgData.replyCount = moreList[i].replyCount
+                imgData.likeCount = moreList[i].likeCount
+                imgData.userAvatar = moreList[i].userAvatar
+                imgData.postPhotos = moreList[i].postPhotos
+                imgData.postTime = moreList[i].postTime
+                imgData.imgHeight = moreList[i].imgHeight
                 
-       
+                this.waterfallList.push(imgData);
+
             }
         },
         //瀑布流布局核心，计算高度和左偏移
@@ -321,43 +294,115 @@ export default {
             console.log("跳转到帖子",imgID)
             console.log("click id left top",this.waterfallList[imgID].id,this.waterfallList[imgID].left,this.waterfallList[imgID].top)
         },
-        wordClickHandler(name, 热度, vm) {
-            console.log('wordClickHandler', name, 热度, vm);
+        wordClickHandler(name) {
+            
+            this.setPostListByTag(name);
         },
         backToTop(){
             window.scrollTo({
                 top:0,
                 behavior:'smooth'
             });
+        },
+        changeTags(currentPage)
+        {
+            let that=this;
+            getDefaultTagList(currentPage,that.tagPageSize).then((response) => {
+                
+                let tags=response.data.tagList.content;
+
+                that.totalTags=response.data.tagList.totalElements;
+
+                
+                //console.log(tags)
+                let words=[]
+                tags.forEach(tag=>{
+                    words.push(
+                            {
+                                "标签": tag,
+                                "热度": 1
+                            }
+                    );
+                })
+                
+                that.defaultWords=words;
+            })
+            .catch((error) => {
+                this.$message({
+                message: error,
+                type: "warning",
+                });
+            });
+        },
+        getPostListByTag(tag,currentPage)
+        {
+            let that=this;
+            if(currentPage===0)
+            {
+                that.waterfallColHeight=[];
+                for (let i = 0; i < this.waterfallImgCol; i++) {
+                    this.waterfallColHeight.push(0);
+                }
+                that.waterfallList=[];
+            }
+
+            getTagSelectedPostList(tag,currentPage,that.postPageSize).then((response) => {
+                
+                let posts=response.data.postInfo.content;
+
+                that.totalPosts=response.data.postInfo.totalElements;
+
+                that.totalPostPages=response.data.postInfo.totalPages;
+
+                that.currentPostPage=currentPage;
+                
+                that.AppendData(posts);
+
+            })
+            .catch((error) => {
+                this.$message({
+                message: error,
+                type: "warning",
+                });
+            });
+        },
+        getPostListByDefault(currentPage)
+        {
+            let that=this;
+            if(currentPage===0)
+            {
+                that.waterfallColHeight=[];
+                for (let i = 0; i < this.waterfallImgCol; i++) {
+                    this.waterfallColHeight.push(0);
+                }
+                that.waterfallList=[];
+            }
+            console.log("sending default post list")
+            getDefaultPostList(currentPage,that.postPageSize).then((response) => {
+                
+                console.log("send default post list success")
+                let posts=response.data.postInfo.content;
+
+                that.totalPosts=response.data.postInfo.totalElements;
+
+                that.totalPostPages=response.data.postInfo.totalPages;
+
+                that.currentPostPage=currentPage;
+                
+                that.AppendData(posts);
+
+            })
+            .catch((error) => {
+                this.$message({
+                message: error,
+                type: "warning",
+                });
+            });
         }
     },
     computed: {
-        disabled() {
-            return this.noMore;
-        }
+
     }
 };
-
-// <!-- 图片卡片 -->
-// <el-card shadow="hover" :body-style="{'padding':'0px','border-radius':'10px'}" lazy>
-//     <!-- 图片懒加载 -->
-//         <el-image :src='img.src' class='image' :key='img.src' >
-//             <!-- 加载前占位 -->
-//             <div slot="placeholder" class="image-slot">
-//                 <div :style="{width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
-//             </div>
-//             <!-- 加载失败占位 -->
-//             <div slot="error" class="image-slot">
-//                 <div :style="{height:img.height.toString()+'px',width:imageWidth.toString() + 'px',backgroundColor:img.colour}"></div>
-//             </div>
-//         </el-image>
-
-//         <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" :style="{height:cardHeight.toString()+'px'}">
-//             <p>{{img.text}}</p>
-
-            
-//         </el-card>
-//     </el-card>
-
 
 </script>
