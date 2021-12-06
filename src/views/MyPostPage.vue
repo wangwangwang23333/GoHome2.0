@@ -20,7 +20,7 @@
                     <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false' :toolbarsFlag='false' :navigation='true'/>
                 </div>
                 <el-card class="box-card" style="0">
-                    <Comment
+                    <!-- <Comment
                         v-model="comments.data"
                         :user="comments.currentUser"
                         :before-submit="addComment"
@@ -28,7 +28,46 @@
                         :before-like="likeComment"
                         :upload-img="uploadOrCopyImg"
                         :props="comments.props"
+                        /> -->
+                    <a-comment>
+                        <template slot="actions">
+                        <span key="comment-basic-like">
+                            <a-tooltip title="Like">
+                            <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like" />
+                            </a-tooltip>
+                            <span style="padding-left: '8px';cursor: 'auto'">
+                            {{ likes }}
+                            </span>
+                        </span>
+                        <span key="comment-basic-dislike">
+                            <a-tooltip title="Dislike">
+                            <a-icon
+                                type="dislike"
+                                :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                                @click="dislike"
+                            />
+                            </a-tooltip>
+                            <span style="padding-left: '8px';cursor: 'auto'">
+                            {{ dislikes }}
+                            </span>
+                        </span>
+                        <span key="comment-basic-reply-to">Reply to</span>
+                        </template>
+                        <a slot="author">Han Solo</a>
+                        <a-avatar
+                        slot="avatar"
+                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                        alt="Han Solo"
                         />
+                        <p slot="content">
+                        We supply a series of design principles, practical patterns and high quality design resources
+                        (Sketch and Axure), to help people create their product prototypes beautifully and
+                        efficiently.
+                        </p>
+                        <a-tooltip slot="datetime" :title="moment().format('YYYY-MM-DD HH:mm:ss')">
+                        <span>{{ moment().fromNow() }}</span>
+                        </a-tooltip>
+                    </a-comment>
                 </el-card>
             </div>
         </div>
@@ -46,8 +85,6 @@ import 'vueperslides/dist/vueperslides.css'
 
 import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-
-import Comment from 'vue-juejin-comment'
 
 export default {
     components: { mavonEditor,VueperSlides, VueperSlide ,Comment},
