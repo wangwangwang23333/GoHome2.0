@@ -283,11 +283,11 @@
             src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/查看.png"
         @click="viewChart(i)">
         </el-image>
-        <el-button class="smallButton"
+        <!-- <el-button class="smallButton"
                    style="position:relative;left:240px;top:-430px;text-align: left"
         @click="updateStay(i)">
           编辑房源
-        </el-button>
+        </el-button> -->
         <br>
         <el-button class="smallButton"
                    style="position:relative;left:252px;top:-425px;text-align: left "
@@ -433,11 +433,11 @@ position: relative;left: 680px;top:-665px">
                style="position:relative;left:470px;top:-250px;text-align: left;font-size: 20px">
               ￥{{pendingStayInfo[(pendingCurrentPage-1)*pendingPageSize+i-1].stayPrice}}
             </p>
-            <el-button class="smallButton"
+            <!-- <el-button class="smallButton"
                        style="position:relative;left:240px;top:-255px;text-align: left"
                       @click="updateStay(i)">
              编辑房源
-            </el-button>
+            </el-button> -->
             <br>
             <el-button class="smallButton"
                        style="position:relative;left:240px;top:-250px;text-align: left"
@@ -528,11 +528,11 @@ position: relative;left: 680px;top:-665px">
               ￥{{unpublishedStayInfo[(unpublishedCurrentPage-1)*unpublishedPageSize+i-1].stayPrice}}
             </p>
 
-            <el-button class="smallButton"
+            <!-- <el-button class="smallButton"
                        style="position:relative;left:240px;top:-255px;text-align: left"
                        @click="updateStay(i)">
               编辑房源
-            </el-button>
+            </el-button> -->
             <br>
             <el-button class="smallButton"
                        style="position:relative;left:240px;top:-250px;text-align: left"
