@@ -6,11 +6,15 @@ import store from '@/store'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.withCredentials = true
 
+export function getDomainUrl() {
+    return 'http://localhost:8080'
+}
+
 // create an axios instance
 const service = axios.create({
 
   // baseURL:'https://api.guisu.fun:6001/api/',
-  baseURL: 'http://localhost:8080/api',
+  baseURL: getDomainUrl() + '/api',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000, // request timeout
   //withCredentials: true

@@ -12,50 +12,64 @@
 */
 
 import request from '@/utils/request'
+import axios from "axios";
+import {getDomainUrl} from "../utils/request";
 
 export function customerLogin(data) {
-  /*
-  顾客登录
-  */
+    /*
+    顾客登录
+    */
 
-  let param = new URLSearchParams(data)
-console.log("吃什么");
-  console.log('paramss',param);
-  console.log('data',data);
-  return request({
-    url: '/login/customer',
-    method: 'post',
-    data:param
-  })
+    let param = new URLSearchParams(data)
+    console.log('paramss', param);
+    console.log('data', data);
+    var config = {
+        method: 'get',
+        url: getDomainUrl() + '/sso/doLogin',
+        params: data
+    };
+
+    return axios(config)
+    // return request({
+    //     url: '/sso/doLogin',
+    //     method: 'GET',
+    //     params: param
+    // })
 }
 
-export function customerRegister(data){
-  /*
-  顾客注册账号
-  */
- let param=new URLSearchParams(data)
+export function getCustomerInfo() {
+    return request({
+        url: "/v1/login/userBriefInfo",
+        method: "GET"
+    })
+}
 
- return request({
-   url:'/register/customer',
-   method:'post',
-   data:param
- })
+export function customerRegister(data) {
+    /*
+    顾客注册账号
+    */
+    let param = new URLSearchParams(data)
+
+    return request({
+        url: '/register/customer',
+        method: 'post',
+        data: param
+    })
 }
 
 
+export function customerPhoneUnique(data) {
+    /*
+    检验顾客手机号是否被注册过
+    未被注册过，则返回true
+    */
+    let param = new URLSearchParams(data)
 
-export function customerPhoneUnique(data){
-  /*
-  检验顾客手机号是否被注册过
-  未被注册过，则返回true
-  */
-  let param=new URLSearchParams(data)
-
-  return request({
-    url:'/customer/phone',
-    method:'post',
-    data:param
-  })
+    return request({
+        url: '/customer/phone',
+        method: 'post',
+        data: param
+    })
 }
 
 // export function getFavorite() {
@@ -66,25 +80,25 @@ export function customerPhoneUnique(data){
 // }
 
 export function testToken() {
-  /*
-  返回当前登录的用户的创建时间
-  */
-  return request({
-    url: '/customer/createtime',
-    method: 'get'
-  })
+    /*
+    返回当前登录的用户的创建时间
+    */
+    return request({
+        url: '/customer/createtime',
+        method: 'get'
+    })
 }
 
-export function changeCustomerPassword(data){
-  /*
-  修改顾客账号密码
-  返回修改状态
-  */
-  let param=new URLSearchParams(data)
+export function changeCustomerPassword(data) {
+    /*
+    修改顾客账号密码
+    返回修改状态
+    */
+    let param = new URLSearchParams(data)
 
-  return request({
-    url:'/customer/changepassword',
-    method:'post',
-    data:param
-  })
+    return request({
+        url: '/customer/changepassword',
+        method: 'post',
+        data: param
+    })
 }

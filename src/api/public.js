@@ -21,7 +21,7 @@ export function getVerifyCode(){
     生成4位随机验证码
     */
    return request({
-       url:'/verifycode',
+       url:'/v1/login/verificationCode',
        method:'get'
    })
 }
