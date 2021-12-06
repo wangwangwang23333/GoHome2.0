@@ -17,3 +17,12 @@ export function getHostStayGender(data){
         params:data
     })
 }
+
+export function getStayOrderChart(data){
+    /*获取房源的订单可视化报表*/
+    return request({
+        url: '/v1/statistics/stay/order/year',
+        method: 'get',
+        params:data
+    })
+}

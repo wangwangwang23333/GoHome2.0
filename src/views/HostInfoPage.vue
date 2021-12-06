@@ -101,7 +101,7 @@ export default {
             stayImgList:response.stayImgList,
             orderNum:response.orderNum,
             reviewNum:response.reviewNum,
-            reviewScore:response.reviewScore
+            reviewScore:Number(response.reviewScore)
           }
           this.publishedHouseInfo.push(newStay)
           
@@ -121,7 +121,7 @@ export default {
             stayPlace:response.stayPlace,
             stayPrice:response.stayPrice,//房源的价格
             stayImgList:response.stayImgList,
-            reviewScore:response.reviewScore
+            reviewScore:Number(response.reviewScore)
           }
           this.pendingStayInfo.push(newStay)
         })
@@ -140,7 +140,7 @@ export default {
             stayPlace:response.stayPlace,
             stayPrice:response.stayPrice,//房源的价格
             stayImgList:response.stayImgList,
-            reviewScore:response.reviewScore
+            reviewScore:Number(response.reviewScore)
           }
           this.unpublishedStayInfo.push(newStay)
         })

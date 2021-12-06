@@ -623,9 +623,9 @@ position: relative;left: 680px;top:-665px">
 </template>
 
 <script>
-import {DeleteStay, getAllStayData, getStayOrderChart, updateHostNickName} from "../api/host";
+import {DeleteStay, getAllStayData, updateHostNickName} from "../api/host";
 
-import {getHostStayAge, getHostStayGender} from '../api/statistics'
+import {getStayOrderChart, getHostStayAge, getHostStayGender} from '../api/statistics'
 
 export default {
   name: "HostInfoMessage",
@@ -693,18 +693,20 @@ export default {
       },
       orderSalesData:{
         columns: ['时间', '订单数量','评价数量','房源评价'],
-        rows: [{ '时间': '2021-1月', '订单数量': 33, '评价数量':12,'房源评价':4.3},
-    { '时间': '2021-2月', '订单数量': 31,'评价数量':10,'房源评价':4.1},
-    { '时间': '2021-3月', '订单数量': 21 ,'评价数量':14,'房源评价':4.5},
-    { '时间': '2021-4月', '订单数量': 41 ,'评价数量':12,'房源评价':4.6},
-    { '时间': '2021-5月', '订单数量': 12 ,'评价数量':32,'房源评价':4.9},
-          { '时间': '2021-6月', '订单数量': 71,'评价数量':56,'房源评价':4.1 },
-          { '时间': '2021-7月', '订单数量': 77 ,'评价数量':12,'房源评价':4.3},
-          { '时间': '2021-8月', '订单数量': 100 ,'评价数量':17,'房源评价':4.4},
-          { '时间': '2021-9月', '订单数量': 140,'评价数量':18,'房源评价':4.3},
-          { '时间': '2021-10月', '订单数量': 145 ,'评价数量':52,'房源评价':4.1},
-          { '时间': '2021-11月', '订单数量':  233,'评价数量':12,'房源评价':4.3},
-          { '时间': '2021-12月', '订单数量': 71 ,'评价数量':12,'房源评价':4.3}]
+        rows: [
+    //       { '时间': '2021-1月', '订单数量': 33, '评价数量':12,'房源评价':4.3},
+    //   { '时间': '2021-2月', '订单数量': 31,'评价数量':10,'房源评价':4.1},
+    // { '时间': '2021-3月', '订单数量': 21 ,'评价数量':14,'房源评价':4.5},
+    // { '时间': '2021-4月', '订单数量': 41 ,'评价数量':12,'房源评价':4.6},
+    // { '时间': '2021-5月', '订单数量': 12 ,'评价数量':32,'房源评价':4.9},
+    //       { '时间': '2021-6月', '订单数量': 71,'评价数量':56,'房源评价':4.1 },
+    //       { '时间': '2021-7月', '订单数量': 77 ,'评价数量':12,'房源评价':4.3},
+    //       { '时间': '2021-8月', '订单数量': 100 ,'评价数量':17,'房源评价':4.4},
+    //       { '时间': '2021-9月', '订单数量': 140,'评价数量':18,'房源评价':4.3},
+    //       { '时间': '2021-10月', '订单数量': 145 ,'评价数量':52,'房源评价':4.1},
+    //       { '时间': '2021-11月', '订单数量':  233,'评价数量':12,'房源评价':4.3},
+    //       { '时间': '2021-12月', '订单数量': 71 ,'评价数量':12,'房源评价':4.3}
+        ]
       },
       scoreImgList:["https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/一般.png",
       "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/微笑.png",
@@ -900,7 +902,6 @@ export default {
 
       // 调用获取房源的顾客年龄api
       getHostStayGender(param).then(response=>{
-        console.log("回复为",response)
         this.sexRingData.rows[0].订单数量=response.data.male;
         this.sexRingData.rows[1].订单数量=response.data.female;
         this.sexRingData.rows[2].订单数量=response.data.unknown;
@@ -913,17 +914,91 @@ export default {
       })
 
       getStayOrderChart(param).then(response=>{
-        this.OrderRate=response.data.averageScore;
-        for(let i =1;i<=12;i++) {
-          this.orderSalesData.rows[i-1].时间 = response.data.orderInfoOfDateList[i-1].data;
-          this.orderSalesData.rows[i-1].订单数量=response.data.orderInfoOfDateList[i-1].orderNum;
-          this.orderSalesData.rows[i-1].评价数量=response.data.orderInfoOfDateList[i-1].reviewNum;
-          this.orderSalesData.rows[i-1].房源评价=response.data.orderInfoOfDateList[i-1].averageScore.toFixed(1);
+        
+        let result = response.data
+        var myDate=new Date()
+        myDate.getFullYear()
+        myDate.getMonth()
+        for(let i=myDate.getMonth()+1;i<=12;++i){
+          let curMonth = String(myDate.getFullYear()-1)+"-"+String(i)
+          
+          let res = null
+          for(let j=0;j<result.length;++j){
+            if(result[j].date==curMonth){
+              res=result[j]
+            }
+          }
+          if (res==null){
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":0,
+              "评价数量":0,
+              "房源评价":0
+            })
+          }
+          else{
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":res.orderNum,
+              "评价数量":res.commentNum,
+              "房源评价":res.commentScore
+            })
+          }
+          
+          
         }
+        for(let i=1;i<=myDate.getMonth();++i){
+          let curMonth = String(myDate.getFullYear())+"-"+String(i)
+       
+          let res = null
+          for(let j=0;j<result.length;++j){
+            if(result[j].date==curMonth){
+              res=result[j]
+            }
+          }
+    
+          if (res==null){
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":0,
+              "评价数量":0,
+              "房源评价":0
+            })
+          }
+          else{
+            this.orderSalesData.rows.push({
+              "时间":curMonth,
+              "订单数量":res.orderNum,
+              "评价数量":res.commentNum,
+              "房源评价":res.commentScore
+            })
+          }
+          
+        }
+
+
+
+        // for(let i=0;i<result.length;++i){
+          
+        //   this.orderSalesData.rows.push({
+        //     "时间":result[i].date,
+        //     "订单数量":result[i].orderNum,
+        //     "评价数量":result[i].commentNum,
+        //     "房源评价":result[i].commentScore
+        //   })
+        // }
+        
+        // this.OrderRate=response.data.averageScore;
+        // for(let i =1;i<=12;i++) {
+        //   this.orderSalesData.rows[i-1].时间 = response.data.orderInfoOfDateList[i-1].data;
+        //   this.orderSalesData.rows[i-1].订单数量=response.data.orderInfoOfDateList[i-1].orderNum;
+        //   this.orderSalesData.rows[i-1].评价数量=response.data.orderInfoOfDateList[i-1].reviewNum;
+        //   this.orderSalesData.rows[i-1].房源评价=response.data.orderInfoOfDateList[i-1].averageScore.toFixed(1);
+        // }
         
       }).catch((error)=>{
         this.$message({
-          message:"网络错误，请稍后重试",
+          message:error,
           type:'warning'
         });
         return;

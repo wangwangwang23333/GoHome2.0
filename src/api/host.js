@@ -117,11 +117,3 @@ export function getAllStayData(data){
     })
 }
 
-export function getStayOrderChart(data){
-    /*获取房源的订单可视化报表*/
-    return request({
-        url: '/Stay/StayOrderInfo',
-        method: 'get',
-        params:data
-    })
-}
