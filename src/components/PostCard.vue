@@ -1,5 +1,5 @@
 <template>
-    <div class="CardType" 
+    <div class="CardType"
     @mouseenter="changeCardStyle($event)" 
     @mouseleave="removeCardStyle($event)">
         <!--走马灯-->

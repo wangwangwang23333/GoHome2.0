@@ -221,8 +221,8 @@ export default {
             tags.forEach(tag=>{
                 words.push(
                         {
-                            "标签": tag,
-                            "热度": 100
+                            "标签": tag.tag,
+                            "热度": tag.hotness
                         }
                 );
             })

@@ -12,6 +12,7 @@
         "ant-design-vue": "^1.7.8",
         "axios": "^0.21.4",
         "core-js": "^3.6.5",
+        "dd-share": "^1.0.1",
         "echarts": "^4.9.0",
         "element-china-area-data": "^5.0.2",
         "element-ui": "^2.15.2",
