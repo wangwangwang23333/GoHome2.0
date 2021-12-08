@@ -344,15 +344,11 @@ export default {
 
       if (this.loginState == 1) {
         if (keyPath[1] === '5-4') {
-          console.log('正在退出登录')
-          //清除token信息
-          this.delLogin();
-          this.loginState = 0;
+          
 
           userLogout().then(response => {
-            //前往主页
-            // this.$router.push({path: '/'});
-
+            this.delLogin();
+            this.loginState = 0;
             this.$message({
               message: '注销成功',
               type: 'success'
@@ -478,11 +474,11 @@ export default {
 
       //判断当前登录对象
       customerLogin(param).then(response => {
-        console.log(response.data)
+        
         //判断是否登录成功
         if (response.data.code === 200) {
           getCustomerInfo().then(response => {
-
+            console.log("登录成功的返回值为",response.data)
                 if (response.status === 200) {
                   this.userName = response.data.userName;
                   this.userAvatar = response.data.userAvatar;
@@ -491,6 +487,7 @@ export default {
                   // 将用户token保存到vuex中
                   this.changeLogin({
                     Authorization: this.userToken,
+                    userId:response.data.userId,
                     userName: response.data.userName,
                     userAvatar: response.data.userAvatar,
                     userIdentity: 'Customer'

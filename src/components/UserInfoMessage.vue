@@ -302,7 +302,7 @@ margin-top: 10%"></el-image>
                   style="width: 35px;height: 35px ;float:left;" >
         </el-image>
         <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%" > 我的帖子</span>
-        <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%">{{posts.length}}个</span>
+        <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%">{{postNumber}}个</span>
         <br><br><br>
         <!--若干个评价模块-->
         <div v-for="i in commentNum<=3?commentNum:((this.commentNum-this.pageSize*(this.currentPage-1))>3?3:(this.commentNum-this.pageSize*(this.currentPage-1)))"
@@ -336,13 +336,13 @@ margin-top: 10%"></el-image>
           <br>
         </div>
 
-        <el-image  v-if="posts.length==0"
+        <el-image  v-if="postNumber==0"
                    src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/Light_转账.png"
                    style="width: 500px;height: 350px;
                    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 margin-top: 10%"></el-image>
         <!--下面是评价的列表-->
-        <p class="smallgretfontsize" v-if="posts.length==0" style="margin-bottom: 5%">该用户暂无发帖记录...</p>
+        <p class="smallgretfontsize" v-if="postNumber==0" style="margin-bottom: 5%">该用户暂无发帖记录...</p>
         <div class="newPagination" >
         <el-pagination v-if="commentNum<4?false:true"
             layout="prev, pager, next"
@@ -394,7 +394,7 @@ margin-top: 10%"></el-image>
 </template>
 
 <script>
-
+import {getPersonalPostList} from '../api/post.js'
 export default {
   name: "UserInfoMessage",
   props: {
@@ -407,12 +407,29 @@ export default {
     commentList:Array
   },
   created(){
-
+    // 获取指定用户的发帖记录
+    this.userId = localStorage.getItem('userId')
+    console.log("用户的个人id为",this.userId)
+    getPersonalPostList(this.userId,0,5).then(response=>{
+      this.postNumber=response.data.postNum
+      this.posts=response.data.postInfo.content
+      console.log(response)
+    })
+    .catch((error) => {
+      this.$message({
+        message: "网络异常，请稍后重试",
+        type: 'warning'
+      });
+      console.log('error', error)
+      return;
+    })
   },
   data()
   {
     return{
+      userId:'',
       posts:[],
+      postNumber:0,
       dialog:false,
       moodIndex:0,
       direction:'rtl',

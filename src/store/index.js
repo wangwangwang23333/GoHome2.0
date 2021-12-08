@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     //存储token
     Authorization:localStorage.getItem('Authorization')?localStorage.getItem('Authorization') : '',
+    userId:localStorage.getItem('userId')?localStorage.getItem('userId'):'',
     userName:localStorage.getItem('userName')?localStorage.getItem('userName'):'',
     userAvatar:localStorage.getItem('userAvatar')?localStorage.getItem('userAvatar'):'',
     userIdentity:localStorage.getItem('userIdentity')?localStorage.getItem('userIdentity'):'',
@@ -18,10 +19,12 @@ export default new Vuex.Store({
     //修改token，并把token存入localStorage
     changeLogin(state,user){
       state.Authorization=user.Authorization
+      state.userId=user.userId
       state.userName=user.userName
       state.userAvatar=user.userAvatar
       state.userIdentity=user.userIdentity //登录身份
       localStorage.setItem('Authorization',user.Authorization)
+      localStorage.setItem('userId',user.userId)
       localStorage.setItem('userName',user.userName)
       localStorage.setItem('userAvatar',user.userAvatar)
       localStorage.setItem('userIdentity',user.userIdentity)
@@ -48,6 +51,7 @@ export default new Vuex.Store({
     delLogin(state){
       console.log('delete token')
       state.Authorization=''
+      state.userId=''
       state.userName=''
       state.userAvatar=''
       state.userIdentity=''

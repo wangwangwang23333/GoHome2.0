@@ -61,7 +61,6 @@ export default {
           };
 
           uploadBasicInfo(param).then(response => {
-            console.log("需要在这里更改基本信息")
             //如果修改成功，需要更改本地信息
             this.changeLogin({
               Authorization: localStorage.getItem('Authorization'),
@@ -210,7 +209,6 @@ export default {
     });
 
     //有token,则读取token
-    console.log('有token信息')
     this.userName = localStorage.getItem('userName');
     console.log('user:', this.userName)
     this.userAvatar = localStorage.getItem('userAvatar');
@@ -218,7 +216,7 @@ export default {
     //loading.close()
     //调用api
     getCustomerInfo().then(response => {
-      console.log(response.data);
+      console.log("获取到的个人信息为",response.data);
       //获取api中的数据
       this.reviewNum = response.data.evalNum;
       if (response.data.userGroupLevel == null)
