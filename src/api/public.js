@@ -12,29 +12,29 @@ export function sendMessage(data) {
     return request({
         url: '/phone/sendmessage',
         method: 'post',
-        data:param
+        data: param
     })
-} 
+}
 
-export function getVerifyCode(){
+export function getVerifyCode() {
     /*
     生成4位随机验证码
     */
-   return request({
-       url:'/v1/login/verificationCode',
-       method:'get'
-   })
+    return request({
+        url: '/v1/login/verificationCode',
+        method: 'get'
+    })
 }
 
-export function IDVerify(data){
+export function IDVerify(data) {
     /*
     身份证照片校验
     */
     let param = new URLSearchParams(data)
     console.log(data)
     return request({
-        url: '/IDVerify',
+        url: 'v1/signup/verifyResidentId',
         method: 'post',
-        data:param
+        data: param
     })
 }
