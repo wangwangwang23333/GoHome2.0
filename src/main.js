@@ -58,6 +58,17 @@ Vue.prototype.$moment = moment;//赋值使用
 import { VueJsonp } from 'vue-jsonp'    // 网上很多博客引用不加{}，会报错
 Vue.use(VueJsonp)
 
+import { Comment, Tooltip, Icon, Avatar } from 'ant-design-vue'
+import Reply from './components/Reply.vue'
+import ReplyList from './components/ReplyList.vue'
+Vue.component(Comment.name, Comment);
+Vue.component(Tooltip.name, Tooltip);
+Vue.component(Icon.name, Icon);
+Vue.component(Avatar.name, Avatar);
+
+Vue.component(Reply.name, Reply);
+Vue.component(ReplyList.name, ReplyList);
+
 Vue.config.productionTip = false
 
 new Vue({
