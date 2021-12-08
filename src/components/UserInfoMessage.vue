@@ -304,10 +304,9 @@ margin-top: 10%"></el-image>
         <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%" > 我的帖子</span>
         <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%">{{postNumber}}个</span>
         <br><br><br>
-        <div v-for="(item,index) in posts.slice((currentPostPage-1)*3,currentPostPage*3)"
+        <div v-for="(item,index) in posts"
              v-if="postNumber!=0" :key="index">
-          <el-card    class="smallcard" style="width: 500px;height: 100%">
-              
+          <el-card class="smallcard" style="width: 500px;height: 100%">
             <el-row>
               <el-col :span="10" v-if="item.images.length>0">
                 <el-carousel trigger="click" height="100px" indicator-position="none">
@@ -443,7 +442,7 @@ export default {
     // 获取指定用户的发帖记录
     this.userId = localStorage.getItem('userId')
     console.log("用户的个人id为",this.userId)
-    getPersonalPostList(this.userId,0,5).then(response=>{
+    getPersonalPostList(this.userId,0,3).then(response=>{
       this.postNumber=response.data.postNum
       this.posts=response.data.postInfo.content
       console.log(response)
@@ -576,6 +575,19 @@ export default {
     },
     postPageChange(currentPage){
       this.currentPostPage=currentPage
+      getPersonalPostList(this.userId,currentPage-1,3).then(response=>{
+        this.postNumber=response.data.postNum
+        this.posts=response.data.postInfo.content
+        console.log(response)
+      })
+      .catch((error) => {
+        this.$message({
+          message: "网络异常，请稍后重试",
+          type: 'warning'
+        });
+        console.log('error', error)
+        return;
+      })
     },
     resaveInfo:function ()
     {
