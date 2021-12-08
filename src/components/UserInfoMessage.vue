@@ -275,13 +275,74 @@
           <br>
         </div>
 
-        <el-image  v-if="commentNum===0?true:false"
+        <el-image  v-if="commentNum===0"
                    src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/Light_转账.png"
                    style="width: 500px;height: 350px;
                    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 margin-top: 10%"></el-image>
         <!--下面是评价的列表-->
-        <p class="smallgretfontsize" v-if="commentNum===0?true:false" style="margin-bottom: 5%">该用户暂无评价哦...</p>
+        <p class="smallgretfontsize" v-if="commentNum===0" style="margin-bottom: 5%">该用户暂无评价哦...</p>
+        <div class="newPagination" >
+        <el-pagination v-if="commentNum<4?false:true"
+            layout="prev, pager, next"
+            :page-size="pageSize"
+             :pager-count="pageCount"
+            :total="commentNum"
+            @current-change="current_change"
+            style="float: bottom ;padding-bottom: 1%"
+            background
+        >
+        </el-pagination>
+        </div>
+      </el-card >
+
+      <!-- 我的帖子模块-->
+      <el-card class="box-card" shadow="hover" style="position: relative;top:20px;left:20px;height: 100%;background-color: white;" >
+        <el-image src="https://tongjigohome.oss-cn-shanghai.aliyuncs.com/%E6%88%91%E7%9A%84%E5%B8%96%E5%AD%90.png"
+                  style="width: 35px;height: 35px ;float:left;" >
+        </el-image>
+        <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%" > 我的帖子</span>
+        <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%">{{posts.length}}个</span>
+        <br><br><br>
+        <!--若干个评价模块-->
+        <div v-for="i in commentNum<=3?commentNum:((this.commentNum-this.pageSize*(this.currentPage-1))>3?3:(this.commentNum-this.pageSize*(this.currentPage-1)))"
+             v-if="commentNum===0?false:true">
+          <el-card    class="smallcard" style="width: 500px;height: 100%">
+                            <span class="bigFontSize" style="font-size: 15px;float: left;color: #7b7b7b">
+                时间：{{commentList[(currentPage-1)*pageSize+i-1].commentTime.substring(0,10)}}</span>
+            <br><br>
+            <el-image :src=commentList[(currentPage-1)*pageSize+i-1].hostAvatar
+                      style="width: 56px;height: 56px;border-radius: 28px;float: left"></el-image>
+            <span class="bigFontSize" style="font-size: 20px;float:left;padding-left: 2%">
+              {{commentList[(currentPage-1)*pageSize+i-1].hostNickName}}</span>
+            <br><br>
+            <span style="font-size: 15px;font-family: 'PingFang SC';
+            font-weight: bold;color: #a3a3a3;float: left;padding-left: 2%">
+              注册时间:{{commentList[(currentPage-1)*pageSize+i-1].hostRegisterDate.substring(0,10)}}</span>
+            <el-divider></el-divider>
+            <el-rate style="float: left"
+                     v-model="commentList[(currentPage-1)*pageSize+i-1].customerStars"
+                     disabled
+                     show-score
+                     text-color="#ff9900"
+                     score-template="{value}">
+            </el-rate>
+            <br><br>
+            <span class="bigFontSize" style="font-size: 13px;float: left;text-align: left">
+                {{commentList[(currentPage-1)*pageSize+i-1].comment}}</span>
+            <br>
+
+          </el-card>
+          <br>
+        </div>
+
+        <el-image  v-if="posts.length==0"
+                   src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/Light_转账.png"
+                   style="width: 500px;height: 350px;
+                   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+margin-top: 10%"></el-image>
+        <!--下面是评价的列表-->
+        <p class="smallgretfontsize" v-if="posts.length==0" style="margin-bottom: 5%">该用户暂无发帖记录...</p>
         <div class="newPagination" >
         <el-pagination v-if="commentNum<4?false:true"
             layout="prev, pager, next"
@@ -351,6 +412,7 @@ export default {
   data()
   {
     return{
+      posts:[],
       dialog:false,
       moodIndex:0,
       direction:'rtl',
