@@ -15,16 +15,16 @@
 
         @select="handleSelect"
         style="
-      display: block;
-      
-      height: 100%;
-      width: 111.8%;
-      left: -10%;
-      top:-5%;
-      align-self: center;
-      background-color: rgba(246,248,248,0.913);
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-      ">
+              display: block;
+              height: 100%;
+              width: 111.8%;
+              left: -10%;
+              top:-5%;
+              align-self: center;
+              background-color: rgba(246,248,248,0.8);
+              backdrop-filter: blur(10px);
+              box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    ">
       <el-menu-item style="width:20%;">
         <el-image
             src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/biglogo.png"
@@ -553,8 +553,8 @@ export default {
       this.dialogTableVisible = false;
       console.log('跳转至注册账号界面')
       //根据当前选项，跳转至不同界面
-        this.$router.replace('/register')
-        // this.$router.replace('/hostRegister')
+      this.$router.replace('/register')
+      // this.$router.replace('/hostRegister')
 
     },
     getCurrentTime() {
