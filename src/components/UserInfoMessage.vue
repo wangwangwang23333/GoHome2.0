@@ -304,34 +304,69 @@ margin-top: 10%"></el-image>
         <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%" > 我的帖子</span>
         <span class="bigFontSize" style="font-size: 20px;float:left;padding-top: 1%;padding-left: 2%">{{postNumber}}个</span>
         <br><br><br>
-        <!--若干个评价模块-->
-        <div v-for="i in commentNum<=3?commentNum:((this.commentNum-this.pageSize*(this.currentPage-1))>3?3:(this.commentNum-this.pageSize*(this.currentPage-1)))"
-             v-if="commentNum===0?false:true">
+        <div v-for="(item,index) in posts.slice((currentPostPage-1)*3,currentPostPage*3)"
+             v-if="postNumber!=0" :key="index">
           <el-card    class="smallcard" style="width: 500px;height: 100%">
-                            <span class="bigFontSize" style="font-size: 15px;float: left;color: #7b7b7b">
-                时间：{{commentList[(currentPage-1)*pageSize+i-1].commentTime.substring(0,10)}}</span>
-            <br><br>
-            <el-image :src=commentList[(currentPage-1)*pageSize+i-1].hostAvatar
-                      style="width: 56px;height: 56px;border-radius: 28px;float: left"></el-image>
-            <span class="bigFontSize" style="font-size: 20px;float:left;padding-left: 2%">
-              {{commentList[(currentPage-1)*pageSize+i-1].hostNickName}}</span>
-            <br><br>
-            <span style="font-size: 15px;font-family: 'PingFang SC';
-            font-weight: bold;color: #a3a3a3;float: left;padding-left: 2%">
-              注册时间:{{commentList[(currentPage-1)*pageSize+i-1].hostRegisterDate.substring(0,10)}}</span>
-            <el-divider></el-divider>
-            <el-rate style="float: left"
-                     v-model="commentList[(currentPage-1)*pageSize+i-1].customerStars"
-                     disabled
-                     show-score
-                     text-color="#ff9900"
-                     score-template="{value}">
-            </el-rate>
-            <br><br>
-            <span class="bigFontSize" style="font-size: 13px;float: left;text-align: left">
-                {{commentList[(currentPage-1)*pageSize+i-1].comment}}</span>
-            <br>
-
+              
+            <el-row>
+              <el-col :span="10" v-if="item.images.length>0">
+                <el-carousel trigger="click" height="100px" indicator-position="none">
+                  <el-carousel-item v-for="(postPhoto,index2) in item.images" :key="index2">
+                      <el-image fit="cover"
+                          style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                          :src="postPhoto"
+                          >
+                      </el-image>
+                  </el-carousel-item>
+              </el-carousel>
+    
+              </el-col>
+              <el-col :span="2">
+                <el-divider direction="vertical"></el-divider>
+              </el-col>
+              <el-col :span="12">
+                <div class="bigFontSize" 
+                style="font-size: 15px;float: left;color: #7b7b7b;margin-left: 4%;">
+                  {{item.post.postTheme}}
+                </div>
+                <h5 style="font-size:5px;font-weight: revert;width:90%;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;
+                overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                    {{item.post.postContent}}
+                </h5>
+                <div class="label-list" style="inli">
+                  <el-tag type="primary" 
+                  v-for="(item2,index2) in item.tags" :key="index2" effect="dark"
+                  :color="labelColor[index2]" v-if="item.tags.length>0">
+                    {{item2}}
+                  </el-tag>
+                  <el-tag type="primary" 
+                  effect="dark"
+                  :color="labelColor[0]" v-if="item.tags.length==0">
+                    暂无标签
+                  </el-tag>
+                </div>
+                <!--点赞信息-->
+                <h5 style="margin-top: 6vh;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
+                  <el-row>
+                      <!--评论数 点赞数-->
+                  <el-col :span="5">
+                      <i class="el-icon-chat-line-square"></i>
+                      {{item.post.replyCount}}
+                  </el-col>
+                  
+                  <el-col :span="5">
+                      <i class="el-icon-thumb"></i>
+                      {{item.post.likeCount}}
+                  </el-col>
+                  <el-col :span="14">
+                      <i class="el-icon-time"></i>
+                      {{item.post.postTime.replace('T',' ').substring(0,16)}}
+                  </el-col>
+                  </el-row>
+              </h5>
+              </el-col>
+            </el-row>
+            
           </el-card>
           <br>
         </div>
@@ -341,15 +376,13 @@ margin-top: 10%"></el-image>
                    style="width: 500px;height: 350px;
                    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 margin-top: 10%"></el-image>
-        <!--下面是评价的列表-->
         <p class="smallgretfontsize" v-if="postNumber==0" style="margin-bottom: 5%">该用户暂无发帖记录...</p>
         <div class="newPagination" >
-        <el-pagination v-if="commentNum<4?false:true"
+        <el-pagination v-if="postNumber>=4"
             layout="prev, pager, next"
-            :page-size="pageSize"
-             :pager-count="pageCount"
-            :total="commentNum"
-            @current-change="current_change"
+            :page-size="3"
+            :total="postNumber"
+            @current-change="postPageChange"
             style="float: bottom ;padding-bottom: 1%"
             background
         >
@@ -436,7 +469,10 @@ export default {
       loading:false,
       pageSize:3,//默认每次显示三条
       currentPage:1,//现在展示的页数
+      currentPostPage:1,
+      postPageCount:5,
       pageCount:5,
+      labelColor:["#77C9D4","#57BC90","#015249"],
       sexImgList:{"未知":"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/问号.png",
         "男":"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/男.png",
         "女":"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/女.png"},//性别图像数组
@@ -537,6 +573,9 @@ export default {
     current_change:function (currentPage){
       this.currentPage=currentPage;
       console.log(this.currentPage);
+    },
+    postPageChange(currentPage){
+      this.currentPostPage=currentPage
     },
     resaveInfo:function ()
     {
@@ -704,6 +743,24 @@ box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   background-color: #d3dce6;
 }
 
+
+/* 标签列表 */
+.label-list{
+    padding:1px 6px;
+    margin:1px 6px ;
+
+}
+.el-tag{
+  float:left;
+  white-space: pre-line;
+  word-break: break-all;
+  margin-top: 5px;
+  margin-left:5px;
+  max-height: 4vh;
+  font-family: "FZHeiBJW";
+  color:white;
+}
+
 </style>
 <style>
 .el-dropdown-link {
@@ -725,4 +782,5 @@ box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   animation: fadeInDown;
   animation-duration: 1s;
 }
+
 </style>
