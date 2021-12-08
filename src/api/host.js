@@ -4,20 +4,6 @@
 
 import request from '@/utils/request'
 
-export function hostLogin(data) {
-    /*
-    房东登录
-    */
-
-    let param = new URLSearchParams(data)
-
-    return request({
-        url: '/login/host',
-        method: 'post',
-        data: param
-    })
-}
-
 
 export function hostRegister(data) {
     /*
@@ -26,9 +12,9 @@ export function hostRegister(data) {
     let param = new URLSearchParams(data)
 
     return request({
-        url: '/register/host',
+        url: '/v1/signup/upgradeToHost',
         method: 'post',
-        data: param
+        params: param
     })
 }
 

@@ -393,6 +393,8 @@ export default {
         this.curStep++;
 
       } else if (this.curStep === 1) {
+        // // TODO: 先跳过一下
+        // this.curStep += 1;
         //上传图片相关
         if (this.fileImg.length != 1) {
           this.$message({
@@ -408,7 +410,7 @@ export default {
         var reader = new FileReader();
         reader.readAsDataURL(this.fileImg[0].raw);
         //
-        // console.log('after base64:', reader.result);
+        console.log('after base64:', reader.result);
         let that = this;
         reader.onload = function (e) {
           console.log('data:')
@@ -419,7 +421,7 @@ export default {
 
           IDVerify(param).then(response => {
             console.log(response.data.verifyResult)
-            if (response.data.verifyResult == 2) {
+            if (response.data.verifyResult === 0) {
               // if (true ) {
               //身份证校验成功
               that.$message({
@@ -429,16 +431,17 @@ export default {
               //读取身份证号
               that.ID = response.data.trueID
               that.trueName = response.data.trueName
+              console.log(that.ID, that.trueName)
 
               //进入下一步
               that.curStep += 1;
-            } else if (response.data.verifyResult == 0) {
+            } else if (response.data.verifyResult === 1) {
               that.$message({
                 message: '无效的身份证，请重新上传',
                 type: 'warning'
               });
               return;
-            } else if (response.data.verifyResult == 1) {
+            } else if (response.data.verifyResult === 2) {
 
               that.$message({
                 message: '该身份证号已被注册过，如有疑问请联系客服',
@@ -451,7 +454,7 @@ export default {
             return;
           })
         }
-        this.curStep += 1;
+        // this.curStep += 1;
       } else if (this.curStep === 2) {
         //检验是否同意协议
         if (!this.licenseAccept) {
@@ -464,19 +467,25 @@ export default {
 
         //获取注册信息
         let param = {
-          prenumber: '+86',
-          phonenumber: this.phone,
-          password: this.password,
-          username: this.name,
+          phoneCode: '+86',
+          phone: this.phone,
           ID: this.ID,
-          truename: this.trueName,
-          gender: this.ID[16] === '1' ? 'F' : 'M'
+          realName: this.trueName,
+          gender: this.ID[16] % 2 === 1 ? 'f' : 'm'
         }
         console.log('最终提交的注册信息为', param);
 
         //判断完成，注册
         hostRegister(param).then(response => {
           console.log(response)
+          if (response.status === 401) {
+            this.$message({
+              message: '请重新登陆再进行升级！',
+              type: 'warning'
+            });
+            return
+          }
+
           if (response.data.registerState) {
             this.curStep = 4;
 
@@ -486,7 +495,9 @@ export default {
             });
 
             //跳转到首页
-            this.$router.push('/');
+            this.$router.push({
+              path: "/"
+            });
 
             //打开登录界面
             startLogin();
@@ -553,6 +564,7 @@ export default {
       }
 
       // 发送验证码
+      this.messageIsSend = true;
 
       // sendMessage(param).then(response => {
       //   if (response.data.sendstate) {
