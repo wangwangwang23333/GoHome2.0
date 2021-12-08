@@ -182,7 +182,9 @@
                 imgUrl="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/cloud1.png"
             />
             <movingCloud
-                style="position: absolute;left: -350%;top:-20%;z-index: 999;width: 600%;"
+                style="position: absolute;
+                left: -350%;top:-20%;
+                z-index: 999;width: 600%;"
                 imgUrl="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/cloud1.png"
             />
             <el-image
@@ -476,6 +478,7 @@ export default {
 
       //判断当前登录对象
       customerLogin(param).then(response => {
+        console.log(response.data)
         //判断是否登录成功
         if (response.data.code === 200) {
           getCustomerInfo().then(response => {
