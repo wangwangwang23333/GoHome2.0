@@ -1,15 +1,15 @@
 <template>
     <a-comment>
         <template slot="actions">
-        <span key="comment-basic-like">
-            <a-tooltip title="Like">
-            <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like" />
-            </a-tooltip>
-            <span style="padding-left: '8px';cursor: 'auto'">
-            {{ this.reply.replyLikeCount}}
+            <span key="comment-basic-like">
+                <a-tooltip title="Like">
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like" />
+                </a-tooltip>
+                <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ this.reply.replyLikeCount}}
+                </span>
             </span>
-        </span>
-        <span key="comment-basic-reply-to">Reply to</span>
+            <span key="comment-basic-reply-to" @click="replyTo">回复</span>
         </template>
         <a slot="author">{{this.customer.customerName}}</a>
         <a-avatar
@@ -23,7 +23,16 @@
         <a-tooltip slot="datetime" :title="moment(this.reply.replyTime).format('YYYY-MM-DD HH:mm:ss')">
         <span>{{ moment(this.reply.replyTime).fromNow() }}</span>
         </a-tooltip>
-        <ReplyList v-if="hasSonReply" :replyList="this.sonReply"/>
+        <el-form v-if="form.show" ref="form" :model="form" label-width="80px">
+            <el-form-item label="回复内容">
+                <el-input type="textarea" v-model="form.desc"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">发送</el-button>
+                <el-button @click="onCancel">取消</el-button>
+            </el-form-item>
+        </el-form>
+        <ReplyList v-if="hasSonReply" ref="child" :replyList="this.sonReply" :id="this.reply.replyId"/>
     </a-comment>
 
 </template>
@@ -41,7 +50,7 @@ import moment from 'moment'
 Vue.use(Antd)
 
 import { Comment,Tooltip, Icon,Avatar } from 'ant-design-vue';
-import {getReplyLikeStatus,addReplyLike} from '@/api/post.js'
+import {getReplyLikeStatus,addReplyLike,deleteReplyLike,addReply} from '@/api/post.js'
 
 
 export default {
@@ -55,34 +64,95 @@ export default {
         moment,
         },
     methods:{
+        onSubmit()
+        {
+            var that=this;
+
+            addReply({
+                "postId":that.reply.postId,
+                "customerId":0,
+                "replyContent":that.form.desc,
+                "preReplyId": that.reply.replyId
+            }).then((response)=>{
+
+                that.form.desc="";
+                that.form.show=false;
+
+                that.$router.go(0);
+                
+            }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
+
+        },
+        onCancel()
+        {
+            this.form.desc="";
+            this.form.show=false;
+        },
         setAction()
         {
-            //这里调用getReplyLikeStatus设置action
+            let that=this;
 
-
-            this.action='disliked';
+            getReplyLikeStatus(that.reply.replyId).then((response)=>
+            {
+                if(response.data.exist===false)
+                {
+                    that.action='disliked';
+                }
+                else
+                {
+                    that.action='liked';
+                }
+            }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
         },
         like() {
             
             if(this.action==='liked')
             {
-                //这里调用delete
+                let that=this;
+                deleteReplyLike(this.reply.replyId).then((response)=>
+                {
+                    that.action='disliked';
+                    console.log("disliked")
 
-
-                this.action='disliked';
+                }).catch((error) => {
+                        this.$message({
+                        message: error,
+                        type: "warning",
+                        });
+                    });
             }
             else
             {
-                //这里调用post
+                let that=this;
+                addReplyLike({
+                        "replyId":that.reply.replyId,
+                        "customerId":0
+                    }).then((response)=>{
+                        that.action='liked';
 
-
-                this.action='liked';
+                        console.log("liked")
+                    }).catch((error) => {
+                            this.$message({
+                            message: error,
+                            type: "warning",
+                            });
+                        });
             }
 
         },
         replyTo()
         {
-
+            this.form.show=true;
         }
     },
     props:{
@@ -109,7 +179,11 @@ export default {
         return {
             action: 'disliked',
             hasSonReply: false,
-            moment
+            moment,
+            form: {
+                desc: '',
+                show: false
+            }
         }
     }
 }

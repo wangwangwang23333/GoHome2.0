@@ -6,6 +6,10 @@
                 <mavon-editor v-model="value"/>
             </div>
         </el-card>
+        <el-card class="box-card">
+            <p>这里是上传图片</p>
+            <p>这里是上传房源</p>
+        </el-card>
     </div>
 </template>
 

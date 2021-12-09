@@ -126,6 +126,7 @@ export default {
       console.log('点击登录键')
       // this.$parent.$parent.$parent.$parent.$parent.dialogTableVisible=false;
       this.$emit("logins")
+      this.$router.go(0);
     },
 
     updateVerifyCode() {
