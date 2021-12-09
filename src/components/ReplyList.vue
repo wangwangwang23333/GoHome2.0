@@ -9,7 +9,14 @@
                 :customer="reply.customer"
                 :sonReply="reply.sonReply"
                 />
-            </div>
+        </div>
+        <div class="block" v-if="this.replyList.replyInfo>1">
+            <el-pagination style=""
+                layout="prev, pager, next"
+                :total="totalReply"
+                @current-change="changeReply">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -30,18 +37,61 @@ export default {
     components:{
     },
     methods:{
+        changeReply:function(currentPage){
+            let that=this;
+            if(this.isPostReplyList)
+            {
+                getPostReplyList(this.id,currentPage).then((response) => {
+                
+                    that.replies=response.data.replyInfo.content
+                    that.totalReply=response.data.replyInfo.totalElements
+                    that.totalPages=response.data.replyInfo.totalPages;
+                }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
+            }
+            else
+            {
+                getSonReplyList(this.id,currentPage).then((response) => {
+                
+                    that.replies=response.data.replyInfo.content
+                    that.totalReply=response.data.replyInfo.totalElements
+                    that.totalPages=response.data.replyInfo.totalPages;
+                    
+                }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
+            }
+
+        }
     },
     props:{
-        replyList:null
+        replyList:null,
+        isPostReplyList: false,
+        id:0
     },
 
     created(){
+            
             this.replies=this.replyList.replyInfo.content
+            this.totalReply=this.replyList.replyInfo.totalElements
+            this.totalPages=this.replyList.replyInfo.totalPages;
+
+    },
+    mounted(){
     },
 
     data() {
         return {
-            replies:null
+            replies:null,
+            totalReply:0,
+            totalPages:0
         }
     }
 }

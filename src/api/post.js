@@ -77,19 +77,19 @@ export function getSonReplyList(replyId,currentPage,pageSize) {
     })
 }
 
-export function getPostLikeStatus(postId, customerId){
+export function getPostLikeStatus(postId){
     return request({
         url: '/v1/posts/like/post/status',
         method: 'get',
-        params: {postId:postId,customerId:customerId}
+        params: {postId:postId,customerId:0}
     })
 }
 
-export function getReplyLikeStatus(replyId, customerId){
+export function getReplyLikeStatus(replyId){
     return request({
         url: '/v1/posts/like/reply/status',
         method: 'get',
-        params: {replyId:replyId,customerId:customerId}
+        params: {replyId:replyId,customerId:0}
     })
 }
 
@@ -105,11 +105,11 @@ export function addPost(data) {
     })
 }
 
-export function deletePost(postId, customerId) {
+export function deletePost(postId) {
     return request({
         url: '/v1/posts/post',
         method: 'delete',
-        params: {postId:postId,customerId:customerId}
+        params: {postId:postId,customerId:0}
     })
 }
 
@@ -149,18 +149,18 @@ export function addReplyLike(data) {
     })
 }
 
-export function deletePostLike(postId, customerId) {
+export function deletePostLike(postId) {
     return request({
         url: '/v1/posts/like/post',
         method: 'delete',
-        params: {postId:postId,customerId:customerId}
+        params: {postId:postId,customerId:0}
     })
 }
 
-export function deleteReplyLike(replyId, customerId) {
+export function deleteReplyLike(replyId) {
     return request({
         url: '/v1/posts/like/reply',
         method: 'delete',
-        params: {replyId:replyId,customerId:customerId}
+        params: {replyId:replyId,customerId:0}
     })
 }

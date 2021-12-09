@@ -38,17 +38,36 @@
 
                 <div id="main" style="z-index:0">
                     <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false' :toolbarsFlag='false' :navigation='true'/>
-                    <div>
-                        <span class="like-demo" style="text-align: left">
-                            这里应该是点赞和评论
-                        </span>
-                        <span class="share-demo" style="text-align: right">
-                            <dd-share class="social-share" :share-config="shareConfig"></dd-share>
-                        </span>
-                    </div>
+                    <el-card class="box-card">
+                        <div class="post-like">
+                                <span key="comment-basic-like" >
+                                    <a-tooltip  title="Like">
+                                        <a-icon type="like" :theme="this.action === 'liked' ? 'filled' : 'outlined'" @click="like" />
+                                    </a-tooltip>
+                                    <span style="padding-left: '8px';cursor: 'auto'">
+                                    {{ this.replyCount}}
+                                    </span>
+                                </span>
+                                <span key="comment-basic-reply-to" @click="replyTo">回复</span>
+                        </div>
+                        <div>
+                            <span class="share-demo" style="text-align: right">
+                                <dd-share class="social-share" :share-config="shareConfig"></dd-share>
+                            </span>
+                        </div>
+                    </el-card>
+                    <el-form v-if="form.show" ref="form" :model="form" label-width="80px">
+                        <el-form-item label="回复内容">
+                            <el-input type="textarea" v-model="form.desc"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">发送</el-button>
+                            <el-button @click="onCancel">取消</el-button>
+                        </el-form-item>
+                    </el-form>
                 </div>
                 <el-card v-if="this.hasReply===true" class="box-card" style="0">
-                    <ReplyList :replyList="this.replyContents"/>
+                    <ReplyList :replyList="this.replyContents" :isPostReplyList="true" :id="this.$route.query.postId"/>
                 </el-card>
             </div>
         </div>
@@ -62,8 +81,11 @@
 import DdShare from 'dd-share'
 import Vue from 'vue';
 
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
 
 Vue.use(DdShare)
+Vue.use(Antd)
 
 import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.css'
@@ -74,6 +96,7 @@ import ReplyList from '@/components/ReplyList'
 
 import {getDetailedPost} from '@/api/post.js'
 import {getPostReplyList} from '@/api/post.js'
+import {getPostLikeStatus,addReply,addPostLike,deletePostLike} from '@/api/post.js'
 
 export default {
     components: { mavonEditor,VueperSlides, VueperSlide ,ReplyList},
@@ -106,9 +129,15 @@ export default {
             likeCount:0,
             author:null,
             replyContents:null,
-            hasReply:false
+            hasReply:false,
 
+            action: 'disliked',
+            form: {
+                desc: '',
+                show: false
             }
+
+        }
     },
     created() {
 
@@ -148,7 +177,7 @@ export default {
                 });
         });
 
-        getPostReplyList(postId).then((response) => {
+        getPostReplyList(postId,0).then((response) => {
             
             that.replyContents=response.data;
             
@@ -169,37 +198,103 @@ export default {
         });
 
 
+
+
     },
     mounted()
     {
-        this.initialize();
-
-        this.splitReference();
-
-        this.addData();
     },
     methods:{
 
+        onSubmit()
+        {
+            var that=this;
+
+            addReply({
+                "postId":that.$route.query.postId,
+                "customerId":0,
+                "replyContent":that.form.desc,
+                "preReplyId": null
+            }).then((response)=>{
+
+                that.form.desc="";
+                that.form.show=false;
+
+                that.$router.go(0);
+                
+            }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
+
+        },
+        onCancel()
+        {
+            this.form.desc="";
+            this.form.show=false;
+        },
+        setAction()
+        {
+            let that=this;
+
+            getPostLikeStatus(that.$route.query.postId).then((response)=>
+            {
+                if(response.data.exist===false)
+                {
+                    that.action='disliked';
+                }
+                else
+                {
+                    that.action='liked';
+                }
+            }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
+        },
         like() {
-            this.likes = 1;
-            this.dislikes = 0;
-            this.action = 'liked';
-        },
-        dislike() {
-            this.likes = 0;
-            this.dislikes = 1;
-            this.action = 'disliked';
-        },
-
-        initialize:function(){
-
-
             
-        },
-        splitReference:function(){
-            
-            console.log(mavonEditor.getMarkdownIt().use('markdown-it-container'));
+            if(this.action==='liked')
+            {
+                let that=this;
+                deletePostLike(that.$route.query.postId).then((response)=>
+                {
+                    that.action='disliked';
+                    console.log("disliked")
 
+                }).catch((error) => {
+                        this.$message({
+                        message: error,
+                        type: "warning",
+                        });
+                    });
+            }
+            else
+            {
+                let that=this;
+                addPostLike({
+                        "postId":that.$route.query.postId,
+                        "customerId":0
+                    }).then((response)=>{
+                        that.action='liked';
+
+                        console.log("liked")
+                    }).catch((error) => {
+                            this.$message({
+                            message: error,
+                            type: "warning",
+                            });
+                        });
+            }
+
+        },
+        replyTo()
+        {
+            this.form.show=true;
         }
 
     },
