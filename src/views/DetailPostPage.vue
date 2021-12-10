@@ -1,8 +1,32 @@
 <template>
     <div>
         <div id="index">
-            
-            <div style="position:relative;display:block; top:0px; margin-left:15%; margin-right:15%">
+            <el-card class="box-card" style="position: fixed;z-index: 100;
+            width: 70vw;margin-left: 15vw;">
+                <el-row >
+                    
+                    <el-col :span="4" >
+                        <el-row style="margin-bottom: 20px;">
+                            <a-avatar
+                            :src="this.author.customerAvatarLink"
+                            :alt="this.author.customerName"
+                            />
+                        </el-row>
+                        <el-row>
+                            <a>{{this.author.customerName}}</a>
+                        </el-row>
+                    </el-col>
+
+                    <el-col :span="15">
+                        <h1 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                            {{theme}}
+                        </h1>
+                    </el-col>
+
+                </el-row>
+            </el-card>
+
+            <div style="position:relative;display:block; top:20vh; margin-left:15%; margin-right:15%">
                 <el-card class="clearfix" style="width:100%" v-if="this.author&&this.userId===this.author.customerId">
                     <el-dropdown @command="handleCommand" >
                         <!-- <i class="el-icon-menu"></i> -->
@@ -35,29 +59,7 @@
                     </div>
                 </el-card>
 
-                <el-card class="box-card">
-                    <el-row>
-                        
-                        <el-col :span="4" >
-                            <el-row style="margin-bottom: 20px;">
-                                <a-avatar
-                                :src="this.author.customerAvatarLink"
-                                :alt="this.author.customerName"
-                                />
-                            </el-row>
-                            <el-row>
-                                <a>{{this.author.customerName}}</a>
-                            </el-row>
-                        </el-col>
-
-                        <el-col :span="15">
-                            <h1 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
-                                {{theme}}
-                            </h1>
-                        </el-col>
-
-                    </el-row>
-                </el-card>
+                
 
                 <el-card class="box-card" v-if="this.tags.length>0">
                     <div class="label-list">                        
@@ -93,7 +95,8 @@
                                             {{ this.likeCount}}
                                             </span>
                                         </span>
-                                        <span key="comment-basic-reply-to" @click="replyTo">回复</span>
+                                        <span key="comment-basic-reply-to" @click="replyTo"><i class="el-icon-chat-line-square"></i></span>
+                                        
                                         <span>
                                             {{ this.replyCount}}
                                         </span>

@@ -95,7 +95,12 @@ export default {
   },
   created(){
       this.changeTags(0,5);
-
+      console.log("每一个星球都有一个驱动核心，\n\
+      每一种思想都有影响力的种子。\n\
+      感受世界的温度，\n\
+      年轻的你也能成为改变世界的动力，\n\
+      归宿珍惜你所有的潜力。\n\
+      你的潜力，是改变世界的动力！")
   },
   data(){
     return{
