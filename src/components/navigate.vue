@@ -490,7 +490,8 @@ export default {
                     userId:response.data.userId,
                     userName: response.data.userName,
                     userAvatar: response.data.userAvatar,
-                    userIdentity: 'Customer'
+                    userIdentity: 'Customer',
+                    userPermissions: response.data.userPermissions
                   });
 
                   this.dialogTableVisible = false;

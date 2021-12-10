@@ -246,7 +246,6 @@ export default {
       else
         this.userSex = '男';
 
-      console.log(this.reviewNum);
       loading.close()
     }).catch((error) => {
       this.$message({

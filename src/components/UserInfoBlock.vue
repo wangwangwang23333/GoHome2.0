@@ -132,8 +132,11 @@
           Score
         }}分</span>
       <el-divider></el-divider>
-      <div v-if="true">
+      <div v-if="!isHost">
         <el-button @click="gotoUpgrade"> 升级成房东</el-button>
+      </div>
+      <div v-if="isHost">
+        <el-button @click="gotoUpgrade"> 去房东界面</el-button>
       </div>
     </el-card>
 
@@ -168,11 +171,18 @@ export default {
     return {
 
       new_img: "",//用户更改的新头像
-      change_img_show: false
+      change_img_show: false,
+      isHost:false,
     }
   },
   created() {
-
+    console.log(localStorage.getItem("userPermissions").split(","))
+    if ("upgrade" in localStorage.getItem("userPermissions").split(",")){
+      this.isHost=false;
+    }
+    else{
+      this.isHost=true;
+    }
   },
   methods: {
     getFile(file) {
