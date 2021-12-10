@@ -1,32 +1,9 @@
 <template>
     <div>
         <div id="index">
-            <el-card class="box-card" style="position: fixed;z-index: 100;
-            width: 70vw;margin-left: 15vw;">
-                <el-row >
-                    
-                    <el-col :span="4" >
-                        <el-row style="margin-bottom: 20px;">
-                            <a-avatar
-                            :src="this.author.customerAvatarLink"
-                            :alt="this.author.customerName"
-                            />
-                        </el-row>
-                        <el-row>
-                            <a>{{this.author.customerName}}</a>
-                        </el-row>
-                    </el-col>
+            
 
-                    <el-col :span="15">
-                        <h1 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
-                            {{theme}}
-                        </h1>
-                    </el-col>
-
-                </el-row>
-            </el-card>
-
-            <div style="position:relative;display:block; top:20vh; margin-left:15%; margin-right:15%">
+            <div style="position:relative;display:block;  margin-left:15%; margin-right:15%">
                 <el-card class="clearfix" style="width:100%" v-if="this.author&&this.userId===this.author.customerId">
                     <el-dropdown @command="handleCommand" >
                         <!-- <i class="el-icon-menu"></i> -->
@@ -57,72 +34,108 @@
                             <vueper-slide v-for="(slide, i) in slides" :key="i" :title="slide.title" :image="slide.image"/>
                         </vueper-slides>
                     </div>
-                </el-card>
-
+                </el-card >
                 
+                    <el-card class="box-card" style="margin-top: 5vh;">
+                    <el-row >
+                        <el-col :span="2" >
+                            <el-row style="margin-bottom: 20px;">
+                                <a-avatar
+                                :src="this.author.customerAvatarLink"
+                                :alt="this.author.customerName"
+                                />
+                            </el-row>
+                            <el-row>
+                                <p>{{this.author.customerName}}</p>
+                            </el-row>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-divider direction="vertical"></el-divider>
+                        </el-col>
 
-                <el-card class="box-card" v-if="this.tags.length>0">
-                    <div class="label-list">                        
-                        <el-tag
-                            type="primary"
-                            v-for="(i,index) in tags"
-                            :key="index"
-                            effect="dark"
-                            :color="labelColor[index]"
-                            :hit="true">
-                            {{i}}
-                        </el-tag>
-                    </div>
-                </el-card>
+                        <el-col :span="15">
+                            <h1 
+                            class="post-title"
+                            >
+                                {{theme}}
+                            </h1>
+                        </el-col>
 
-
-                <div id="main" style="z-index:0">
-                    <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false' :toolbarsFlag='false' :navigation='false'/>
-                     
-                    <el-card class="box-card">
-                        <p>这里应该是房源卡片</p>
-                    </el-card>
-
-                    <el-card class="box-card">
+                    </el-row>
+                    <el-divider></el-divider>
+                    <div class="box-card">
                         <el-row>
-                            <el-col :span="3">
-                                <div class="post-like">
-                                        <span key="comment-basic-like" >
-                                            <a-tooltip  title="Like">
-                                                <a-icon type="like" :theme="this.action === 'liked' ? 'filled' : 'outlined'" @click="like" />
-                                            </a-tooltip>
-                                            <span>
-                                            {{ this.likeCount}}
-                                            </span>
-                                        </span>
-                                        <span key="comment-basic-reply-to" @click="replyTo"><i class="el-icon-chat-line-square"></i></span>
-                                        
-                                        <span>
-                                            {{ this.replyCount}}
-                                        </span>
+                            <el-col :span="9">
+                                <div class="label-list">                        
+                                    <el-tag
+                                        type="primary"
+                                        v-for="(i,index) in tags"
+                                        :key="index"
+                                        effect="dark"
+                                        :color="labelColor[index]"
+                                        :hit="true">
+                                        {{i}}
+                                    </el-tag>
                                 </div>
                             </el-col>
-                            <el-col :span="21">
+                            
+                            <el-col :span="15">
                                 <dd-share style="width:100%;text-align:right" class="social-share" :share-config="shareConfig"></dd-share>
                             </el-col>
                         </el-row>
                         
                         
+                    </div>
+                </el-card>
+
+                <div id="main" style="z-index:0">
+                    <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false'
+                        :toolbarsFlag='false' :navigation='false' />
+                
+                    <el-card class="box-card">
+                        <p>这里应该是房源卡片</p>
                     </el-card>
-
-
-
-                    <el-form v-if="form.show" ref="form" :model="form" label-width="80px">
+                
+                    
+                </div>
+                <el-card v-if="this.hasReply===true" class="box-card" >
+                    <div style="margin-top: 2vh;text-align: right;">
+                        <span key="comment-basic-like">
+                            <a-tooltip title="点赞">
+                                <a-icon type="like" 
+                                :theme="this.action === 'liked' ? 'filled' : 'outlined'" 
+                                @click="like" 
+                                />
+                            </a-tooltip>
+                            <span>
+                                {{ this.likeCount}}
+                            </span>
+                        </span>
+                        <span key="comment-basic-reply-to" @click="replyTo" 
+                        style="cursor: pointer;">
+                            <a-tooltip title="回复">
+                                <i class="el-icon-chat-line-square"></i>
+                            </a-tooltip>
+                
+                        </span>
+                
+                        <span>
+                            {{ this.replyCount}}
+                        </span>
+                    </div>
+                    <el-divider ></el-divider>
+                    <el-form  v-if="form.show" ref="form" :model="form" label-width="80px">
                         <el-form-item label="回复内容">
                             <el-input type="textarea" v-model="form.desc"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="onSubmit">发送</el-button>
-                            <el-button @click="onCancel">取消</el-button>
+                            <el-button type="primary" @click="onSubmit" 
+                            style="text-align: left;">发送</el-button>
+                            <el-button type="primary" @click="onCancel" 
+                            style="text-align: left;">取消</el-button>
                         </el-form-item>
                     </el-form>
-                </div>
-                <el-card v-if="this.hasReply===true" class="box-card" style="0">
+                    <el-divider v-if="form.show"></el-divider>
                     <ReplyList :replyList="this.replyContents" :isPostReplyList="true" :id="this.$route.query.postId"/>
                 </el-card>
             </div>
@@ -215,8 +228,11 @@ export default {
 
             replyCount:0,
             likeCount:0,
-            author:null,
-            replyContents:null,
+            author:{
+                customerAvatarLink:"https://guisu.oss-cn-shanghai.aliyuncs.com/img/customer_img.png",
+                customerName:"归宿"
+            },
+            replyContents:"加载中",
             hasReply:false,
 
             action: 'disliked',
@@ -238,13 +254,12 @@ export default {
         this.userId = Number(localStorage.getItem('userId'))
         
         
-        let that=this;
         getDetailedPost(postId).then((response) => {
             
             let postDetail=response.data;
 
             postDetail.imagesDetail.forEach(element => {
-                that.slides.push(
+                this.slides.push(
                 {
                     title: postDetail.post.Theme,
                     content: '',
@@ -254,19 +269,19 @@ export default {
                 
             });
             postDetail.tagsDetail.forEach(element => {
-                that.tags.push(element.postTag);
+                this.tags.push(element.postTag);
             });
-            that.stays=postDetail.stays;
-            that.author=postDetail.author;
-            that.value=postDetail.post.postContent;
-            that.theme=postDetail.post.postTheme;
-            that.replyCount=postDetail.post.replyCount;
-            that.likeCount=postDetail.post.likeCount;
+            this.stays=postDetail.stays;
+            this.author=postDetail.author;
+            this.value=postDetail.post.postContent;
+            this.theme=postDetail.post.postTheme;
+            this.replyCount=postDetail.post.replyCount;
+            this.likeCount=postDetail.post.likeCount;
 
-            that.author=postDetail.author;
+            this.author=postDetail.author;
 
-            console.log("登录的用户的个人id为",that.userId)
-            console.log("作者的用户的个人id为",that.author.customerId)
+            console.log("登录的用户的个人id为",this.userId)
+            console.log("作者的用户的个人id为",this.author.customerId)
 
         }).catch((error) => {
                 this.$message({
@@ -277,21 +292,21 @@ export default {
 
         getPostReplyList(postId,0).then((response) => {
             
-            that.replyContents=response.data;
+            this.replyContents=response.data;
             
-            if(that.replyContents===null)
+            if(this.replyContents===null)
             {
-                that.hasReply=false;
+                this.hasReply=false;
             }
             else
             {
-                that.hasReply=true;
+                this.hasReply=true;
             }
 
         }).catch((error) => {
             this.$message({
-            message: error,
-            type: "warning",
+                message: error,
+                type: "warning",
             });
         });
 
@@ -345,6 +360,12 @@ export default {
                 that.form.show=false;
 
                 that.$router.go(0);
+
+                // 提醒用户
+                this.$message({
+                    message: "成功回复！",
+                    type: "success",
+                });
                 
             }).catch((error) => {
                     this.$message({
@@ -426,3 +447,21 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.el-divider--vertical {
+    height: 5em !important;
+    width: 1.5px !important;
+}
+.post-title{
+    font-size:2em;
+    padding: 1px 6px;
+    margin-top: 3%;
+    font-weight: bold;
+    text-align: left;
+    display:block;
+    float:left;
+    font-family:"PingFang SC";
+    flex: 1;  
+}
+</style>
