@@ -483,6 +483,7 @@ export default {
                   this.userName = response.data.userName;
                   this.userAvatar = response.data.userAvatar;
 
+                  
                   // 后端返回身份
                   // 将用户token保存到vuex中
                   this.changeLogin({
