@@ -17,9 +17,7 @@
         :src="this.customer.customerAvatarLink"
         :alt="this.customer.customerName"
         />
-        <p slot="content">
-        {{this.reply.replyContent}}
-        </p>
+
         <a-tooltip slot="datetime" :title="moment(this.reply.replyTime).format('YYYY-MM-DD HH:mm:ss')">
         <span>{{ moment(this.reply.replyTime).fromNow() }}</span>
         </a-tooltip>
@@ -122,7 +120,8 @@ export default {
                 deleteReplyLike(this.reply.replyId).then((response)=>
                 {
                     that.action='disliked';
-                    console.log("disliked")
+                    that.reply.replyLikeCount-=1;
+
 
                 }).catch((error) => {
                         this.$message({
@@ -139,8 +138,8 @@ export default {
                         "customerId":0
                     }).then((response)=>{
                         that.action='liked';
+                        that.reply.replyLikeCount+=1;
 
-                        console.log("liked")
                     }).catch((error) => {
                             this.$message({
                             message: error,

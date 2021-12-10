@@ -1,10 +1,32 @@
 <template>
     <div>
-        <div id="index" style="z-index:0">
-            <el-card class="clearfix" style="position:fixed;z-index:1;width:100%" >
-                    这里是编辑之类的应该，分享啊什么的
-            </el-card>
-            <div style="position:relative;display:block; top:90px; margin-left:15%; margin-right:15%;z-index:0">
+        <div id="index">
+            
+            <div style="position:relative;display:block; top:0px; margin-left:15%; margin-right:15%">
+                <el-card class="clearfix" style="width:100%" v-if="this.author&&this.userId===this.author.customerId">
+                    <el-dropdown @command="handleCommand" >
+                        <!-- <i class="el-icon-menu"></i> -->
+                        <span class="el-dropdown-link" icon="">
+                            作者操作<i class="el-icon-menu el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="edit">编辑</el-dropdown-item>
+                            <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-card>
+                <el-dialog
+                    title="提示"
+                    :visible.sync="deleteVisible"
+                    width="30%"
+                    :modal="false"
+                    @before-close="this.deleteVisible = false">
+                    <span>确认要删除这篇帖子吗</span>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="deleteVisible = false">取 消</el-button>
+                        <el-button @click="handleDelete">确 定</el-button>
+                    </span>
+                </el-dialog>
                 <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}">
                     <div>
                         <vueper-slides>
@@ -13,49 +35,80 @@
                     </div>
                 </el-card>
 
-                <el-card class="box-card" style="0">
-                    <div class="label-list">                        
-                    <el-tag
-                    type="primary"
-                    v-for="(i,index) in labels"
-                    :key="index"
-                    effect="dark"
-                    :color="labelColor[index]"
-                    :hit="true">
-                    {{i}}
-                    </el-tag>
-                </div>
-                </el-card>
-                
-                <el-card class="box-card" style="0">
-                    这里应该是标签之类的
+                <el-card class="box-card">
+                    <el-row>
+                        
+                        <el-col :span="4" >
+                            <el-row style="margin-bottom: 20px;">
+                                <a-avatar
+                                :src="this.author.customerAvatarLink"
+                                :alt="this.author.customerName"
+                                />
+                            </el-row>
+                            <el-row>
+                                <a>{{this.author.customerName}}</a>
+                            </el-row>
+                        </el-col>
+
+                        <el-col :span="15">
+                            <h1 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                                {{theme}}
+                            </h1>
+                        </el-col>
+
+                    </el-row>
                 </el-card>
 
-                <el-card class="box-card" style="0">
-                    这里应该是作者信息什么的
+                <el-card class="box-card" v-if="this.tags.length>0">
+                    <div class="label-list">                        
+                    <el-tag
+                        type="primary"
+                        v-for="(i,index) in tags"
+                        :key="index"
+                        effect="dark"
+                        :color="labelColor[index]"
+                        :hit="true">
+                        {{i}}
+                    </el-tag>
+                </div>
                 </el-card>
 
 
                 <div id="main" style="z-index:0">
-                    <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false' :toolbarsFlag='false' :navigation='true'/>
+                    <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false' :toolbarsFlag='false' :navigation='false'/>
+                     
                     <el-card class="box-card">
-                        <div class="post-like">
-                                <span key="comment-basic-like" >
-                                    <a-tooltip  title="Like">
-                                        <a-icon type="like" :theme="this.action === 'liked' ? 'filled' : 'outlined'" @click="like" />
-                                    </a-tooltip>
-                                    <span style="padding-left: '8px';cursor: 'auto'">
-                                    {{ this.replyCount}}
-                                    </span>
-                                </span>
-                                <span key="comment-basic-reply-to" @click="replyTo">回复</span>
-                        </div>
-                        <div>
-                            <span class="share-demo" style="text-align: right">
-                                <dd-share class="social-share" :share-config="shareConfig"></dd-share>
-                            </span>
-                        </div>
+                        <p>这里应该是房源卡片</p>
                     </el-card>
+
+                    <el-card class="box-card">
+                        <el-row>
+                            <el-col :span="3">
+                                <div class="post-like">
+                                        <span key="comment-basic-like" >
+                                            <a-tooltip  title="Like">
+                                                <a-icon type="like" :theme="this.action === 'liked' ? 'filled' : 'outlined'" @click="like" />
+                                            </a-tooltip>
+                                            <span>
+                                            {{ this.likeCount}}
+                                            </span>
+                                        </span>
+                                        <span key="comment-basic-reply-to" @click="replyTo">回复</span>
+                                        <span>
+                                            {{ this.replyCount}}
+                                        </span>
+                                </div>
+                            </el-col>
+                            <el-col :span="21">
+                                <dd-share style="width:100%;text-align:right" class="social-share" :share-config="shareConfig"></dd-share>
+                            </el-col>
+                        </el-row>
+                        
+                        
+                    </el-card>
+
+
+
                     <el-form v-if="form.show" ref="form" :model="form" label-width="80px">
                         <el-form-item label="回复内容">
                             <el-input type="textarea" v-model="form.desc"></el-input>
@@ -73,6 +126,38 @@
         </div>
     </div>
 </template>
+
+<style>
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  
+</style>
+
+<style scoped>
+    .el-divider--vertical {
+        height: 4em !important;
+        width: 1.5px !important;
+    }
+    /* 标签列表 */
+    .label-list{
+        padding:1px 6px;
+        margin:1px 6px ;
+    }
+    .el-tag{
+        float:left;
+        white-space: pre-line;
+        word-break: break-all;
+        margin-top: 5px;
+        margin-left:5px;
+        margin-bottom:5px;
+        /* max-height: 4vh; */
+        font-family: "FZHeiBJW";
+        color:white;
+}
+
+</style>
 
 <script>
 
@@ -94,9 +179,9 @@ import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import ReplyList from '@/components/ReplyList'
 
-import {getDetailedPost} from '@/api/post.js'
-import {getPostReplyList} from '@/api/post.js'
-import {getPostLikeStatus,addReply,addPostLike,deletePostLike} from '@/api/post.js'
+import {getDetailedPost,deletePost} from '@/api/post.js'
+import {getPostReplyList,addReply} from '@/api/post.js'
+import {getPostLikeStatus,addPostLike,deletePostLike} from '@/api/post.js'
 
 export default {
     components: { mavonEditor,VueperSlides, VueperSlide ,ReplyList},
@@ -135,13 +220,20 @@ export default {
             form: {
                 desc: '',
                 show: false
-            }
+            },
+
+            userId:null,
+
+            deleteVisible:false
 
         }
     },
     created() {
 
         let postId=this.$route.query.postId;
+
+        this.userId = Number(localStorage.getItem('userId'))
+        
         
         let that=this;
         getDetailedPost(postId).then((response) => {
@@ -164,11 +256,14 @@ export default {
             that.stays=postDetail.stays;
             that.author=postDetail.author;
             that.value=postDetail.post.postContent;
-            that.theme=postDetail.post.Theme;
+            that.theme=postDetail.post.postTheme;
             that.replyCount=postDetail.post.replyCount;
             that.likeCount=postDetail.post.likeCount;
 
             that.author=postDetail.author;
+
+            console.log("登录的用户的个人id为",that.userId)
+            console.log("作者的用户的个人id为",that.author.customerId)
 
         }).catch((error) => {
                 this.$message({
@@ -205,6 +300,32 @@ export default {
     {
     },
     methods:{
+        handleCommand(command) {
+            
+            if(command==="edit")
+            {
+                //跳转到编辑界面
+            }
+            else if(command==="delete")
+            {
+                this.deleteVisible = true;
+            }
+        },
+        handleDelete()
+        {
+            this.deleteVisible=false;
+
+            deletePost(this.$route.query.postId).then((response)=>
+            {
+                this.$router.go(-1);
+            }).catch((error) => {
+                    this.$message({
+                    message: error,
+                    type: "warning",
+                    });
+                });
+
+        },
 
         onSubmit()
         {
