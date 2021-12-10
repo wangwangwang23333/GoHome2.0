@@ -81,8 +81,8 @@
       <!--评价信息-->
       <span style="position:relative;right: 50px">
       <img
-        src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/评价 (2).png"
-        style="width: 40px;height: 40px;">
+          src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/评价 (2).png"
+          style="width: 40px;height: 40px;">
   </span>
 
       <span
@@ -131,21 +131,12 @@
           style="font-size: 15px;color: #7b7b7b;font-family: 'PingFang SC';font-weight: bold;position: relative;top: -10px">{{
           Score
         }}分</span>
-      <el-divider></el-divider>
-      <div v-if="!isHost">
-        <el-button @click="gotoUpgrade"> 升级成房东</el-button>
-      </div>
-      <div v-if="isHost">
-        <el-button @click="gotoUpgrade"> 去房东界面</el-button>
-      </div>
     </el-card>
 
     <el-image
         src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/室内1 (1) (4).png"
         style="position:fixed;left:-50px;top:0px;width: 300px;height: 420px">
     </el-image>
-
-
   </div>
 </template>
 
@@ -172,16 +163,6 @@ export default {
 
       new_img: "",//用户更改的新头像
       change_img_show: false,
-      isHost:false,
-    }
-  },
-  created() {
-    console.log(localStorage.getItem("userPermissions").split(","))
-    if ("upgrade" in localStorage.getItem("userPermissions").split(",")){
-      this.isHost=false;
-    }
-    else{
-      this.isHost=true;
     }
   },
   methods: {
@@ -232,12 +213,6 @@ export default {
         // this.$router.go(0);
       })
     },
-
-    gotoUpgrade() {
-      this.$router.push({
-        path: "/hostRegister"
-      })
-    }
   }
 }
 </script>
@@ -248,8 +223,7 @@ export default {
 
 .box-card {
   width: 250px;
-  //height: 650px;
-  border-radius: 15px;
+//height: 650px; border-radius: 15px;
   border-width: 3px;
   border-color: #7b7b7b;
   background-color: #ffffff;
