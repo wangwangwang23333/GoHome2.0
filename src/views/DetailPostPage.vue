@@ -1,10 +1,8 @@
 <template>
     <div>
         <div id="index">
-            
-
             <div style="position:relative;display:block;  margin-left:15%; margin-right:15%">
-                <el-card class="clearfix" style="width:100%" v-if="this.author&&this.userId===this.author.customerId">
+                <el-card class="clearfix" v-if="this.author&&this.userId===this.author.customerId">
                     <el-dropdown @command="handleCommand" >
                         <!-- <i class="el-icon-menu"></i> -->
                         <span class="el-dropdown-link" icon="">
@@ -99,29 +97,29 @@
                     
                 </div>
                 <el-card v-if="this.hasReply===true" class="box-card" >
-                    <div style="margin-top: 2vh;text-align: right;">
+                    <div style="text-align: right;cursor: pointer;">
+                        <a-tooltip title="点赞">
                         <span key="comment-basic-like">
-                            <a-tooltip title="点赞">
+                            
                                 <a-icon type="like" 
                                 :theme="this.action === 'liked' ? 'filled' : 'outlined'" 
                                 @click="like" 
                                 />
-                            </a-tooltip>
+ 
                             <span>
                                 {{ this.likeCount}}
                             </span>
                         </span>
-                        <span key="comment-basic-reply-to" @click="replyTo" 
-                        style="cursor: pointer;">
-                            <a-tooltip title="回复">
+                        </a-tooltip>
+                        <a-tooltip title="回复"  @click="replyTo" style="cursor: pointer;margin-left: 1vw;">
+                            <span key="comment-basic-reply-to">
                                 <i class="el-icon-chat-line-square"></i>
-                            </a-tooltip>
-                
-                        </span>
-                
-                        <span>
-                            {{ this.replyCount}}
-                        </span>
+                            </span>
+                            <span>
+                                {{ this.replyCount}}
+                            </span>
+                        </a-tooltip>
+ 
                     </div>
                     <el-divider ></el-divider>
                     <el-form  v-if="form.show" ref="form" :model="form" label-width="80px">
@@ -129,9 +127,9 @@
                             <el-input type="textarea" v-model="form.desc"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="onSubmit" 
+                            <el-button  @click="onSubmit" plain
                             style="text-align: left;">发送</el-button>
-                            <el-button type="primary" @click="onCancel" 
+                            <el-button  @click="onCancel" 
                             style="text-align: left;">取消</el-button>
                         </el-form-item>
                     </el-form>
@@ -283,11 +281,14 @@ export default {
             console.log("登录的用户的个人id为",this.userId)
             console.log("作者的用户的个人id为",this.author.customerId)
 
+            // 获取点赞图标状态
+            this.setAction()
+
         }).catch((error) => {
-                this.$message({
+            this.$message({
                 message: error,
                 type: "warning",
-                });
+            });
         });
 
         getPostReplyList(postId,0).then((response) => {
@@ -351,7 +352,7 @@ export default {
 
             addReply({
                 "postId":that.$route.query.postId,
-                "customerId":0,
+                "customerId":this.customerId,
                 "replyContent":that.form.desc,
                 "preReplyId": null
             }).then((response)=>{
@@ -410,23 +411,24 @@ export default {
                 {
                     that.action='disliked';
                     console.log("disliked")
+                    this.likeCount-=1;
 
                 }).catch((error) => {
-                        this.$message({
+                    this.$message({
                         message: error,
                         type: "warning",
-                        });
                     });
+                });
             }
             else
             {
                 let that=this;
                 addPostLike({
                         "postId":that.$route.query.postId,
-                        "customerId":0
+                        "customerId":this.customerId
                     }).then((response)=>{
                         that.action='liked';
-
+                        this.likeCount+=1;
                         console.log("liked")
                     }).catch((error) => {
                             this.$message({
