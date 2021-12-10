@@ -18,6 +18,10 @@
         :alt="this.customer.customerName"
         />
 
+        <p slot="content">
+        {{this.reply.replyContent}}
+        </p>
+
         <a-tooltip slot="datetime" :title="moment(this.reply.replyTime).format('YYYY-MM-DD HH:mm:ss')">
         <span>{{ moment(this.reply.replyTime).fromNow() }}</span>
         </a-tooltip>

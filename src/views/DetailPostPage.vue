@@ -61,16 +61,16 @@
 
                 <el-card class="box-card" v-if="this.tags.length>0">
                     <div class="label-list">                        
-                    <el-tag
-                        type="primary"
-                        v-for="(i,index) in tags"
-                        :key="index"
-                        effect="dark"
-                        :color="labelColor[index]"
-                        :hit="true">
-                        {{i}}
-                    </el-tag>
-                </div>
+                        <el-tag
+                            type="primary"
+                            v-for="(i,index) in tags"
+                            :key="index"
+                            effect="dark"
+                            :color="labelColor[index]"
+                            :hit="true">
+                            {{i}}
+                        </el-tag>
+                    </div>
                 </el-card>
 
 
