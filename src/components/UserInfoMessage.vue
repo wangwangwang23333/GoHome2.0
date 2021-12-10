@@ -338,10 +338,14 @@ margin-top: 10%"></el-image>
                 <el-divider direction="vertical"></el-divider>
               </el-col>
               <el-col :span="12">
-                <div class="bigFontSize"
-                     style="font-size: 15px;float: left;color: #7b7b7b;margin-left: 4%;">
+                <el-tooltip class="item" effect="dark" content="查看帖子" placement="top-start">
+                  <div class="bigFontSize"
+                     style="cursor:pointer;font-size: 15px;float: left;color: #7b7b7b;margin-left: 4%;"
+                     @click="gotoPost(item.post.postId)">
                   {{ item.post.postTheme }}
-                </div>
+                  </div>
+                </el-tooltip>
+                
                 <h5 style="font-size:5px;font-weight: revert;width:90%;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;
                 overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
                   {{ item.post.postContent }}
@@ -549,6 +553,13 @@ export default {
       let newCommand = command;
       this.$emit("UpdateMood", newCommand);
 
+    },
+
+    gotoPost(postId){
+      this.$router.push({ 
+        path: "/DetailPost", 
+        query: { postId: postId } }
+        );
     },
 
     gotoUpgrade() {

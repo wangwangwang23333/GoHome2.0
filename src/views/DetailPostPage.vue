@@ -26,7 +26,7 @@
                         <el-button @click="handleDelete">确 定</el-button>
                     </span>
                 </el-dialog>
-                <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}">
+                <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" v-if="slides.length>0">
                     <div>
                         <vueper-slides>
                             <vueper-slide v-for="(slide, i) in slides" :key="i" :title="slide.title" :image="slide.image"/>
