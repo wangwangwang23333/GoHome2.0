@@ -156,10 +156,7 @@
           广场
         </el-menu-item>
         <el-menu-item index="6-2" @click="routerToPostSearch">
-          搜索
-        </el-menu-item>
-        <el-menu-item index="6-3" @click="routerToMyPost">
-          我的帖子
+          发帖
         </el-menu-item>
       </el-submenu>
 
@@ -333,11 +330,7 @@ export default {
         return;
       }
       if (key === '6-2') {
-        this.$router.push({path: '/postSearch'});
-        return;
-      }
-      if (key === '6-3') {
-        this.$router.push({path: '/myPost'});
+        this.$router.push({path: '/EditPost'});
         return;
       }
 
