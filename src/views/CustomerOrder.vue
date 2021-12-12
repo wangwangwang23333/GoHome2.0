@@ -3,10 +3,10 @@
     <div class="customerOrderTitle">
       <p class="titleText">用户订单</p>
     </div>
-    <!-- <el-button type="text" @click="dialogVisible = true" style="float:right;width:80px;height:80px"
+    <el-button type="text" @click="dialogVisible = true" style="float:right;width:80px;height:80px"
               v-loading="mapLoading">
       <i class="el-icon-map-location"></i>历史足迹
-    </el-button> -->
+    </el-button>
     <div class="customerOrderList" v-loading="listLoading">
       <el-select class="select" v-model="sortOrder" placeholder="默认顺序" @change="sortOrderChange">
         <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -29,11 +29,11 @@
         </div>
       </el-tabs>
     </div>
-      <!-- <div class="myDialog">
+      <div class="myDialog">
         <el-dialog :visible.sync="dialogVisible" width="1000px">
           <FootPrintMap :footPrintInfos="footPrintInfos"/>
         </el-dialog>
-      </div> -->
+      </div>
     </div>
 </template>
 
@@ -101,7 +101,7 @@
 </style>
 
 <script>
-import {GetCustomerOrderInfo, GetCustomerOrderInfoByStatus} from '@/api/order';
+import {GetCustomerOrderInfo, GetCustomerOrderInfoByStatus, GetFootMap} from '@/api/order';
 import OrderCardList from '@/components/OrderCardList.vue'
 import FootPrintMap from '@/components/FootPrintMap.vue'
 
@@ -150,17 +150,18 @@ export default {
       stationStatus: {'payment': 1, 'underway': 2, 'completing': 3, 'pending': 4, 'completed': 5},
       orderInfo: [],
       emptyImgUrl: "https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/暂无订单.png",
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 5,
       totalPage: 0,
       paginationFlag : true,
+      footMapData:[]
     }
   },
   created: function () {
     this.paginationFlag = false;
     this.listLoading = true;
 
-    GetCustomerOrderInfo(this.currentPage, this.pageSize).then(response => {
+    GetCustomerOrderInfo(this.currentPage - 1, this.pageSize).then(response => {
       this.orderInfo = response.data.orderInfo;
       this.totalPage = response.data.totalPage;
 
@@ -176,10 +177,19 @@ export default {
 
     this.paginationFlag = true;
     this.listLoading = false;
+
+    GetFootMap().then(response =>{
+      this.footMapData = response.data;
+
+    }).catch(() => {
+      console.log("fail");
+      this.$message.error("错误:数据库连接错误");
+    })
   },
   methods: {
     sortOrderChange(val) {
-      let order = val == 'orderInfo' ? -1 : 1;
+      console.log(val)
+      let order = val == 'orderStartTime' ? -1 : 1;
       this.orderInfo.sort((a, b) => {
         return a[val] < b[val] ? order : -order;
       });
@@ -187,7 +197,6 @@ export default {
     getOrderInfoListByPage(currentPage, pageSize, currentStation){
       if (currentStation === 'whole') {
         GetCustomerOrderInfo(currentPage, pageSize).then(response => {
-          this.currentPage = 0;
           this.orderInfo = response.data.orderInfo;
           this.totalPage = response.data.totalPage;
           console.log(this.totalPage)
@@ -204,7 +213,6 @@ export default {
         let status = this.stationStatus[currentStation]
         console.log('status', status)
         GetCustomerOrderInfoByStatus(currentPage, pageSize, status).then(response => {
-          this.currentPage = 0;
           this.orderInfo = response.data.orderInfo;
           this.totalPage = response.data.totalPage;
           this.orderInfo.forEach((order) => {
@@ -233,27 +241,27 @@ export default {
   },
   computed: {
 
-    // footPrintInfos: function () {
-    //   var infos = new Array();
-    //   this.customerOrderList.forEach((order) => {
-    //     var province = order.stayProvince;
-    //     var city = order.stayCity;
-    //     var day = this.$moment(order.endTime).diff(this.$moment(order.startTime), 'day');
-    //     var target = infos.find((info) => info.province == province && info.city == city);
-    //     if (target) {
-    //       target.times += 1;
-    //       target.days += this.$moment(day);
-    //     } else {
-    //       infos.push({
-    //         province: province,
-    //         city: city,
-    //         times: 1,
-    //         days: day
-    //       })
-    //     }
-    //   })
-    //  return infos;
-    // }
+    footPrintInfos: function () {
+      var infos = new Array();
+      this.footMapData.forEach((order) => {
+        var province = order.stayProvince;
+        var city = order.stayCity;
+        var day = this.$moment(order.orderEndTime).diff(this.$moment(order.orderStartTime), 'day');
+        var target = infos.find((info) => info.province == province && info.city == city);
+        if (target) {
+          target.times += 1;
+          target.days += this.$moment(day);
+        } else {
+          infos.push({
+            province: province,
+            city: city,
+            times: 1,
+            days: day
+          })
+        }
+      })
+     return infos;
+    }
   },
   watch: {
     customerOrderStation(val, oldVal) {
@@ -262,23 +270,23 @@ export default {
 
       let station = val;
 
-      this.getOrderInfoListByPage(this.currentPage, this.pageSize, station)
+      this.getOrderInfoListByPage(0, this.pageSize, station)
 
       this.paginationFlag = true;
       this.listLoading = false;
     },
     currentPage(val, oldVal){
-      this.getOrderInfoListByPage(val, this.pageSize, this.customerOrderStation)
+      this.getOrderInfoListByPage(val - 1, this.pageSize, this.customerOrderStation)
+    },
+    footPrintInfos: function () {
+      var that = this;
+      that.$nextTick(function () {
+        that.listLoading = false;
+        setTimeout(() => {
+          this.mapLoading = false;
+        }, 3000);
+      });
     }
-  //   footPrintInfos: function () {
-  //     var that = this;
-  //     that.$nextTick(function () {
-  //       that.listLoading = false;
-  //       setTimeout(() => {
-  //         this.mapLoading = false;
-  //       }, 3000);
-  //     });
-  //   }
   },
 
 }

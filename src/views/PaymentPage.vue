@@ -141,7 +141,7 @@
                   </div>   
                 <el-pagination
                 :page-size="coupon_pageSize"
-                :pager-count="coupon_totalPage"
+                :page-count="coupon_totalPage"
                 @current-change="handleCurrentChange" 
                 @prev-click="prevCurrentChange"
                 @next-click="nextCurrentChange"
@@ -403,7 +403,7 @@ export default {
 
       //礼券信息
       coupon_information: [],
-      coupon_currentPage: 0,
+      coupon_currentPage: 1,
       coupon_pageSize: 2,
       coupon_totalPage: 0,
       coupon_id:-1
@@ -528,7 +528,7 @@ export default {
     },
     //显示礼券界面
     chooseCoupon:function(){
-      this.getCouponListByPage(this.coupon_price,this.coupon_currentPage,this.coupon_pageSize)
+      this.getCouponListByPage(this.total_price,this.coupon_currentPage - 1,this.coupon_pageSize)
     },
     //点击卡片选择礼券
     clickCouponCard:function(couponId, couponAmount){
@@ -624,7 +624,7 @@ export default {
   },
   watch:{
     coupon_currentPage(val,oldVal){
-      this.getCouponListByPage(this.coupon_price,val,this.coupon_pageSize)
+      this.getCouponListByPage(this.total_price,val - 1,this.coupon_pageSize)
     }
   }
 
