@@ -74,10 +74,10 @@
                 style="color: #333333;float: left;position: relative;left: 2px;top:7px" >
             用户名:{{hostNickName}}
           </span>
-          <el-image
+          <!-- <el-image
               class="icon" :src="scoreImgList[Math.round(this.averageRate-3)<0?0:Math.round(this.averageRate-3)]"
               style="float: right;position: relative;left: -70px">
-          </el-image>
+          </el-image> -->
           <span class="smallgretfontsize"
                 style="color: #333333;float: right;position: relative;left:30px;top:5px" >
             {{rateString[Math.round(this.averageRate-3)<0?0:Math.round(this.averageRate-3)]}}
@@ -283,11 +283,11 @@
             src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/查看.png"
         @click="viewChart(i)">
         </el-image>
-        <!-- <el-button class="smallButton"
+        <el-button class="smallButton"
                    style="position:relative;left:240px;top:-430px;text-align: left"
-        @click="updateStay(i)">
-          编辑房源
-        </el-button> -->
+        @click="viewChart(i)">
+          房源销量
+        </el-button>
         <br>
         <el-button class="smallButton"
                    style="position:relative;left:252px;top:-425px;text-align: left "
@@ -325,7 +325,7 @@
         </p>
         <el-divider></el-divider>
         <el-card class="velineCard" style="width: 320px;height: 320px ;
-position: relative;left: -195px">
+position: relative;left: -300px">
           <ve-line :data="orderSalesData"
                    class="lineCharts"
                    height="300px"
