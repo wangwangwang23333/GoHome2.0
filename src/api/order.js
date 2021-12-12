@@ -1,9 +1,17 @@
 import request from '@/utils/request'
 
 
-export function GetHostOrderInfo() {
+export function GetHostOrderInfo(currentPage, pageSize) {
     return request({
         url: '/v1/orders/host',
+        method: 'get',
+        params: {currentPage: currentPage, pageSize:pageSize}
+    })
+}
+
+export function GetFootMap() {
+    return request({
+        url: '/v1/order/footMap',
         method: 'get'
     })
 }

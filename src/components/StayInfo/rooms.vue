@@ -62,7 +62,7 @@
     </div>
     <div class="book-button">
       <el-button class="buttonStyle" type="primary" @click="handleBook" 
-      :disabled="true"
+      :disabled="hostIsEqual"
       plain>
         开始预定
       </el-button>
