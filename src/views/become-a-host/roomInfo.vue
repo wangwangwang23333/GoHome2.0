@@ -14,7 +14,7 @@
     ></el-progress>
 
     <!--主体部分-->
-    <div id="mymain">
+    <div id="mymain" >
       <!--主功能区-->
       <div id="workspace">
         <h2 style="margin-bottom: 20px">您的房源可以住几位房客？</h2>

@@ -181,7 +181,7 @@ import DdShare from 'dd-share'
 import Vue from 'vue';
 
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+
 
 Vue.use(DdShare)
 Vue.use(Antd)
@@ -467,3 +467,5 @@ export default {
     flex: 1;  
 }
 </style>
+
+<style scoped src='../../node_modules/ant-design-vue/dist/antd.css'>

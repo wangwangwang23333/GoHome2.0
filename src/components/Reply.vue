@@ -42,12 +42,13 @@
 <script>
 
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+
 import Vue from 'vue';
 
 import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import moment from 'moment'
+import 'ant-design-vue/dist/antd.css'
 
 Vue.use(Antd)
 
@@ -190,4 +191,5 @@ export default {
         }
     }
 }
+
 </script>
