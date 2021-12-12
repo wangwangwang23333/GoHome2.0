@@ -15,16 +15,16 @@
 
         @select="handleSelect"
         style="
-      display: block;
-      
-      height: 100%;
-      width: 111.8%;
-      left: -10%;
-      top:-5%;
-      align-self: center;
-      background-color: rgba(246,248,248,0.913);
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-      ">
+              display: block;
+              height: 100%;
+              width: 111.8%;
+              left: -10%;
+              top:-5%;
+              align-self: center;
+              background-color: rgba(246,248,248,0.8);
+              backdrop-filter: blur(10px);
+              box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    ">
       <el-menu-item style="width:20%;">
         <el-image
             src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/biglogo.png"
@@ -182,7 +182,9 @@
                 imgUrl="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/cloud1.png"
             />
             <movingCloud
-                style="position: absolute;left: -350%;top:-20%;z-index: 999;width: 600%;"
+                style="position: absolute;
+                left: -350%;top:-20%;
+                z-index: 999;width: 600%;"
                 imgUrl="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/cloud1.png"
             />
             <el-image
@@ -342,15 +344,11 @@ export default {
 
       if (this.loginState == 1) {
         if (keyPath[1] === '5-4') {
-          console.log('正在退出登录')
-          //清除token信息
-          this.delLogin();
-          this.loginState = 0;
+          
 
           userLogout().then(response => {
-            //前往主页
-            // this.$router.push({path: '/'});
-
+            this.delLogin();
+            this.loginState = 0;
             this.$message({
               message: '注销成功',
               type: 'success'
@@ -476,21 +474,25 @@ export default {
 
       //判断当前登录对象
       customerLogin(param).then(response => {
+        
         //判断是否登录成功
         if (response.data.code === 200) {
           getCustomerInfo().then(response => {
-
+            console.log("登录成功的返回值为",response.data)
                 if (response.status === 200) {
                   this.userName = response.data.userName;
                   this.userAvatar = response.data.userAvatar;
 
+                  
                   // 后端返回身份
                   // 将用户token保存到vuex中
                   this.changeLogin({
                     Authorization: this.userToken,
+                    userId:response.data.userId,
                     userName: response.data.userName,
                     userAvatar: response.data.userAvatar,
-                    userIdentity: 'Customer'
+                    userIdentity: 'Customer',
+                    userPermissions: response.data.userPermissions
                   });
 
                   this.dialogTableVisible = false;
@@ -553,8 +555,8 @@ export default {
       this.dialogTableVisible = false;
       console.log('跳转至注册账号界面')
       //根据当前选项，跳转至不同界面
-        this.$router.replace('/register')
-        // this.$router.replace('/hostRegister')
+      this.$router.replace('/register')
+      // this.$router.replace('/hostRegister')
 
     },
     getCurrentTime() {

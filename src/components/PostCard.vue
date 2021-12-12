@@ -1,10 +1,10 @@
 <template>
-    <div class="CardType" 
+    <div class="CardType"
     @mouseenter="changeCardStyle($event)" 
     @mouseleave="removeCardStyle($event)">
         <!--走马灯-->
         <el-carousel trigger="click" :height="imgHeight+'px'" indicator-position="none">
-            <el-carousel-item v-for="(stayPhoto,index) in [postPhotos]" :key="index">
+            <el-carousel-item v-for="(stayPhoto,index) in postPhotos" :key="index">
                 <el-image fit="cover"
                     style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
                     :src="stayPhoto"
@@ -93,7 +93,7 @@
                 type:String
             },
             postPhotos:{
-                type:String
+                type:Array,
             },
             postTime:{
                 type:String

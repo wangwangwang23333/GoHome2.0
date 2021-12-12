@@ -54,6 +54,15 @@ export function getCustomerInfo() {
     })
 }
 
+export function getUserPhone() {
+    var config = {
+        method: "GET",
+        url: "/v1/login/getLoginPhone"
+    }
+
+    return request(config)
+}
+
 export function customerRegister(data) {
     /*
     顾客注册账号

@@ -87,6 +87,11 @@ const routes = [
     path: '/myPost',
     name: 'MyPost',
     component: () =>import('../views/MyPostPage.vue')
+    },
+    {
+    path: '/DetailPost',
+    name: 'DetailPost',
+    component: () =>import('../views/DetailPostPage.vue')
   },
   // {
   //   path: '/UserInfoMesssage',

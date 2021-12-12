@@ -168,7 +168,7 @@ export default {
     mounted() {
         this.currentPostPage=-1;
         this.getMoreData();
-        backToTop();
+        this.backToTop();
     },
     methods: {
         setPostListByDefault()
@@ -292,7 +292,9 @@ export default {
         openDialog(imgID)
         {
             console.log("跳转到帖子",imgID)
-            console.log("click id left top",this.waterfallList[imgID].id,this.waterfallList[imgID].left,this.waterfallList[imgID].top)
+
+            this.$router.push({path:"/DetailPost",query:{postId:imgID}});
+
         },
         wordClickHandler(name) {
             
@@ -319,8 +321,8 @@ export default {
                 tags.forEach(tag=>{
                     words.push(
                             {
-                                "标签": tag,
-                                "热度": 1
+                                "标签": tag.tag,
+                                "热度": tag.hotness
                             }
                     );
                 })
