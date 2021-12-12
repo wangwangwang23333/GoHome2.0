@@ -3,14 +3,14 @@
     <div class="customerOrderTitle">
       <p class="titleText">用户订单</p>
     </div>
-    <!--    <el-button type="text" @click="dialogVisible = true" style="float:right;width:80px;height:80px"-->
-    <!--               v-loading="mapLoading">-->
-    <!--      <i class="el-icon-map-location"></i>历史足迹-->
-    <!--    </el-button>-->
+    <!-- <el-button type="text" @click="dialogVisible = true" style="float:right;width:80px;height:80px"
+              v-loading="mapLoading">
+      <i class="el-icon-map-location"></i>历史足迹
+    </el-button> -->
     <div class="customerOrderList" v-loading="listLoading">
-      <!--      <el-select class="select" v-model="sortOrder" placeholder="默认顺序" @change="sortOrderChange">-->
-      <!--        <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>-->
-      <!--      </el-select>-->
+      <el-select class="select" v-model="sortOrder" placeholder="默认顺序" @change="sortOrderChange">
+        <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+      </el-select>
       <el-tabs class="tabs" v-model="customerOrderStation">
         <el-tab-pane v-for="(tabPane,index) in tabPanes" :key="index" :label="tabPane.label" :name="tabPane.name">
           <OrderCardList v-if="orderInfo.length > 0" :orderList="orderInfo" :isCustomer="true"/>
@@ -22,18 +22,19 @@
         </el-tab-pane>
         <div class="pagination">
           <div style="margin:0 auto">
-            <el-pagination v-if = "paginationFlag" :page-size="pageSize" layout="prev, pager, next" :page-count="totalPage"
-                           :current-page="currentPage"></el-pagination>
+            <el-pagination v-if = "paginationFlag" :hide-on-single-page="true" :page-size="pageSize" layout="prev, pager, next" :page-count="totalPage"
+                           :current-page="currentPage" @current-change="handleCurrentChange" @prev-click="prevCurrentChange"
+                           @next-click="nextCurrentChange"></el-pagination>
           </div>
         </div>
       </el-tabs>
     </div>
-    <!--    <div class="myDialog">-->
-    <!--      <el-dialog :visible.sync="dialogVisible" width="1000px">-->
-    <!--        <FootPrintMap :footPrintInfos="footPrintInfos"/>-->
-    <!--      </el-dialog>-->
-    <!--    </div>-->
-  </div>
+      <!-- <div class="myDialog">
+        <el-dialog :visible.sync="dialogVisible" width="1000px">
+          <FootPrintMap :footPrintInfos="footPrintInfos"/>
+        </el-dialog>
+      </div> -->
+    </div>
 </template>
 
 <style scoped>
@@ -118,10 +119,10 @@ export default {
       mapLoading: true,
       listLoading: true,
       options: [{
-        value: 'startTime',
+        value: 'orderStartTime',
         label: '时间顺序'
       }, {
-        value: 'endTime',
+        value: 'orderEndTime',
         label: '时间逆序'
       }, {
         value: 'totalCost',
@@ -183,6 +184,52 @@ export default {
         return a[val] < b[val] ? order : -order;
       });
     },
+    getOrderInfoListByPage(currentPage, pageSize, currentStation){
+      if (currentStation === 'whole') {
+        GetCustomerOrderInfo(currentPage, pageSize).then(response => {
+          this.currentPage = 0;
+          this.orderInfo = response.data.orderInfo;
+          this.totalPage = response.data.totalPage;
+          console.log(this.totalPage)
+          this.orderInfo.forEach((order) => {
+            order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
+            order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
+            order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
+          });
+        }).catch(() => {
+          console.log("fail");
+          this.$message.error("错误:数据库连接错误");
+        })
+      } else {
+        let status = this.stationStatus[currentStation]
+        console.log('status', status)
+        GetCustomerOrderInfoByStatus(currentPage, pageSize, status).then(response => {
+          this.currentPage = 0;
+          this.orderInfo = response.data.orderInfo;
+          this.totalPage = response.data.totalPage;
+          this.orderInfo.forEach((order) => {
+            order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
+            order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
+            order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
+          });
+        }).catch(() => {
+          console.log("fail");
+          this.$message.error("错误:数据库连接错误");
+        })
+      }
+    },
+    handleCurrentChange(val){
+      this.currentPage = val;
+    },
+    prevCurrentChange(val){
+      this.currentPage = val;
+    },
+    nextCurrentChange(val){
+      this.currentPage = val;
+    }
+
+
+
   },
   computed: {
 
@@ -215,51 +262,23 @@ export default {
 
       let station = val;
 
-      if (station === 'whole') {
-        GetCustomerOrderInfo(this.currentPage, this.pageSize).then(response => {
-          this.currentPage = 0;
-          this.orderInfo = response.data.orderInfo;
-          this.totalPage = response.data.totalPage;
-          console.log(this.totalPage)
-          this.orderInfo.forEach((order) => {
-            order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
-            order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
-            order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
-          });
-        }).catch(() => {
-          console.log("fail");
-          this.$message.error("错误:数据库连接错误");
-        })
-      } else {
-        let status = this.stationStatus[station]
-        console.log('status', status)
-        GetCustomerOrderInfoByStatus(this.currentPage, this.pageSize, status).then(response => {
-          this.currentPage = 0;
-          this.orderInfo = response.data.orderInfo;
-          this.totalPage = response.data.totalPage;
-          this.orderInfo.forEach((order) => {
-            order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
-            order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
-            order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
-          });
-        }).catch(() => {
-          console.log("fail");
-          this.$message.error("错误:数据库连接错误");
-        })
-      }
+      this.getOrderInfoListByPage(this.currentPage, this.pageSize, station)
 
       this.paginationFlag = true;
       this.listLoading = false;
+    },
+    currentPage(val, oldVal){
+      this.getOrderInfoListByPage(val, this.pageSize, this.customerOrderStation)
     }
-    // footPrintInfos: function () {
-    //   var that = this;
-    //   that.$nextTick(function () {
-    //     that.listLoading = false;
-    //     setTimeout(() => {
-    //       this.mapLoading = false;
-    //     }, 3000);
-    //   });
-    // }
+  //   footPrintInfos: function () {
+  //     var that = this;
+  //     that.$nextTick(function () {
+  //       that.listLoading = false;
+  //       setTimeout(() => {
+  //         this.mapLoading = false;
+  //       }, 3000);
+  //     });
+  //   }
   },
 
 }
