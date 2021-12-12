@@ -286,13 +286,9 @@ export default {
       console.log("进入论坛广场")
       this.$router.replace('/postSquare');
     },
-    routerToPostSearch: function () {
-      console.log("进入帖子搜索")
-      this.$router.replace('/postSearch');
-    },
-    routerToMyPost: function () {
-      console.log("进入个人发帖")
-      this.$router.replace('/myPost');
+    routerToEditPost: function () {
+      console.log("进入发帖")
+      this.$router.replace('/EditPost');
     },
     // add@Lq
     routerToHostPage: function () {
