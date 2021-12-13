@@ -2,7 +2,7 @@
     <a-comment>
         <template slot="actions">
             <span key="comment-basic-like">
-                <a-tooltip title="Like">
+                <a-tooltip title="点赞">
                     <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like" />
                 </a-tooltip>
                 <span style="padding-left: '8px';cursor: 'auto'">
