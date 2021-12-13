@@ -124,13 +124,12 @@ export default {
 
         let stayId = this.$route.query.stayId;
         this.stayId = stayId;
-
+        this.stayExisted = true
 
         getStayDetails(stayId)
           .then((response) => {
             // 房源不存在
             if (response.data.stayId == null) {
-
               return
             }
             this.data = response.data;
@@ -157,12 +156,9 @@ export default {
       StayDelCollection(){
           let that=this;
           DeleteFavoriteStayByView(this.stayID).then(response=>{
-              let flag=response.errorCode;
-              if(flag=='200'){
-                  this.isLike=false;
-              }
+              this.isLike=false;
           }).catch(error=>{
-          this.$message.error("删除数据失败，请稍后重试")});
+          this.$message.error("网络异常，请稍后重试")});
       },
     //修改收藏框的可见度
       changeDialogVisible(val){

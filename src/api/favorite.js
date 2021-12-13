@@ -60,20 +60,21 @@ export function DeleteFavoriteStay(favoriteId,stayId) {
     data:{favoriteId:favoriteId,stayId:stayId}
   })
 }
-export function InsertFavoriteStay(data1,data2) {
-  let param=new URLSearchParams({favoriteId:data1,stayId:data2})
+export function InsertFavoriteStay(favoriteId,stayId) {
   return request({  
-    url: '/FavoriteStay',
+    url: '/v1/personinfo/favorite/stay/addition',
     method: 'post',
-    data:param
+    data:{favoriteId:favoriteId,stayId:stayId}
   })
 }
 
-export function DeleteFavoriteStayByView(data1){
+export function DeleteFavoriteStayByView(stayId){
   return request({  
-    url: '/FavoriteStay/stay',
-    method: 'delete',
-    params:{stayID:data1}
-  }) 
+    url: '/v1/personinfo/favoirte/stay/heart/deletion',
+    method: 'get',
+    params:{stayId:stayId}
+  })
+
+
   
 }
