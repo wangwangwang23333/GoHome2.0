@@ -210,10 +210,7 @@ export default {
         StayDelCollection(){
             let that=this;
             DeleteFavoriteStayByView(this.curStayID).then(response=>{
-                let flag=response.errorCode;
-                if(flag=='200'){
-                    that.isLike=false;
-                }
+              that.isLike=false;
             }).catch(error=>{
             this.$message.error("删除数据失败，请稍后重试")});
         },     

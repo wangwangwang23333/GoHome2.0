@@ -68,13 +68,24 @@ export function InsertFavoriteStay(favoriteId,stayId) {
   })
 }
 
+
+  
 export function DeleteFavoriteStayByView(stayId){
   return request({  
-    url: '/v1/personinfo/favoirte/stay/heart/deletion',
+    url: '/v1/personinfo/favorite/stay/heart/deletion',
     method: 'get',
     params:{stayId:stayId}
   })
+}
+
+export function GetSpecificStayLikeState(stayId){
+  return request({  
+    url: '/v1/personinfo/favorite/stay/heart',
+    method: 'get',
+    params:{stayId:stayId}
+  })
+}
 
 
   
-}
+

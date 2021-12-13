@@ -109,16 +109,27 @@ export default {
 
   },
   created(){
-    // 判断该房源是不是自己的
-    isHostSameWithCustomer(stayId).then(response=>{
-      this.hostIsEqual=response.data.isEqual
-    })
-    .catch((error) => {
-        this.$message({
-          message: error,
-          type: "warning",
-        });
-      });
+    console.log("房间初始化加载",this.stayId)
+    // 判断是否登录
+    let userId=localStorage.getItem('userId');
+    if (userId != null && userId != ''){
+       // 判断该房源是不是自己的
+        isHostSameWithCustomer(this.stayId).then(response=>{
+          this.hostIsEqual=response.data.isEqual
+        })
+        .catch((error) => {
+            this.$message({
+              message: error,
+              type: "warning",
+            });
+          });
+    }
+    else{
+      // 用户未登录
+      this.hostIsEqual=true;
+    }
+
+   
   },
   computed: {
     pickerOptions(){
