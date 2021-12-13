@@ -93,70 +93,74 @@
                     <el-card class="box-card" v-if="stayInfoList.length>0">
                         <!--替换为房源卡片-->
                         <p>我的推荐</p>
-                        <!--使用flex布局-->
-                        <div class="CardContainer" v-for="(item,index) in stayInfoList" >
-                            <!--房源卡片-->
-                            <div class="CardType"
-                                @mouseenter="changeCardStyle($event)"
-                                @mouseleave="removeCardStyle($event)"
-                                @click="clickCard(index)">
-                            <!---->
-                            <!-- <el-image
-                                fit="cover"
-                                style="width: 100%;height:55%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
-                                :src="stayInfoList[index].StayPic">
-                            </el-image> -->
-                            <!--走马灯-->
-                            <el-carousel trigger="click" height="165px" indicator-position="none">
-                                <el-carousel-item v-for="(stayPhoto,index) in stayInfoList[index].StayPic" :key="index">                           
-                                <el-image
-                                fit="cover"
-                                style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
-                                :src="stayPhoto">
-                                </el-image>
-                            </el-carousel-item>
-                            </el-carousel>
-
-                            <h5 style="font-size:5px;font-weight: revert;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;margin-bottom: 0">
-                                {{stayInfoList[index].StayType}}
-                            </h5>
-                            <h4 style="text-align: left;margin-left: 4%;margin-top: 0;margin-right: 4%;margin-bottom: 0">
-                                {{stayInfoList[index].StayName|ellipsis}}
-                            </h4>
-                            <el-row>
-                                <el-col :span="14">
-                                <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
-                                    ￥{{stayInfoList[index].StayPrice}}/晚
-                                </h4>
-                                <el-rate
-                                v-model="stayInfoList[index].StayCommentRate"
-                                disabled
-                                show-score
-                                text-color="#ff9900"
-                                score-template="{value}"
-                                style="margin-left: 0;margin-bottom: 0"
-                                :colors="colors"
-                                >
-                                </el-rate>
-                                <h5 style="margin-top: 0;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
-                                    {{stayInfoList[index].StayCommentNum}}条评价
-                                </h5>
-                                </el-col>
-                                <el-col :span="10">
-                                <el-divider
-                                    direction="vertical"
-                                    style="float: left;margin-right: 0;"
-                                    class="el-divider--vertical"></el-divider>
-                                <el-image class="UserAvatar"
-                                            :src="stayInfoList[index].UserAvatar"
-                                            style="float:right;margin-left: 0;margin-right: 10px"
-                                >
-                                </el-image>
-                                </el-col>
-                            </el-row>
-
-                            </div>
-                        </div>
+                        <div style="width: 95%;margin:0 auto"
+                        class="containerFlex">
+                                           <!--使用flex布局-->
+                                           <div class="CardContainer" v-for="(item,index) in stayInfoList" >
+                                            <!--房源卡片-->
+                                            <div class="CardType"
+                                                @mouseenter="changeCardStyle($event)"
+                                                @mouseleave="removeCardStyle($event)"
+                                                @click="clickCard(index)">
+                                            <!---->
+                                            <!-- <el-image
+                                                fit="cover"
+                                                style="width: 100%;height:55%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                                                :src="stayInfoList[index].StayPic">
+                                            </el-image> -->
+                                            <!--走马灯-->
+                                            <el-carousel trigger="click" height="165px" indicator-position="none">
+                                                <el-carousel-item v-for="(stayPhoto,index) in stayInfoList[index].StayPic" :key="index">                           
+                                                <el-image
+                                                fit="cover"
+                                                style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                                                :src="stayPhoto">
+                                                </el-image>
+                                            </el-carousel-item>
+                                            </el-carousel>
+                
+                                            <h5 style="font-size:5px;font-weight: revert;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;margin-bottom: 0">
+                                                {{stayInfoList[index].StayType}}
+                                            </h5>
+                                            <h4 style="text-align: left;margin-left: 4%;margin-top: 0;margin-right: 4%;margin-bottom: 0">
+                                                {{stayInfoList[index].StayName|ellipsis}}
+                                            </h4>
+                                            <el-row>
+                                                <el-col :span="14">
+                                                <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                                                    ￥{{stayInfoList[index].StayPrice}}/晚
+                                                </h4>
+                                                <el-rate
+                                                v-model="stayInfoList[index].StayCommentRate"
+                                                disabled
+                                                show-score
+                                                text-color="#ff9900"
+                                                score-template="{value}"
+                                                style="margin-left: 0;margin-bottom: 0"
+                                                :colors="colors"
+                                                >
+                                                </el-rate>
+                                                <h5 style="margin-top: 0;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
+                                                    {{stayInfoList[index].StayCommentNum}}条评价
+                                                </h5>
+                                                </el-col>
+                                                <el-col :span="10">
+                                                <el-divider
+                                                    direction="vertical"
+                                                    style="float: left;margin-right: 0;"
+                                                    class="el-divider--vertical"></el-divider>
+                                                <el-image class="UserAvatar"
+                                                            :src="stayInfoList[index].UserAvatar"
+                                                            style="float:right;margin-left: 0;margin-right: 10px"
+                                                >
+                                                </el-image>
+                                                </el-col>
+                                            </el-row>
+                
+                                            </div>
+                                        </div>
+                    </div>
+ 
                     </el-card>
                 
                     
