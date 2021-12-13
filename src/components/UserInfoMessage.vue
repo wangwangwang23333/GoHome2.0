@@ -458,10 +458,14 @@ export default {
     commentList: Array
   },
   created() {
-    console.log(localStorage.getItem("userPermissions").split(","))
-    if ("upgrade" in localStorage.getItem("userPermissions").split(",")) {
-      this.canUpgrade = true;
-    } else {
+    let userPermissions=localStorage.getItem("userPermissions").split(",")
+    for(let i=0;i<userPermissions.length;++i){
+      if(userPermissions[i]=="upgrade"){
+        this.canUpgrade = true;
+        this.isHost = false;
+        console.log("不是房东")
+        break;
+      }
       this.isHost = true;
     }
 

@@ -63,6 +63,17 @@ import { GetFavorite,InsertFavorite,GetFavoriteImage } from '@/api/favorite';
 export default {
 
     created:function(){
+        let userId=localStorage.getItem('userId');
+        if (userId == null || userId == ''){
+            this.$message({
+              message: "您尚未登录，请先登录",
+              type: "warning",
+            });
+            this.$router.push({
+                path: "/"
+            })
+            return;
+        }
         GetFavorite().then(response=>{
             this.favorite_list=response.data;
             console.log(this.favorite_list)

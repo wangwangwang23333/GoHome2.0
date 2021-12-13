@@ -208,9 +208,9 @@ export default {
       };
       console.log('参数为', param.base64Data)
       uploadAvatar(param).then(response => {
-
+        
         //刷新
-        // this.$router.go(0);
+        this.$router.go(0);
       })
     },
   }

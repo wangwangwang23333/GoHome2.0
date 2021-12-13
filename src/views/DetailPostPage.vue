@@ -41,11 +41,10 @@
                                 <a-avatar
                                 :src="this.author.customerAvatarLink"
                                 :alt="this.author.customerName"
+                                style="height:10vh;width:5vw;"
                                 />
                             </el-row>
-                            <el-row>
-                                <p>{{this.author.customerName}}</p>
-                            </el-row>
+                            <p>{{this.author.customerName}}</p>
                         </el-col>
                         <el-col :span="2">
                             <el-divider direction="vertical"></el-divider>
@@ -319,7 +318,7 @@ export default {
 
         let postId=this.$route.query.postId;
 
-        this.userId = Number(localStorage.getItem('userId'))
+        this.userId = localStorage.getItem('userId')
         
         
         getDetailedPost(postId).then((response) => {
@@ -344,21 +343,21 @@ export default {
             // 查询stays详细信息
             for(let i = 0;i<8 && i < this.stays.length; ++i){
                 GetDetailedStay(this.stays[i].stayId).then(response=>{
-                console.log(response.data.stayPositionInfo)
-                let stayData = response.data.stayPositionInfo
-                let newStayInfo={}
-                newStayInfo.StayType = stayData.stayDescribe
-                newStayInfo.StayName = stayData.stayName
-                newStayInfo.UserAvatar = stayData.hostAvatar
-                newStayInfo.StayPrice = stayData.stayPrice
-                newStayInfo.UserId = stayData.hostId
-                newStayInfo.StayCommentRate = stayData.stayScore
-                newStayInfo.StayCommentNum = stayData.stayCommentNum
-                
-                if (stayData.stayPhoto.length != 0){
-                    newStayInfo.StayPic = stayData.stayPhoto
-                }
-                this.stayInfoList.push(newStayInfo)
+                    console.log(response.data.stayPositionInfo)
+                    let stayData = response.data.stayPositionInfo
+                    let newStayInfo={}
+                    newStayInfo.StayType = stayData.stayDescribe
+                    newStayInfo.StayName = stayData.stayName
+                    newStayInfo.UserAvatar = stayData.hostAvatar
+                    newStayInfo.StayPrice = stayData.stayPrice
+                    newStayInfo.UserId = stayData.hostId
+                    newStayInfo.StayCommentRate = stayData.stayScore
+                    newStayInfo.StayCommentNum = stayData.stayCommentNum
+                    
+                    if (stayData.stayPhoto.length != 0){
+                        newStayInfo.StayPic = stayData.stayPhoto
+                    }
+                    this.stayInfoList.push(newStayInfo)
                 })
             }
 
@@ -371,7 +370,7 @@ export default {
 
             this.author=postDetail.author;
 
-            console.log("登录的用户的个人id为",this.userId)
+
             console.log("作者的用户的个人id为",this.author.customerId)
 
             // 获取点赞图标状态
@@ -506,6 +505,16 @@ export default {
                 });
         },
         like() {
+            // 用户尚未登录
+            if(this.userId == null || this.userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             
             if(this.action==='liked')
             {
@@ -544,6 +553,15 @@ export default {
         },
         replyTo()
         {
+            if(this.userId == null || this.userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             this.form.show=true;
         }
 

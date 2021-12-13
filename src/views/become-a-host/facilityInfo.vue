@@ -113,6 +113,22 @@ export default {
     
 
     mounted(){
+      // 查看用户是否有权限进入该页面
+      let userPermissions=localStorage.getItem("userPermissions").split(",")
+      for(let i=0;i<userPermissions.length;++i){
+        if(userPermissions[i]=="upgrade"){
+            this.$message({
+            message: "请您首先成为房东",
+            type: 'warning'
+          });
+          // 跳转到个人信息界面
+          this.$router.push({
+            path: "/userInfoPage"
+          })
+          return;
+        }
+    
+      }
       if(localStorage.getItem('pubRestNum')){
         try{
           console.log('浏览器获取pubRestNum');

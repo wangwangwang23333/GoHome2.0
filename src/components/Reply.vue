@@ -118,6 +118,16 @@ export default {
                 });
         },
         like() {
+            let userId=localStorage.getItem("userId")
+            if(userId == null || userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             
             if(this.action==='liked')
             {
@@ -156,6 +166,16 @@ export default {
         },
         replyTo()
         {
+            let userId=localStorage.getItem("userId")
+            if(userId == null || userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             this.form.show=true;
         }
     },
