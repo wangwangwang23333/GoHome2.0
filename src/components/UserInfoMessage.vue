@@ -463,7 +463,6 @@ export default {
       if(userPermissions[i]=="upgrade"){
         this.canUpgrade = true;
         this.isHost = false;
-        console.log("不是房东")
         break;
       }
       this.isHost = true;
@@ -471,7 +470,6 @@ export default {
 
     // 获取指定用户的发帖记录
     this.userId = localStorage.getItem('userId')
-    console.log("用户的个人id为", this.userId)
     getPersonalPostList(this.userId, 0, 3).then(response => {
       this.postNumber = response.data.postNum
       this.posts = response.data.postInfo.content

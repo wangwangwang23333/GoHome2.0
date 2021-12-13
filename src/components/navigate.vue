@@ -275,10 +275,17 @@ export default {
     window['publicChangeName'] = (newName) => {
       that.changeName(newName);
     }
+    window['changeAvatar'] = (newAvatar)=>{
+      this.changeAvatar(newAvatar);
+    }
   },
   methods: {
     changeName: function (newName) {
       this.$refs.loginComponent.userName = newName;
+      this.userName=newName;
+    },
+    changeAvatar(newAvatar){
+      this.userAvatar = newAvatar;
     },
     //add@Lq
     routerToUserPage: function () {
