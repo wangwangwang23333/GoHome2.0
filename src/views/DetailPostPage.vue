@@ -32,7 +32,7 @@
                             <vueper-slide v-for="(slide, i) in slides" :key="i" :title="slide.title" :image="slide.image"/>
                         </vueper-slides>
                     </div>
-                </el-card >
+                </el-card v-loading="dataLoading">
                 
                     <el-card class="box-card" style="margin-top: 5vh;">
                     <el-row >
@@ -85,7 +85,7 @@
                     </div>
                 </el-card>
 
-                <div id="main" style="z-index:0">
+                <div id="main" style="z-index:0" v-loading="dataLoading">
                     <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false'
                         :toolbarsFlag='false' :navigation='false' />
                 
@@ -310,7 +310,9 @@ export default {
 
             userId:null,
 
-            deleteVisible:false
+            deleteVisible:false,
+
+            dataLoading:true,
 
         }
     },
@@ -361,7 +363,7 @@ export default {
                 })
             }
 
-
+            this.dataLoading=false;
             this.author=postDetail.author;
             this.value=postDetail.post.postContent;
             this.theme=postDetail.post.postTheme;

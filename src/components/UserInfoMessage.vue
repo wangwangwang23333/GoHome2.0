@@ -473,14 +473,13 @@ export default {
     getPersonalPostList(this.userId, 0, 3).then(response => {
       this.postNumber = response.data.postNum
       this.posts = response.data.postInfo.content
-      console.log(response)
+
     })
         .catch((error) => {
           this.$message({
             message: "网络异常，请稍后重试",
             type: 'warning'
           });
-          console.log('error', error)
           return;
         })
   },
@@ -626,14 +625,13 @@ export default {
       getPersonalPostList(this.userId, currentPage - 1, 3).then(response => {
         this.postNumber = response.data.postNum
         this.posts = response.data.postInfo.content
-        console.log(response)
       })
           .catch((error) => {
             this.$message({
               message: "网络异常，请稍后重试",
               type: 'warning'
             });
-            console.log('error', error)
+
             return;
           })
     },
