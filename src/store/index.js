@@ -57,6 +57,7 @@ export default new Vuex.Store({
       state.userAvatar=''
       state.userPermissions=[]
       localStorage.removeItem('Authorization')
+      localStorage.removeItem('userId')
       localStorage.removeItem('userName')
       localStorage.removeItem('userAvatar')
       localStorage.removeItem('userIdentity')

@@ -3,14 +3,14 @@
     <div class="customerOrderTitle">
       <p class="titleText">用户订单</p>
     </div>
-    <!--    <el-button type="text" @click="dialogVisible = true" style="float:right;width:80px;height:80px"-->
-    <!--               v-loading="mapLoading">-->
-    <!--      <i class="el-icon-map-location"></i>历史足迹-->
-    <!--    </el-button>-->
+    <el-button type="text" @click="dialogVisible = true" style="float:right;width:80px;height:80px"
+              v-loading="mapLoading">
+      <i class="el-icon-map-location"></i>历史足迹
+    </el-button>
     <div class="customerOrderList" v-loading="listLoading">
-      <!--      <el-select class="select" v-model="sortOrder" placeholder="默认顺序" @change="sortOrderChange">-->
-      <!--        <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>-->
-      <!--      </el-select>-->
+      <el-select class="select" v-model="sortOrder" placeholder="默认顺序" @change="sortOrderChange">
+        <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+      </el-select>
       <el-tabs class="tabs" v-model="customerOrderStation">
         <el-tab-pane v-for="(tabPane,index) in tabPanes" :key="index" :label="tabPane.label" :name="tabPane.name">
           <OrderCardList v-if="orderInfo.length > 0" :orderList="orderInfo" :isCustomer="true"/>
@@ -22,18 +22,19 @@
         </el-tab-pane>
         <div class="pagination">
           <div style="margin:0 auto">
-            <el-pagination v-if = "paginationFlag" :page-size="pageSize" layout="prev, pager, next" :page-count="totalPage"
-                           :current-page="currentPage"></el-pagination>
+            <el-pagination v-if = "paginationFlag" :hide-on-single-page="true" :page-size="pageSize" layout="prev, pager, next" :page-count="totalPage"
+                           :current-page="currentPage" @current-change="handleCurrentChange" @prev-click="prevCurrentChange"
+                           @next-click="nextCurrentChange"></el-pagination>
           </div>
         </div>
       </el-tabs>
     </div>
-    <!--    <div class="myDialog">-->
-    <!--      <el-dialog :visible.sync="dialogVisible" width="1000px">-->
-    <!--        <FootPrintMap :footPrintInfos="footPrintInfos"/>-->
-    <!--      </el-dialog>-->
-    <!--    </div>-->
-  </div>
+      <div class="myDialog">
+        <el-dialog :visible.sync="dialogVisible" width="1000px">
+          <FootPrintMap :footPrintInfos="footPrintInfos"/>
+        </el-dialog>
+      </div>
+    </div>
 </template>
 
 <style scoped>
@@ -100,7 +101,7 @@
 </style>
 
 <script>
-import {GetCustomerOrderInfo, GetCustomerOrderInfoByStatus} from '@/api/order';
+import {GetCustomerOrderInfo, GetCustomerOrderInfoByStatus, GetFootMap} from '@/api/order';
 import OrderCardList from '@/components/OrderCardList.vue'
 import FootPrintMap from '@/components/FootPrintMap.vue'
 
@@ -118,10 +119,10 @@ export default {
       mapLoading: true,
       listLoading: true,
       options: [{
-        value: 'startTime',
+        value: 'orderStartTime',
         label: '时间顺序'
       }, {
-        value: 'endTime',
+        value: 'orderEndTime',
         label: '时间逆序'
       }, {
         value: 'totalCost',
@@ -149,17 +150,18 @@ export default {
       stationStatus: {'payment': 1, 'underway': 2, 'completing': 3, 'pending': 4, 'completed': 5},
       orderInfo: [],
       emptyImgUrl: "https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/暂无订单.png",
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 5,
       totalPage: 0,
       paginationFlag : true,
+      footMapData:[]
     }
   },
   created: function () {
     this.paginationFlag = false;
     this.listLoading = true;
 
-    GetCustomerOrderInfo(this.currentPage, this.pageSize).then(response => {
+    GetCustomerOrderInfo(this.currentPage - 1, this.pageSize).then(response => {
       this.orderInfo = response.data.orderInfo;
       this.totalPage = response.data.totalPage;
 
@@ -175,49 +177,26 @@ export default {
 
     this.paginationFlag = true;
     this.listLoading = false;
+
+    GetFootMap().then(response =>{
+      this.footMapData = response.data;
+
+    }).catch(() => {
+      console.log("fail");
+      this.$message.error("错误:数据库连接错误");
+    })
   },
   methods: {
     sortOrderChange(val) {
-      let order = val == 'orderInfo' ? -1 : 1;
+      console.log(val)
+      let order = val == 'orderStartTime' ? -1 : 1;
       this.orderInfo.sort((a, b) => {
         return a[val] < b[val] ? order : -order;
       });
     },
-  },
-  computed: {
-
-    // footPrintInfos: function () {
-    //   var infos = new Array();
-    //   this.customerOrderList.forEach((order) => {
-    //     var province = order.stayProvince;
-    //     var city = order.stayCity;
-    //     var day = this.$moment(order.endTime).diff(this.$moment(order.startTime), 'day');
-    //     var target = infos.find((info) => info.province == province && info.city == city);
-    //     if (target) {
-    //       target.times += 1;
-    //       target.days += this.$moment(day);
-    //     } else {
-    //       infos.push({
-    //         province: province,
-    //         city: city,
-    //         times: 1,
-    //         days: day
-    //       })
-    //     }
-    //   })
-    //  return infos;
-    // }
-  },
-  watch: {
-    customerOrderStation(val, oldVal) {
-      this.paginationFlag = false;
-      this.listLoading = true;
-
-      let station = val;
-
-      if (station === 'whole') {
-        GetCustomerOrderInfo(this.currentPage, this.pageSize).then(response => {
-          this.currentPage = 0;
+    getOrderInfoListByPage(currentPage, pageSize, currentStation){
+      if (currentStation === 'whole') {
+        GetCustomerOrderInfo(currentPage, pageSize).then(response => {
           this.orderInfo = response.data.orderInfo;
           this.totalPage = response.data.totalPage;
           console.log(this.totalPage)
@@ -231,10 +210,9 @@ export default {
           this.$message.error("错误:数据库连接错误");
         })
       } else {
-        let status = this.stationStatus[station]
+        let status = this.stationStatus[currentStation]
         console.log('status', status)
-        GetCustomerOrderInfoByStatus(this.currentPage, this.pageSize, status).then(response => {
-          this.currentPage = 0;
+        GetCustomerOrderInfoByStatus(currentPage, pageSize, status).then(response => {
           this.orderInfo = response.data.orderInfo;
           this.totalPage = response.data.totalPage;
           this.orderInfo.forEach((order) => {
@@ -247,19 +225,68 @@ export default {
           this.$message.error("错误:数据库连接错误");
         })
       }
+    },
+    handleCurrentChange(val){
+      this.currentPage = val;
+    },
+    prevCurrentChange(val){
+      this.currentPage = val;
+    },
+    nextCurrentChange(val){
+      this.currentPage = val;
+    }
+
+
+
+  },
+  computed: {
+
+    footPrintInfos: function () {
+      var infos = new Array();
+      this.footMapData.forEach((order) => {
+        var province = order.stayProvince;
+        var city = order.stayCity;
+        var day = this.$moment(order.orderEndTime).diff(this.$moment(order.orderStartTime), 'day');
+        var target = infos.find((info) => info.province == province && info.city == city);
+        if (target) {
+          target.times += 1;
+          target.days += this.$moment(day);
+        } else {
+          infos.push({
+            province: province,
+            city: city,
+            times: 1,
+            days: day
+          })
+        }
+      })
+     return infos;
+    }
+  },
+  watch: {
+    customerOrderStation(val, oldVal) {
+      this.paginationFlag = false;
+      this.listLoading = true;
+
+      let station = val;
+
+      this.getOrderInfoListByPage(0, this.pageSize, station)
 
       this.paginationFlag = true;
       this.listLoading = false;
+    },
+    currentPage(val, oldVal){
+      this.getOrderInfoListByPage(val - 1, this.pageSize, this.customerOrderStation)
+    },
+    footPrintInfos: function () {
+      var that = this;
+      that.$nextTick(function () {
+        that.listLoading = false;
+        setTimeout(() => {
+          this.mapLoading = false;
+        }, 3000);
+      });
     }
-    // footPrintInfos: function () {
-    //   var that = this;
-    //   that.$nextTick(function () {
-    //     that.listLoading = false;
-    //     setTimeout(() => {
-    //       this.mapLoading = false;
-    //     }, 3000);
-    //   });
-    // }
   },
 
 }

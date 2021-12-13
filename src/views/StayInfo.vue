@@ -63,7 +63,8 @@
         <div ref="imageDom">
           <div class="info" >
             <detail id="detail" :stay="data" ></detail>
-            <rooms v-for="(room, index) of data.rooms" :key="index" :room="room" :stayId="stayId" 
+            <rooms v-for="(room, index) of data.rooms" :key="index" :room="room" 
+            :stayId="stayId" 
             ></rooms>
             <!--    </el-row>-->
           </div>
@@ -108,7 +109,7 @@ import CollectionDialog from '@/components/collectionDialog.vue'
 import {getStayDetails} from '@/api/stay.js'
 
 
-import{DeleteFavoriteStayByView} from '@/api/favorite.js'
+import{DeleteFavoriteStayByView,GetSpecificStayLikeState} from '@/api/favorite.js'
 
 export default {
   name: "StayInfo",
@@ -122,31 +123,44 @@ export default {
   },
   created() {
 
-        let stayId = this.$route.query.stayId;
-        this.stayId = stayId;
+    let stayId = this.$route.query.stayId;
+    this.stayId = stayId;
+    console.log("房源id为",this.stayId)
+    this.stayExisted = true
 
+    // 判断用户是否收藏了该房源
+    let userId=localStorage.getItem('userId');
+    if (userId != null && userId != ''){
+      GetSpecificStayLikeState(stayId).then(response=>{
+        this.isLike=response.data
+        
+      })
+    }
+    else{
+      // 用户未登录
+      this.hostIsEqual=true;
+    }
 
-        getStayDetails(stayId)
-          .then((response) => {
-            // 房源不存在
-            if (response.data.stayId == null) {
-
-              return
-            }
-            this.data = response.data;
-            this.dataReady = true;
-            this.stayExisted = true
-          })
-          .catch((error) => {
-            this.$message({
-              message: error,
-              type: "warning",
-            });
-          });
+    getStayDetails(stayId)
+      .then((response) => {
+        // 房源不存在
+        if (response.data.stayId == null) {
+          return
+        }
+        this.data = response.data;
+        this.dataReady = true;
+        this.stayExisted = true
+      })
+      .catch((error) => {
+        this.$message({
+          message: error,
+          type: "warning",
+        });
+      });
         
       
 
-      },
+  },
   methods:{
 
     //添加房源至收藏夹;
@@ -156,13 +170,10 @@ export default {
       },
       StayDelCollection(){
           let that=this;
-          DeleteFavoriteStayByView(this.stayID).then(response=>{
-              let flag=response.errorCode;
-              if(flag=='200'){
-                  this.isLike=false;
-              }
+          DeleteFavoriteStayByView(this.stayId).then(response=>{
+              this.isLike=false;
           }).catch(error=>{
-          this.$message.error("删除数据失败，请稍后重试")});
+          this.$message.error("网络异常，请稍后重试")});
       },
     //修改收藏框的可见度
       changeDialogVisible(val){

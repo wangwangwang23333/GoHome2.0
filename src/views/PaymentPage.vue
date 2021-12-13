@@ -141,7 +141,10 @@
                   </div>   
                 <el-pagination
                 :page-size="coupon_pageSize"
-                :pager-count="coupon_totalPage"
+                :page-count="coupon_totalPage"
+                @current-change="handleCurrentChange" 
+                @prev-click="prevCurrentChange"
+                @next-click="nextCurrentChange"
                 layout="prev, pager, next"
                 :total="coupon_pageSize*coupon_totalPage">                  
                 </el-pagination>
@@ -353,7 +356,6 @@
 // api
 import {getStayDetails, getComments} from "@/api/stay.js";
 import {AddOrder, UseCouponForOrder} from '@/api/order.js';
-import PayDialog from '@/components/payDialog.vue';
 import {GetCustomerCouponInfo} from "@/api/coupon.js";
 
 
@@ -401,7 +403,7 @@ export default {
 
       //礼券信息
       coupon_information: [],
-      coupon_currentPage: 0,
+      coupon_currentPage: 1,
       coupon_pageSize: 2,
       coupon_totalPage: 0,
       coupon_id:-1
@@ -507,7 +509,6 @@ export default {
     handleChangeNumOpen() {
       this.changeNumDialogVisible = true;
       this.changedPeopleNum = this.peopleNum;
-      // console.log("hehe")
     },
 
     handleChangeDateOpen() {
@@ -516,18 +517,18 @@ export default {
       this.changedDate[1] = this.$route.query.endDate;
     },
 
-    //显示礼券界面
-    chooseCoupon:function(){
-      GetCustomerCouponInfo(this.total_price,this.coupon_currentPage,this.coupon_pageSize).then(response=>{
+    getCouponListByPage(price, currentPage, pageSize){
+      GetCustomerCouponInfo(price,currentPage,pageSize).then(response=>{
 
-        console.log("before change",this.coupon_information)
         this.coupon_information = response.data.couponInfo;
         this.coupon_totalPage = response.data.totalPage;
         this.selectCouponVisible = true;
-        console.log("response",response.data.couponInfo)
-        console.log("after change",this.coupon_information)
         
       })
+    },
+    //显示礼券界面
+    chooseCoupon:function(){
+      this.getCouponListByPage(this.total_price,this.coupon_currentPage - 1,this.coupon_pageSize)
     },
     //点击卡片选择礼券
     clickCouponCard:function(couponId, couponAmount){
@@ -535,7 +536,19 @@ export default {
         this.coupon_price = couponAmount;
         this.coupon_id = couponId;
         this.selectCouponVisible = false;
+    },
+    //礼券分页
+    handleCurrentChange(val){
+      this.coupon_currentPage = val;
+    },
+    prevCurrentChange(val){
+      this.coupon_currentPage = val;
+    },
+    nextCurrentChange(val){
+      this.coupon_currentPage = val;
     }
+
+
   },
   computed: {
     pickerOptions() {
@@ -608,6 +621,11 @@ export default {
     let endDate = this.bookDate[1];
     this.day_count = this.getDaysBetween(startDate, endDate)
 
+  },
+  watch:{
+    coupon_currentPage(val,oldVal){
+      this.getCouponListByPage(this.total_price,val - 1,this.coupon_pageSize)
+    }
   }
 
 }

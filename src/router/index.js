@@ -222,7 +222,6 @@ const router = new VueRouter({
 
 // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
 router.beforeEach((to, from, next) => {
-  console.log('to:',to)
   if (to.path === '/login' 
   || to.path==='/' 
   || to.path==='/hostRegister'
@@ -231,14 +230,15 @@ router.beforeEach((to, from, next) => {
   || to.path==='/staysView'
   || to.path==='/help'
   || to.path==='/StayInfo'
+  || to.path==='/postSquare'
+  || to.path==='/DetailPost'
   ) {
     next();
   } else {
-    next(); // TODO: reomove it
-    return;
-    let token = localStorage.getItem('Authorization');
 
-    if (token === null || token === '') {
+    let userId = localStorage.getItem('userId');
+
+    if (userId === null || userId === '') {
       if (to.path === '/forgetPassword'  
       || to.path==='/register'
       ) {
@@ -250,7 +250,6 @@ router.beforeEach((to, from, next) => {
           message: '您需要先进行登录操作',
           type: 'warning'
         });
-        console.log('to',to);
         //打开登录界面
         startLogin();
         //前往首页

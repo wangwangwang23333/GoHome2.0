@@ -325,6 +325,7 @@ export default {
       getCurrentStay(val){
         this.curStayID=val;
       },
+      
 
       //添加至对比
       addCurCompareID(val){

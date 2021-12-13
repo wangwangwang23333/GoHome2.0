@@ -35,10 +35,11 @@
                                     :offset=" index %3==0 ? 1 : 2 "  
                                     style="margin-bottom:40px;" >
                     <el-card :body-style="{ padding: '0px' }" shadow="hover"  @click.native="jump_to_oneFav(item)">
-                        <img v-if="item.imgurl=='' | item.imgurl==null " src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/9074398134361ed01c5bd7c2d917934a.png" class="emp-image">
+                        <img v-if="item.imgUrl=='' || item.imgUrl==null " src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/9074398134361ed01c5bd7c2d917934a.png" class="emp-image">
 <!--                        https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/f8cc5e654d8f69d1353e2a4833dd3a38.jpg-->
-                        <img v-else :src="item.imgurl" class="image">
+                        <img v-else :src="item.imgUrl" class="image">
                         <div style="padding: 14px;">
+
                             <div class="top-clearfix">
                                 <span class="time">共有{{ item.totalStay }}个房源</span>
                             </div>
@@ -62,12 +63,24 @@ import { GetFavorite,InsertFavorite,GetFavoriteImage } from '@/api/favorite';
 export default {
 
     created:function(){
+        let userId=localStorage.getItem('userId');
+        if (userId == null || userId == ''){
+            this.$message({
+              message: "您尚未登录，请先登录",
+              type: "warning",
+            });
+            this.$router.push({
+                path: "/"
+            })
+            return;
+        }
         GetFavorite().then(response=>{
-            
-            this.favorite_list=response.data.favoriteList;
+            this.favorite_list=response.data;
+            console.log(this.favorite_list)
         }).catch(error=>{
             console.log("fail");
-            this.$message.error("错误:数据库连接错误");
+            console.log(error);
+            this.$message.error("网络异常，请稍后重试");
         })
     },
 
@@ -92,22 +105,20 @@ export default {
             inputErrorMessage: '格式不正确',
             center: true
             }).then(({ value }) => {
-
+                console.log("value为",value)
                 //插入
-                InsertFavorite({name:value}).then(response=>{
-                    console.log(response.errorCode);
-                    if(response.errorCode==200){
-                        this.$message({
-                            type: 'success',
-                            message: '新的收藏夹名字是: ' + value
-                        });     
-                    }
-                
+                InsertFavorite({favoriteName:String(value)}).then(response=>{
+                    this.$message({
+                        type: 'success',
+                        message: '新的收藏夹名字是: ' + value
+                    });     
+                    console.log("在此为ok")
                     GetFavorite().then(response=>{
-                        this.favorite_list=response.data.favoriteList;
+                        console.log("在此为ok2")
+                        this.favorite_list=response.data;
                     })
                 }).catch(error=>{
-                    console.log("fail");
+                    console.log(error);
                     this.$message.error("错误:插入了重名的文件夹");
                 })
 

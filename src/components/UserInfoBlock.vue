@@ -206,11 +206,18 @@ export default {
       let param = {
         base64Data: this.new_img.toString()
       };
-      console.log('参数为', param.base64Data)
+
       uploadAvatar(param).then(response => {
+        console.log("成功上传头像的回复为",response)
+        // 获取用户个人头像
+        let userId=localStorage.getItem("userId")
+        
+        //修改个人头像
+        changeAvatar("http://tongjigohome.oss-cn-shanghai.aliyuncs.com/avatar/"+userId+".png")
+        
 
         //刷新
-        // this.$router.go(0);
+        this.$router.go(0);
       })
     },
   }

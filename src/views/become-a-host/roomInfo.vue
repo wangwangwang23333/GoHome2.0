@@ -14,7 +14,7 @@
     ></el-progress>
 
     <!--主体部分-->
-    <div id="mymain">
+    <div id="mymain" >
       <!--主功能区-->
       <div id="workspace">
         <h2 style="margin-bottom: 20px">您的房源可以住几位房客？</h2>
@@ -216,6 +216,22 @@ export default{
     
 
     mounted(){
+      // 查看用户是否有权限进入该页面
+      let userPermissions=localStorage.getItem("userPermissions").split(",")
+      for(let i=0;i<userPermissions.length;++i){
+        if(userPermissions[i]=="upgrade"){
+            this.$message({
+            message: "请您首先成为房东",
+            type: 'warning'
+          });
+          // 跳转到个人信息界面
+          this.$router.push({
+            path: "/userInfoPage"
+          })
+          return;
+        }
+    
+      }
         if(localStorage.getItem('maxTenantNum')){
             try {
                 console.log('从浏览器获取房客数');

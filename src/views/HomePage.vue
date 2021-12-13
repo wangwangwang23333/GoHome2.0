@@ -191,10 +191,10 @@ export default {
         '#409EFF', '#909399', '#F56C6C', '#E6A23C',
         '#67C23A'],
       defaultWords: [
-        {
-        "标签": "萌宠",
-        "热度": 1
-        }
+        // {
+        // "标签": "萌宠",
+        // "热度": 1
+        // }
       ],
       currentTagPage:0,
       tagPageSize:20,
@@ -221,7 +221,6 @@ export default {
             let tags=response.data.tagList.content;
 
             that.totalTags=response.data.tagList.totalElements;
-            console.log(tags)
             let words=[]
             tags.forEach(tag=>{
                 words.push(

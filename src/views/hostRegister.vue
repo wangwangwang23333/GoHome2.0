@@ -251,7 +251,8 @@
 <script>
 import {hostRegister, hostPhoneUnique} from '@/api/host'
 import {sendMessage, IDVerify} from '@/api/public'
-import {getUserPhone} from '@/api/customer'
+import {getUserPhone,getCustomerInfo} from '@/api/customer'
+import {mapMutations} from 'vuex';
 import axios from 'axios'
 
 export default {
@@ -357,6 +358,7 @@ export default {
       return isLt2M;
     },
 
+    ...mapMutations(['changeLogin']),
     nextStep() {
       console.log('file:', this.fileImg);
       if (this.curStep === 0) {
@@ -477,37 +479,38 @@ export default {
 
         //判断完成，注册
         hostRegister(param).then(response => {
-          console.log(response)
-          if (response.status === 401) {
-            this.$message({
-              message: '请重新登陆再进行升级！',
-              type: 'warning'
-            });
-            return
-          }
+          this.curStep = 4;
 
-          if (response.data.registerState) {
-            this.curStep = 4;
+          this.$message({
+            message: '成功注册账号！',
+            type: 'success'
+          });
 
-            this.$message({
-              message: '成功注册账号！',
-              type: 'success'
-            });
+          
 
-            //跳转到首页
-            this.$router.push({
-              path: "/"
-            });
-
-            //打开登录界面
-            startLogin();
-          } else {
-            this.$message({
-              message: '注册失败，请稍后再试',
-              type: 'warning'
-            });
-            return;
-          }
+          getCustomerInfo().then(response => {
+            if (response.status === 200) {
+              this.userName = response.data.userName;
+              this.userAvatar = response.data.userAvatar;
+              console.log("用户id为",response.data.userId)
+              // 后端返回身份
+              // 将用户token保存到vuex中
+              this.changeLogin({
+                Authorization: this.userToken,
+                userId:response.data.userId,
+                userName: response.data.userName,
+                userAvatar: response.data.userAvatar,
+                userIdentity: 'Customer',
+                userPermissions: response.data.userPermissions
+              });
+              //跳转到首页
+              this.$router.push({
+                path: "/"
+              });
+              
+            }
+          })
+          
         }).catch(error => {
           console.log(error)
           this.$message.error('发生异常，请稍后再试');

@@ -12,28 +12,26 @@ import axios from 'axios'
 
 export function GetFavorite() {
   return request({
-    url: '/CustomerFavorite',
+    url: '/v1/personinfo/favorite/directory',
     method: 'get',
   })
 }
   
 
 export function InsertFavorite(data) {
-  let param=new URLSearchParams(data)
-  
   return request({  
-    url: '/CustomerFavorite',
+    url: '/v1/personinfo/favorite/addition',
     method: 'post',
-    data:param
+    data:data
   })
 }
 
 export function DeleteFavorite(data) {
 
   return request({  
-    url: '/CustomerFavorite',
+    url: '/v1/personinfo/favorite/deletion',
     method: 'delete',
-    params:{favoriteId:data}
+    data:{favoriteId:data}
   })
 }
 
@@ -48,34 +46,46 @@ export function GetFavoriteImage(data){
 
 export function GetFavoriteStay(data){
   return request({
-    url: '/FavoriteStay',
+    url: '/v1/personinfo/favorite/stayinfo',
     method: 'get',
     params:{favoriteId:data}
   })
 }
 
 
-export function DeleteFavoriteStay(data1,data2) {
+export function DeleteFavoriteStay(favoriteId,stayId) {
   return request({  
-    url: '/FavoriteStay',
+    url: '/v1/personinfo/favorite/stay/deletion',
     method: 'delete',
-    params:{favoriteId:data1,stayid:data2}
+    data:{favoriteId:favoriteId,stayId:stayId}
   })
 }
-export function InsertFavoriteStay(data1,data2) {
-  let param=new URLSearchParams({favoriteId:data1,stayId:data2})
+export function InsertFavoriteStay(favoriteId,stayId) {
   return request({  
-    url: '/FavoriteStay',
+    url: '/v1/personinfo/favorite/stay/addition',
     method: 'post',
-    data:param
+    data:{favoriteId:favoriteId,stayId:stayId}
   })
 }
 
-export function DeleteFavoriteStayByView(data1){
-  return request({  
-    url: '/FavoriteStay/stay',
-    method: 'delete',
-    params:{stayID:data1}
-  }) 
+
   
+export function DeleteFavoriteStayByView(stayId){
+  return request({  
+    url: '/v1/personinfo/favorite/stay/heart/deletion',
+    method: 'get',
+    params:{stayId:stayId}
+  })
 }
+
+export function GetSpecificStayLikeState(stayId){
+  return request({  
+    url: '/v1/personinfo/favorite/stay/heart',
+    method: 'get',
+    params:{stayId:stayId}
+  })
+}
+
+
+  
+

@@ -17,7 +17,7 @@
             <div v-for="(favorite,index) in showFavorites" :key="index">
                 <div style="height:64px; margin:5px" v-on:click="clickFavorites(favorite)">
                     <el-card class="imgStyle">
-                        <el-image :src="favorite.imgurl" fit="fill"></el-image>
+                        <el-image :src="favorite.imgUrl" fit="fill"></el-image>
                     </el-card>
                     <div style="display:block; float:left; width:320px">
                         <div class="nameStyle">{{favorite.name}}</div>             
@@ -87,21 +87,21 @@ export default {
         let that=this;
 
         //判断登录状态
-        let token=localStorage.getItem('Authorization');
-        if (token === null || token === ''){
+        let userId=localStorage.getItem('userId');
+        if (userId === null || userId === ''){
             this.hasLogin=false;
             return;
         }
 
         GetFavorite().then(response=>{
-            that.favorites=response.data.favoriteList;
+            that.favorites=response.data;
             that.totalStays=that.favorites.length;   
             console.log('favorites为',that.favorites);
             let start=(that.currentPage-1)*that.pageSize;
             let end=start+that.pageSize;
             for(let i=0;i<that.totalStays;i++){
-                if(that.favorites[i].imgurl == null){
-                    that.favorites[i].imgurl="https://z3.ax1x.com/2021/07/13/WE1Vl8.png";
+                if(that.favorites[i].imgUrl == null){
+                    that.favorites[i].imgUrl="https://z3.ax1x.com/2021/07/13/WE1Vl8.png";
                 }
             }
             that.showFavorites=that.favorites.slice(start,end);         

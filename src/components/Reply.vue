@@ -2,7 +2,7 @@
     <a-comment style="text-align:left">
         <template slot="actions">
             <span key="comment-basic-like">
-                <a-tooltip title="Like">
+                <a-tooltip title="点赞">
                     <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" @click="like" />
                 </a-tooltip>
                 <span style="padding-left: '8px';cursor: 'auto'">
@@ -43,12 +43,13 @@
 <script>
 
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+
 import Vue from 'vue';
 
 import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import moment from 'moment'
+import 'ant-design-vue/dist/antd.css'
 
 Vue.use(Antd)
 
@@ -118,6 +119,16 @@ export default {
                 });
         },
         like() {
+            let userId=localStorage.getItem("userId")
+            if(userId == null || userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             
             if(this.action==='liked')
             {
@@ -156,6 +167,16 @@ export default {
         },
         replyTo()
         {
+            let userId=localStorage.getItem("userId")
+            if(userId == null || userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             this.form.show=true;
         }
     },
@@ -191,4 +212,5 @@ export default {
         }
     }
 }
+
 </script>

@@ -41,11 +41,10 @@
                                 <a-avatar
                                 :src="this.author.customerAvatarLink"
                                 :alt="this.author.customerName"
+                                style="height:10vh;width:5vw;"
                                 />
                             </el-row>
-                            <el-row>
-                                <p>{{this.author.customerName}}</p>
-                            </el-row>
+                            <p>{{this.author.customerName}}</p>
                         </el-col>
                         <el-col :span="2">
                             <el-divider direction="vertical"></el-divider>
@@ -90,13 +89,82 @@
                     <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false'
                         :toolbarsFlag='false' :navigation='false' />
                 
-                    <el-card class="box-card">
-                        <p>这里应该是房源卡片</p>
+                    <el-card class="box-card" v-if="stayInfoList.length>0">
+                        <!--替换为房源卡片-->
+                        <p>我的推荐</p>
+                        <div style="width: 95%;margin:0 auto"
+                        class="containerFlex">
+                                           <!--使用flex布局-->
+                                           <div class="CardContainer" v-for="(item,index) in stayInfoList" >
+                                            <!--房源卡片-->
+                                            <div class="CardType"
+                                                @mouseenter="changeCardStyle($event)"
+                                                @mouseleave="removeCardStyle($event)"
+                                                @click="clickCard(index)">
+                                            <!---->
+                                            <!-- <el-image
+                                                fit="cover"
+                                                style="width: 100%;height:55%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                                                :src="stayInfoList[index].StayPic">
+                                            </el-image> -->
+                                            <!--走马灯-->
+                                            <el-carousel trigger="click" height="165px" indicator-position="none">
+                                                <el-carousel-item v-for="(stayPhoto,index) in stayInfoList[index].StayPic" :key="index">                           
+                                                <el-image
+                                                fit="cover"
+                                                style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                                                :src="stayPhoto">
+                                                </el-image>
+                                            </el-carousel-item>
+                                            </el-carousel>
+                
+                                            <h5 style="font-size:5px;font-weight: revert;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;margin-bottom: 0">
+                                                {{stayInfoList[index].StayType}}
+                                            </h5>
+                                            <h4 style="text-align: left;margin-left: 4%;margin-top: 0;margin-right: 4%;margin-bottom: 0">
+                                                {{stayInfoList[index].StayName|ellipsis}}
+                                            </h4>
+                                            <el-row>
+                                                <el-col :span="14">
+                                                <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                                                    ￥{{stayInfoList[index].StayPrice}}/晚
+                                                </h4>
+                                                <el-rate
+                                                v-model="stayInfoList[index].StayCommentRate"
+                                                disabled
+                                                show-score
+                                                text-color="#ff9900"
+                                                score-template="{value}"
+                                                style="margin-left: 0;margin-bottom: 0"
+                                                :colors="colors"
+                                                >
+                                                </el-rate>
+                                                <h5 style="margin-top: 0;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
+                                                    {{stayInfoList[index].StayCommentNum}}条评价
+                                                </h5>
+                                                </el-col>
+                                                <el-col :span="10">
+                                                <el-divider
+                                                    direction="vertical"
+                                                    style="float: left;margin-right: 0;"
+                                                    class="el-divider--vertical"></el-divider>
+                                                <el-image class="UserAvatar"
+                                                            :src="stayInfoList[index].UserAvatar"
+                                                            style="float:right;margin-left: 0;margin-right: 10px"
+                                                >
+                                                </el-image>
+                                                </el-col>
+                                            </el-row>
+                
+                                            </div>
+                                        </div>
+                    </div>
+ 
                     </el-card>
                 
                     
                 </div>
-                <el-card v-if="this.hasReply===true" class="box-card" >
+                <el-card  class="box-card" style="margin-top: 5vh;">
                     <div style="text-align: right;cursor: pointer;">
                         <a-tooltip title="点赞">
                         <span key="comment-basic-like">
@@ -134,7 +202,7 @@
                         </el-form-item>
                     </el-form>
                     <el-divider v-if="form.show"></el-divider>
-                    <ReplyList :replyList="this.replyContents" :isPostReplyList="true" :id="this.$route.query.postId"/>
+                    <ReplyList v-if="this.hasReply" :replyList="this.replyContents" :isPostReplyList="true" :id="this.$route.query.postId"/>
                 </el-card>
             </div>
         </div>
@@ -181,7 +249,7 @@ import DdShare from 'dd-share'
 import Vue from 'vue';
 
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
+
 
 Vue.use(DdShare)
 Vue.use(Antd)
@@ -192,7 +260,7 @@ import 'vueperslides/dist/vueperslides.css'
 import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import ReplyList from '@/components/ReplyList'
-
+import {GetDetailedStay} from '@/api/staysView.js'
 import {getDetailedPost,deletePost} from '@/api/post.js'
 import {getPostReplyList,addReply} from '@/api/post.js'
 import {getPostLikeStatus,addPostLike,deletePostLike} from '@/api/post.js'
@@ -221,6 +289,7 @@ export default {
             tags:[],
             labels:[],
             stays:[],
+            stayInfoList:[],
             theme:"",
             value:"",
 
@@ -249,7 +318,7 @@ export default {
 
         let postId=this.$route.query.postId;
 
-        this.userId = Number(localStorage.getItem('userId'))
+        this.userId = localStorage.getItem('userId')
         
         
         getDetailedPost(postId).then((response) => {
@@ -270,6 +339,29 @@ export default {
                 this.tags.push(element.postTag);
             });
             this.stays=postDetail.stays;
+
+            // 查询stays详细信息
+            for(let i = 0;i<8 && i < this.stays.length; ++i){
+                GetDetailedStay(this.stays[i].stayId).then(response=>{
+                    console.log(response.data.stayPositionInfo)
+                    let stayData = response.data.stayPositionInfo
+                    let newStayInfo={}
+                    newStayInfo.StayType = stayData.stayDescribe
+                    newStayInfo.StayName = stayData.stayName
+                    newStayInfo.UserAvatar = stayData.hostAvatar
+                    newStayInfo.StayPrice = stayData.stayPrice
+                    newStayInfo.UserId = stayData.hostId
+                    newStayInfo.StayCommentRate = stayData.stayScore
+                    newStayInfo.StayCommentNum = stayData.stayCommentNum
+                    
+                    if (stayData.stayPhoto.length != 0){
+                        newStayInfo.StayPic = stayData.stayPhoto
+                    }
+                    this.stayInfoList.push(newStayInfo)
+                })
+            }
+
+
             this.author=postDetail.author;
             this.value=postDetail.post.postContent;
             this.theme=postDetail.post.postTheme;
@@ -278,7 +370,7 @@ export default {
 
             this.author=postDetail.author;
 
-            console.log("登录的用户的个人id为",this.userId)
+
             console.log("作者的用户的个人id为",this.author.customerId)
 
             // 获取点赞图标状态
@@ -319,6 +411,16 @@ export default {
     {
     },
     methods:{
+        changeCardStyle(e){
+            e.currentTarget.className='activeMe';
+        },
+        removeCardStyle(e){
+            e.currentTarget.className='CardType';
+        },
+        clickCard(index){
+            console.log(this.stays[index].stayId)
+            this.$router.push({path:"/StayInfo",query:{stayId:this.stays[index].stayId}});
+        },
         handleCommand(command) {
             
             if(command==="edit")
@@ -403,6 +505,16 @@ export default {
                 });
         },
         like() {
+            // 用户尚未登录
+            if(this.userId == null || this.userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             
             if(this.action==='liked')
             {
@@ -441,14 +553,87 @@ export default {
         },
         replyTo()
         {
+            if(this.userId == null || this.userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
             this.form.show=true;
         }
 
     },
     props: {
     },
+    filters: {
+    ellipsis(value) {
+      if (!value) return ''
+      if (value.length > 16) {
+        return value.slice(0, 16) + '...';
+      }
+      return value
+    }
+  },
 }
 </script>
+<style>
+.containerFlex{
+    display: flex;
+    flex-direction: row;/*容器内成员的排列方式为从左到右*/
+    flex-wrap:wrap;/*换行方式，放不下就换行*/
+    justify-content: flex-start;/*项目在主轴上的对齐方式*/
+    align-content: flex-start;
+}
+
+.CardContainer{
+    width: 270px;
+    height: 310px;
+    margin-bottom: 20px;
+    margin-left: 25px;
+
+}
+
+.CardType{
+    width: 95%;
+    height: 95%;
+    margin: 0 auto;
+    margin-top: 5px ;
+    border-radius: 10px !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px!important;
+    background-color: rgba(229, 225, 225, 0.34);
+    cursor: pointer;
+    -webkit-transition: all 200ms ease-in;
+
+}
+.activeMe {
+    width: 95%;
+    height: 95%;
+    margin: 0 auto;
+    margin-top: 0px;
+    border-radius: 10px !important;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px!important;
+    background-color: rgba(255, 255, 255, 0.84);
+    cursor: pointer;
+    -webkit-transition: all 200ms ease-in;
+}
+
+.UserAvatar{
+    width: 54px;
+    height: 54px;
+    border-radius: 27px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    margin-left: 30%;
+}
+
+
+
+
+
+</style>
+    
 
 <style scoped>
 .el-divider--vertical {
@@ -467,3 +652,5 @@ export default {
     flex: 1;  
 }
 </style>
+
+<style scoped src='../../node_modules/ant-design-vue/dist/antd.css'>

@@ -32,23 +32,23 @@
         </div>
         <el-row :gutter='30' class="main">
             <el-col :span="12" v-for='(item,index) in this.stayList'
-                                :key='item.stayId' 
+                                :key='item.stayID' 
                                 :offset=" index %1==0 ? 6 : 1 "  
                                 style="margin-bottom:40px;" >
             
             <stay-card  :money="item.stayMinPrice" 
                         :rate="item.stayRate"
                         :comment_num="item.commentNum"
-                        :stay_id='item.stayId'
+                        :stay_id='item.stayID'
                         :label1="item.stayHasFacility"
                         :label2="item.stayHasWashroom"
                         :label3="item.stayHasPath"
                         :hostImg="item.hostAvatar"
-                        :stayImg="item.stayPhoto"
+                        :stayImg="item.stayPhotoList"
                         :stay_characteristic="item.stayCharacteristic"
                         :stay_name="item.stayName.slice(0,18)+'...'"
                         @deleteStay="delete_stay"
-                        @click.native="on_card_clicked(item.stayId)"
+                        @click.native="on_card_clicked(item.stayID)"
                         ></stay-card>
             </el-col>
         </el-row>
@@ -101,6 +101,7 @@
                     type: 'warning'
                 }).then(() => {
                     //!删除该收藏夹
+                    console.log(this.favorID)
                     DeleteFavorite(this.favorID).catch(error=>{
                         console.log("fail");
                         this.$message.error("错误:数据库连接错误");
@@ -127,7 +128,7 @@
                 }).then(() => {
                     
                     DeleteFavoriteStay(parseInt(this.favorID),stayid).catch(error=>{
-                        console.log("fail");
+                        console.log(error);
                         this.$message.error("错误:数据库连接错误");
                     });
 
@@ -138,10 +139,9 @@
 
                     GetFavoriteStay(this.favorID).then(response=>{
                         this.stayList=response.data.stayList;
-                        console.log(this.stayList);
                     }).catch(error=>{
-                        console.log("fail");
-                        this.$message.error("错误:数据库连接错误");
+                        console.log(error);
+                        this.$message.error("网络异常，请稍后重试");
                     });
 
                     

@@ -63,10 +63,12 @@ export default {
           uploadBasicInfo(param).then(response => {
             //如果修改成功，需要更改本地信息
             this.changeLogin({
-              Authorization: localStorage.getItem('Authorization'),
               userName: NewName,
               userAvatar: localStorage.getItem('userAvatar'),
-              userIdentity: localStorage.getItem('userIdentity')
+              userIdentity: localStorage.getItem('userIdentity'),
+              userId:localStorage.getItem('userId'),
+              userIdentity: 'Customer',
+              userPermissions: localStorage.getItem('userPermissions'),
             });
 
             //刷新
@@ -94,12 +96,15 @@ export default {
               Authorization: localStorage.getItem('Authorization'),
               userName: NewName,
               userAvatar: localStorage.getItem('userAvatar'),
-              userIdentity: localStorage.getItem('userIdentity')
+              userId:localStorage.getItem('userId'),
+              userIdentity: 'Customer',
+              userPermissions: localStorage.getItem('userPermissions'),
             });
 
             //刷新
             this.$router.go(0);
           }).catch((error) => {
+            console.log(error);
             this.$message({
               message: error,
               type: 'warning'
@@ -123,7 +128,9 @@ export default {
               Authorization: localStorage.getItem('Authorization'),
               userName: NewName,
               userAvatar: localStorage.getItem('userAvatar'),
-              userIdentity: localStorage.getItem('userIdentity')
+              userId:localStorage.getItem('userId'),
+              userIdentity: 'Customer',
+              userPermissions: localStorage.getItem('userPermissions'),
             });
 
             //刷新
@@ -153,7 +160,9 @@ export default {
               Authorization: localStorage.getItem('Authorization'),
               userName: NewName,
               userAvatar: localStorage.getItem('userAvatar'),
-              userIdentity: localStorage.getItem('userIdentity')
+              userId:localStorage.getItem('userId'),
+              userIdentity: 'Customer',
+              userPermissions: localStorage.getItem('userPermissions'),
             });
 
             //刷新
@@ -184,7 +193,9 @@ export default {
               Authorization: localStorage.getItem('Authorization'),
               userName: NewName,
               userAvatar: localStorage.getItem('userAvatar'),
-              userIdentity: localStorage.getItem('userIdentity')
+              userId:localStorage.getItem('userId'),
+              userIdentity: 'Customer',
+              userPermissions: localStorage.getItem('userPermissions'),
             });
 
             //刷新
