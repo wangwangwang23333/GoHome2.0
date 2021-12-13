@@ -90,7 +90,7 @@
                     <mavon-editor style="z-index:0" v-model="value" :subfield="false" :defaultOpen="'preview'" :editable='false'
                         :toolbarsFlag='false' :navigation='false' />
                 
-                    <el-card class="box-card">
+                    <el-card class="box-card" v-if="stayInfoList.length>0">
                         <!--替换为房源卡片-->
                         <p>我的推荐</p>
                         <!--使用flex布局-->
@@ -161,7 +161,7 @@
                 
                     
                 </div>
-                <el-card v-if="this.hasReply===true" class="box-card" >
+                <el-card  class="box-card" style="margin-top: 5vh;">
                     <div style="text-align: right;cursor: pointer;">
                         <a-tooltip title="点赞">
                         <span key="comment-basic-like">
@@ -199,7 +199,7 @@
                         </el-form-item>
                     </el-form>
                     <el-divider v-if="form.show"></el-divider>
-                    <ReplyList :replyList="this.replyContents" :isPostReplyList="true" :id="this.$route.query.postId"/>
+                    <ReplyList v-if="this.hasReply" :replyList="this.replyContents" :isPostReplyList="true" :id="this.$route.query.postId"/>
                 </el-card>
             </div>
         </div>
