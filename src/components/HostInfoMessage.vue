@@ -17,6 +17,8 @@
           修改个人资料
         </u>
       </el-button>
+
+      <el-button class="Mybutton" @click="gotoOrder()" style="margin-left: -10vw;"> <u>我的订单</u></el-button>
       <el-drawer
           title="个人资料"
           :visible.sync="dialog"
@@ -750,6 +752,12 @@ export default {
   },
 
   methods:{
+    gotoOrder(){
+      this.$router.push({ 
+        path: "/hostOrder"
+      });
+    },
+
     createStay:function (){
       localStorage.setItem('stayAlter',JSON.stringify(false));
       this.$router.push({path:'/become-a-host/type'});
