@@ -155,7 +155,7 @@
         <el-menu-item index="6-1" @click="routerToPostSquare">
           广场
         </el-menu-item>
-        <el-menu-item index="6-2" @click="routerToPostSearch">
+        <el-menu-item index="6-2" @click="routerToEditPost">
           发帖
         </el-menu-item>
       </el-submenu>

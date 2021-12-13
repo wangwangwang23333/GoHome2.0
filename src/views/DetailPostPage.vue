@@ -95,7 +95,7 @@
                         <div style="width: 95%;margin:0 auto"
                         class="containerFlex">
                                            <!--使用flex布局-->
-                                           <div class="CardContainer" v-for="(item,index) in stayInfoList" >
+                                           <div class="CardContainer" v-for="(item,index) in stayInfoList" :key="index" >
                                             <!--房源卡片-->
                                             <div class="CardType"
                                                 @mouseenter="changeCardStyle($event)"
@@ -310,7 +310,7 @@ export default {
 
             userId:null,
 
-            deleteVisible:false
+            deleteVisible:false,
 
         }
     },
@@ -411,6 +411,7 @@ export default {
     {
     },
     methods:{
+        
         changeCardStyle(e){
             e.currentTarget.className='activeMe';
         },

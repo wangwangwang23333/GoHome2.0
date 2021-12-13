@@ -1,21 +1,25 @@
 <template>
-    <div style="position:relative;display:block;  margin-left:15%; margin-right:15%">>
+    <div style="position:relative;display:block;  margin-left:15%; margin-right:15%">
         <el-row>
-            <el-card class="box-card" style="text-align:left">
-                <el-col :span="2.5">
+            <el-card class="box-card" style="text-align:left;margin-bottom:10px">
+                <el-row>
+                <el-col :span="3">
                     <h2>主题：</h2>
                 </el-col>
-                <el-col :span="19">
+                <el-col :span="15">
                     <el-input v-model="post.postTheme" placeholder="请输入主题" class="input-tag">
                     </el-input>
                 </el-col>
-                <el-col :span="2.5">
-                    <el-button class="upload-post"  @click="uploadPost">上传帖子</el-button>
+                <el-col :span="5" style="text-align:right">
+                    <el-button class="upload-post" style="margin-left:10%" @click="uploadPost">完成编辑并上传</el-button>
                 </el-col>
+                </el-row>
+                <el-row>
+                </el-row>
             </el-card>
         </el-row>
         <el-row>
-            <el-card class="box-card" style="text-align:left">
+            <el-card class="box-card" style="text-align:left;margin-bottom:10px">
                 <el-row>
                     <el-col :span="2.5">
                         <h2>添加标签：</h2>
@@ -56,16 +60,11 @@
                 </el-row>
             </el-card>
         </el-row>
-        <el-row>
-            <div id="main">
-                <mavon-editor v-model="post.postContent" :toolbars="this.toolbars"/>
-            </div>
-        </el-row>
-        <el-row>
-            <el-col :span="12">
-                <el-card class="box-card" style="text-align:left">
-                    <h2>图片上传：</h2>
 
+        <el-row>
+                <el-card class="box-card" style="text-align:left;margin-bottom:10px">
+                    <h2>图片上传：</h2>
+                    <el-divider></el-divider>
                     <el-upload
                     action="#"
                     ref="uploadwall"
@@ -101,16 +100,114 @@
                     
                 </el-card>
                 
-            </el-col>
+            </el-row>
 
-            <el-col :span="12">
-                <el-card class="box-card" style="text-align:left">
-                    <h2>房源添加：</h2>
+        <el-row>
+            <el-card class="box-card" style="text-align:left;margin-bottom:-0.5px">
+                <h2>内容编辑：</h2>
+            </el-card>
+            <div id="main" style="margin-bottom:10px">
+                <mavon-editor v-model="post.postContent" :toolbars="this.toolbars"/>
+            </div>
+
+        </el-row>
+        
+        <el-row>
+            <el-card class="box-card" style="text-align:left">
+                <h2>房源添加：</h2>
+                <el-divider></el-divider>
+                <!-- 收藏夹列表 -->
+                <div v-if="this.favorite_list.length==0">
+                    <img class="empty-img" src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/f7c588076d9dc58d2ce4170920301c90.png">
+                    <p>还没有创建收藏夹哦，快去收藏房源后再来添加吧!</p>
+                </div>
+                <div v-else class="card-list">
+                    <el-row :gutter='30'>
+                        <el-col :span="6" v-for='item in favorite_list'
+                            :key='item.id'>
+                            <!-- :offset=" index %3==0 ? 1 : 2 ">   -->
+                            <!-- style="margin-bottom:40px;" > -->
+                            <el-card  shadow="hover"  @click.native="openOneFav(item)">
+                                <img v-if="item.imgUrl=='' || item.imgUrl==null " src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/9074398134361ed01c5bd7c2d917934a.png" class="emp-image">
+        <!--                        https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/f8cc5e654d8f69d1353e2a4833dd3a38.jpg-->
+                                <img v-else :src="item.imgUrl" class="image">
+                                <div style="padding: 14px;">
+
+                                    <div class="top-clearfix">
+                                        <span class="time">共有{{ item.totalStay }}个房源</span>
+                                    </div>
+                                    <span class="favor-title">{{item.name}}</span>
+                                    <div class="bottom clearfix">
+                                    
+                                    </div>
+                                </div>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </div>
+
+                <!-- 收藏夹打开的选择房源界面 -->
+                <div>
+                    <el-dialog :visible.sync="dialogTableVisible" width="850px">
+
+                        <div class="top-info">
+                            <!-- 心愿单标题与按钮 -->
+                            <el-row :span="24">
+                                <el-col :span="12" style="text-align:left" > 
+                                    <h2 class="title">{{this.favorName}}</h2>
+                                </el-col>
+                                <el-col :span="12" style="text-align:right">
+                                    <el-button type="primary" class="return-button" icon="el-icon-caret-left" @click="returnEdit">返回</el-button>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        <el-divider></el-divider>
+                        <br>
+                        
+                        <div v-if="stayList.length==0">
+                                <img class="empty-img" src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/283dd5de830e60c82cf9ecc9362e8779.png">
+                                <p>收藏夹内还没有房源哦，快去探索吧!</p>
+                        </div>
+                        <el-table v-else
+                            :data="tableData"
+                            ref="multipleTable"
+                            tooltip-effect="dark"
+                            style="width: 100%"
+                            @selection-change="handleSelectionChange">
+                            <el-table-column
+                                type="selection"
+                                width="55">
+                            </el-table-column>
+                            <el-table-column
+                                label="卡片"
+                                width="750">
+                                <template slot-scope="scope">
+                                    <stay-card  :money="scope.row.item.stayMinPrice" 
+                                                    :rate="scope.row.item.stayRate"
+                                                    :comment_num="scope.row.item.commentNum"
+                                                    :stay_id='scope.row.item.stayID'
+                                                    :label1="scope.row.item.stayHasFacility"
+                                                    :label2="scope.row.item.stayHasWashroom"
+                                                    :label3="scope.row.item.stayHasPath"
+                                                    :hostImg="scope.row.item.hostAvatar"
+                                                    :stayImg="scope.row.item.stayPhotoList"
+                                                    :stay_characteristic="scope.row.item.stayCharacteristic"
+                                                    :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
+                                                    @deleteStay="doNothing"
+                                                    @click.native="on_card_clicked(item.stayID)"
+                                                    ></stay-card>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        
+                    </el-dialog>
+
+                </div>
+
+        
+            </el-card>
             
-                </el-card>
-                
-            </el-col>
-
         </el-row>
     </div>
 </template>
@@ -126,6 +223,26 @@
 
 
 <style scoped>
+    
+    
+    .image {
+        height: 80%;
+        width: 100%;
+        width: 400px;
+        height: 200px;  
+        display:block;
+        opacity: 0.8;
+    }
+
+    .emp-image{
+        margin-left:80px;
+        width: 200px;
+        height: 200px;  
+        display:block;
+        opacity: 0.8;
+    }
+
+
     .el-divider--vertical {
         height: 4em !important;
         width: 1.5px !important;
@@ -157,10 +274,13 @@ import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
 import { addPost } from '@/api/post.js'
+import { GetFavorite} from '@/api/favorite';
+import staycard from '../components/stayCard.vue'
+import { GetFavoriteStay } from '@/api/favorite';
 
 
 export default {
-    components: { mavonEditor },
+    components: { mavonEditor ,'stay-card':staycard},
     data() {
         return { 
             toolbars: {
@@ -217,9 +337,28 @@ export default {
             dialogImageUrl: '',
             dialogVisible: false,
             disabled: false,
+
+
+
+            favorite_list: [],
+            url_list:[],
+            user_name:localStorage.getItem('userName'),
+
+
+            dialogTableVisible:false,
+            favorName: "",
+            favorID:0,
+            stayList:[],
+
+
+            tableData: [],
+            multipleSelection: []
         }
     },
     created() {
+
+        this.getFavoriteCollection();
+
         if(this.initTags)
             this.tags=this.initTags;
         if(this.initStays)
@@ -240,6 +379,61 @@ export default {
     {
     },
     methods:{
+        handleSelectionChange(val)
+        {
+            this.multipleSelection = val;
+            console.log(val);
+
+        },
+        doNothing()
+        {
+
+        },
+        returnEdit()
+        {
+            this.dialogTableVisible=false;
+        },
+        on_card_clicked(id){
+
+            this.$router.push({path:"/StayInfo",query:{stayId:id}});
+        },
+        getFavoriteCollection(){
+            let userId=localStorage.getItem('userId');
+            if (userId == null || userId == ''){
+                this.$message({
+                message: "您尚未登录，请先登录",
+                type: "warning",
+                });
+                this.$router.push({
+                    path: "/"
+                })
+                return;
+            }
+            GetFavorite().then(response=>{
+                this.favorite_list=response.data;
+                console.log(this.favorite_list)
+            }).catch(error=>{
+                console.log("fail");
+                console.log(error);
+                this.$message.error("网络异常，请稍后重试");
+            })
+        },
+        openOneFav(item){
+            this.favorName=item.name;
+            this.favorID=item.favoriteId;
+
+            GetFavoriteStay(this.favorID).then(response=>{
+                this.stayList=response.data.stayList;
+
+                this.tableData=this.stayList.map((element)=>{return {item: element};});
+
+                console.log(this.stayList);
+                this.dialogTableVisible=true;
+            }).catch(error=>{
+                console.log("fail");
+                this.$message.error("错误:",error);
+            });
+        },
         uploadFinished() {
 
             this.$alert('发帖成功，快去帖子页面看看吧', '提示', {
