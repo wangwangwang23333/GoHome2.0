@@ -112,7 +112,7 @@ export default{
         }
     },
     created:function(){
-        GetHostOrderInfo().then(response=>{
+        GetHostOrderInfo(this.currentPage-1,this.pageSize).then(response=>{
             this.hostOrderList=response.data.orderInfo;
             this.totalPage = response.data.totalPage;
             this.hostOrderList.forEach((order)=>{
@@ -126,7 +126,7 @@ export default{
             })
         }).catch(()=>{
             console.log("fail");
-            this.$message.error("错误:数据库连接错误");
+            this.$message.error("网络异常，请稍后重试");
         })
     },
     methods: {
@@ -147,7 +147,7 @@ export default{
                 });
                 }).catch(() => {
                 console.log("fail");
-                this.$message.error("错误:数据库连接错误");
+                this.$message.error("网络异常，请稍后重试");
                 })
             } else {
                 let status = this.stationStatus[currentStation]
@@ -162,7 +162,7 @@ export default{
                 });
                 }).catch(() => {
                 console.log("fail");
-                this.$message.error("错误:数据库连接错误");
+                this.$message.error("网络异常，请稍后重试");
                 })
             }
         },
