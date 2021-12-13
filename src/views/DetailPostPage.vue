@@ -91,7 +91,72 @@
                         :toolbarsFlag='false' :navigation='false' />
                 
                     <el-card class="box-card">
-                        <p>这里应该是房源卡片</p>
+                        <!--替换为房源卡片-->
+                        <p>我的推荐</p>
+                        <!--使用flex布局-->
+                        <div class="CardContainer" v-for="(item,index) in stayInfoList" >
+                            <!--房源卡片-->
+                            <div class="CardType"
+                                @mouseenter="changeCardStyle($event)"
+                                @mouseleave="removeCardStyle($event)"
+                                @click="clickCard(index)">
+                            <!---->
+                            <!-- <el-image
+                                fit="cover"
+                                style="width: 100%;height:55%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                                :src="stayInfoList[index].StayPic">
+                            </el-image> -->
+                            <!--走马灯-->
+                            <el-carousel trigger="click" height="165px" indicator-position="none">
+                                <el-carousel-item v-for="(stayPhoto,index) in stayInfoList[index].StayPic" :key="index">                           
+                                <el-image
+                                fit="cover"
+                                style="width: 100%;height:100%;border-radius: 10px 10px 0 0;box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
+                                :src="stayPhoto">
+                                </el-image>
+                            </el-carousel-item>
+                            </el-carousel>
+
+                            <h5 style="font-size:5px;font-weight: revert;text-align: left;margin-left: 4%;margin-top: 2%;color: #909399;margin-bottom: 0">
+                                {{stayInfoList[index].StayType}}
+                            </h5>
+                            <h4 style="text-align: left;margin-left: 4%;margin-top: 0;margin-right: 4%;margin-bottom: 0">
+                                {{stayInfoList[index].StayName|ellipsis}}
+                            </h4>
+                            <el-row>
+                                <el-col :span="14">
+                                <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                                    ￥{{stayInfoList[index].StayPrice}}/晚
+                                </h4>
+                                <el-rate
+                                v-model="stayInfoList[index].StayCommentRate"
+                                disabled
+                                show-score
+                                text-color="#ff9900"
+                                score-template="{value}"
+                                style="margin-left: 0;margin-bottom: 0"
+                                :colors="colors"
+                                >
+                                </el-rate>
+                                <h5 style="margin-top: 0;color: #7b7b7b;font-weight: normal;margin-left: 6%;text-align: left">
+                                    {{stayInfoList[index].StayCommentNum}}条评价
+                                </h5>
+                                </el-col>
+                                <el-col :span="10">
+                                <el-divider
+                                    direction="vertical"
+                                    style="float: left;margin-right: 0;"
+                                    class="el-divider--vertical"></el-divider>
+                                <el-image class="UserAvatar"
+                                            :src="stayInfoList[index].UserAvatar"
+                                            style="float:right;margin-left: 0;margin-right: 10px"
+                                >
+                                </el-image>
+                                </el-col>
+                            </el-row>
+
+                            </div>
+                        </div>
                     </el-card>
                 
                     
@@ -192,7 +257,7 @@ import 'vueperslides/dist/vueperslides.css'
 import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import ReplyList from '@/components/ReplyList'
-
+import {GetDetailedStay} from '@/api/staysView.js'
 import {getDetailedPost,deletePost} from '@/api/post.js'
 import {getPostReplyList,addReply} from '@/api/post.js'
 import {getPostLikeStatus,addPostLike,deletePostLike} from '@/api/post.js'
@@ -221,6 +286,7 @@ export default {
             tags:[],
             labels:[],
             stays:[],
+            stayInfoList:[],
             theme:"",
             value:"",
 
@@ -270,6 +336,29 @@ export default {
                 this.tags.push(element.postTag);
             });
             this.stays=postDetail.stays;
+
+            // 查询stays详细信息
+            for(let i = 0;i<8 && i < this.stays.length; ++i){
+                GetDetailedStay(this.stays[i].stayId).then(response=>{
+                console.log(response.data.stayPositionInfo)
+                let stayData = response.data.stayPositionInfo
+                let newStayInfo={}
+                newStayInfo.StayType = stayData.stayDescribe
+                newStayInfo.StayName = stayData.stayName
+                newStayInfo.UserAvatar = stayData.hostAvatar
+                newStayInfo.StayPrice = stayData.stayPrice
+                newStayInfo.UserId = stayData.hostId
+                newStayInfo.StayCommentRate = stayData.stayScore
+                newStayInfo.StayCommentNum = stayData.stayCommentNum
+                
+                if (stayData.stayPhoto.length != 0){
+                    newStayInfo.StayPic = stayData.stayPhoto
+                }
+                this.stayInfoList.push(newStayInfo)
+                })
+            }
+
+
             this.author=postDetail.author;
             this.value=postDetail.post.postContent;
             this.theme=postDetail.post.postTheme;
@@ -319,6 +408,16 @@ export default {
     {
     },
     methods:{
+        changeCardStyle(e){
+            e.currentTarget.className='activeMe';
+        },
+        removeCardStyle(e){
+            e.currentTarget.className='CardType';
+        },
+        clickCard(index){
+            console.log(this.stays[index].stayId)
+            this.$router.push({path:"/StayInfo",query:{stayId:this.stays[index].stayId}});
+        },
         handleCommand(command) {
             
             if(command==="edit")
@@ -447,8 +546,72 @@ export default {
     },
     props: {
     },
+    filters: {
+    ellipsis(value) {
+      if (!value) return ''
+      if (value.length > 16) {
+        return value.slice(0, 16) + '...';
+      }
+      return value
+    }
+  },
 }
 </script>
+<style>
+.containerFlex{
+    display: flex;
+    flex-direction: row;/*容器内成员的排列方式为从左到右*/
+    flex-wrap:wrap;/*换行方式，放不下就换行*/
+    justify-content: flex-start;/*项目在主轴上的对齐方式*/
+    align-content: flex-start;
+}
+
+.CardContainer{
+    width: 270px;
+    height: 310px;
+    margin-bottom: 20px;
+    margin-left: 25px;
+
+}
+
+.CardType{
+    width: 95%;
+    height: 95%;
+    margin: 0 auto;
+    margin-top: 5px ;
+    border-radius: 10px !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px!important;
+    background-color: rgba(229, 225, 225, 0.34);
+    cursor: pointer;
+    -webkit-transition: all 200ms ease-in;
+
+}
+.activeMe {
+    width: 95%;
+    height: 95%;
+    margin: 0 auto;
+    margin-top: 0px;
+    border-radius: 10px !important;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px!important;
+    background-color: rgba(255, 255, 255, 0.84);
+    cursor: pointer;
+    -webkit-transition: all 200ms ease-in;
+}
+
+.UserAvatar{
+    width: 54px;
+    height: 54px;
+    border-radius: 27px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    margin-left: 30%;
+}
+
+
+
+
+
+</style>
+    
 
 <style scoped>
 .el-divider--vertical {
