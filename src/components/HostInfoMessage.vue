@@ -79,7 +79,7 @@
               style="float: right;position: relative;left: -70px">
           </el-image> -->
           <span class="smallgretfontsize"
-                style="color: #333333;float: right;position: relative;left:30px;top:5px" >
+                style="color: #333333;float: right;position: relative;left:0px;top:5px" >
             {{rateString[Math.round(this.averageRate-3)<0?0:Math.round(this.averageRate-3)]}}
           </span>
 <!--          真名-->
