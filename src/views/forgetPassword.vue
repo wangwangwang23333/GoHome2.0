@@ -28,7 +28,7 @@
         ></el-image>
         <div style="
         width: 40%;
-        height: 450px;
+        height: 55vh;
         margin-left: 30%;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         opacity: 1;
@@ -44,27 +44,7 @@
                 <el-divider>
                 <strong style="font-size: xx-large;">找回密码</strong>
                 </el-divider>
-                <el-form
-                style="position: absolute;left:30.1%;top:78%;"
-                ><!--54.6,30.1 21.1,78 -->
-                    <el-form-item>
-                        <el-radio-group 
-                        v-model="isCustomer" 
-                        size="middle"
-                        :disabled="curStep==1"
-                        >
-                            <el-radio-button v-model="isCustomer" label="1" border>
-                                <i class="el-icon-user"></i>
-                                我是顾客
-                            </el-radio-button>
-                            <el-radio-button v-model="isCustomer" label="2" border>
-                                <i class="el-icon-s-home"></i>
-                                我是房东
-                            </el-radio-button>
-                        </el-radio-group>
-                        
-                    </el-form-item>
-                </el-form>
+                
             </div>
             <el-steps 
             :active="curStep" 
@@ -204,68 +184,38 @@ export default{
             }
 
             let param={
-                prenumber:'+86',
+                phoneCode:'+86',
                 phone:this.phone,
-                password:this.newPassword
+                newPassword:this.newPassword
             }
-            //根据当前身份进行不同操作
-            if (this.isCustomer==='1'){
-                
-                changeCustomerPassword(param).then(response=>{
-                    if(response.data.changestate){
-                        this.$message({
-                            message: '修改成功！',
-                            type: 'success'
-                        });
-                        //跳转到首页
-                        this.$router.push('/'); 
-
-                        //打开登录界面
-                        startLogin();
-
-                        return true;
-                    }
-                    else{
-                        this.$message({
-                            message: '修改失败，请检查密码',
-                            type: 'error'
-                        });
-                        return false;
-                    }
-                }).catch(error=>{
-                    this.$message.error('发生异常，请稍后再试');
-                    return;
-                })
-            }
-            else{
-                changeHostPassword(param).then(response=>{
-                    if(response.data.changestate){
-                        this.$message({
-                            message: '修改成功！',
-                            type: 'success'
-                        });
-                        //跳转到首页
-                        this.$router.push('/'); 
-
-                        //打开登录界面
-                        startLogin();
-
-                        return true;
-                    }
-                    else{
-                        this.$message({
-                            message: '修改失败，请检查密码',
-                            type: 'error'
-                        });
-                        return false;
-                    }
-                }).catch(error=>{
-                    this.$message.error('发生异常，请稍后再试');
-                    return;
-                })
-            }
-
             
+            changeCustomerPassword(param).then(response=>{
+                console.log(response.data.changeState)
+                if(response.data.changeState){
+                    this.$message({
+                        message: '修改成功！',
+                        type: 'success'
+                    });
+                    //跳转到首页
+                    this.$router.push('/'); 
+
+                    //打开登录界面
+                    startLogin();
+
+                    return true;
+                }
+                else{
+                    this.$message({
+                        message: '修改失败，请检查密码',
+                        type: 'error'
+                    });
+                    return false;
+                }
+            }).catch(error=>{
+                this.$message.error('网络异常，请稍后重试');
+                return;
+            })
+        
 
         },
         nextStep(){
@@ -282,6 +232,9 @@ export default{
                 });
                 return false;
             }
+
+            // TODO: 验证码待接入
+            this.curStep=1;
 
             //检验是否完成发送验证码的步骤
             if (!this.messageIsSend){
@@ -327,124 +280,64 @@ export default{
             console.log('param',param);
             
             //根据当前身份进行不同操作
-            if(this.isCustomer==='1'){
-                customerPhoneUnique(param).then(response=>{
-                    console.log('状态：',response.data.phoneunique)
-                    //判断手机号是否被注册过
-                    if (!response.data.phoneunique){
+            customerPhoneUnique(param).then(response=>{
+            console.log('状态：',response.data.phoneunique)
+            //判断手机号是否被注册过
+            if (!response.data.phoneunique){
 
-                    //暂时禁止发短信
-                    this.waitingTime=60;
-                    var waitingForMessage=setInterval(()=>{
-                        this.canSendMessage=false;
-                        this.waitingTime-=1;
-                        this.messageButtonName='请等待'+this.waitingTime+'s';
-                        if(this.waitingTime<=0){
-                        clearInterval(waitingForMessage);
-                        this.canSendMessage=true;
-                        this.messageButtonName='获取验证码';
-                        this.waitingTime=60;
-                        }
-                    },600)
-                    
-                    //更新参数
-                    param= {
-                        prenumber:'+86',
-                        phonenumber:this.phone,
-                        state:'1' //state为1：表示用户找回密码验证码
-                    }
+            //暂时禁止发短信
+            this.waitingTime=60;
+            var waitingForMessage=setInterval(()=>{
+                this.canSendMessage=false;
+                this.waitingTime-=1;
+                this.messageButtonName='请等待'+this.waitingTime+'s';
+                if(this.waitingTime<=0){
+                clearInterval(waitingForMessage);
+                this.canSendMessage=true;
+                this.messageButtonName='获取验证码';
+                this.waitingTime=60;
+                }
+            },600)
+            
+            //更新参数
+            param= {
+                prenumber:'+86',
+                phonenumber:this.phone,
+                state:'1' //state为1：表示用户找回密码验证码
+            }
 
-                    //发送验证码
-                    sendMessage(param).then(response=>{
-                        if(response.data.sendstate){
-                        console.log('成功发送验证码')
+            //发送验证码
+            sendMessage(param).then(response=>{
+                if(response.data.sendstate){
+                console.log('成功发送验证码')
 
-                        //读取回复中的验证码内容
-                        this.correctCode=response.data.code;
+                //读取回复中的验证码内容
+                this.correctCode=response.data.code;
 
-                        //已经完成发送验证码步骤
-                        this.messageIsSend=true;
-                        }
-                        else{
-                        this.$message({
-                            message: '发送失败，请稍后尝试重新发送',
-                            type: 'error'
-                        });
-                        }
+                //已经完成发送验证码步骤
+                this.messageIsSend=true;
+                }
+                else{
+                this.$message({
+                    message: '发送失败，请稍后尝试重新发送',
+                    type: 'error'
+                });
+                }
 
-                    })
-                    }
-                    else{
-                    this.$message({
-                        message: '该手机尚未被注册',
-                        type: 'warning'
-                    });
-                    return;
-                    }
-                }).catch(error=>{
-                    this.$message.error('发生异常，请稍后再试');
-                    return;
-                })
+            })
             }
             else{
-                hostPhoneUnique(param).then(response=>{
-                    console.log('状态：',response.data.phoneunique)
-                    //判断手机号是否被注册过
-                    if (!response.data.phoneunique){
-
-                    //暂时禁止发短信
-                    this.waitingTime=60;
-                    var waitingForMessage=setInterval(()=>{
-                        this.canSendMessage=false;
-                        this.waitingTime-=1;
-                        this.messageButtonName='请等待'+this.waitingTime+'s';
-                        if(this.waitingTime<=0){
-                        clearInterval(waitingForMessage);
-                        this.canSendMessage=true;
-                        this.messageButtonName='获取验证码';
-                        this.waitingTime=60;
-                        }
-                    },600)
-                    
-                    //更新参数
-                    param= {
-                        prenumber:'+86',
-                        phonenumber:this.phone,
-                        state:'3' //state为3：表示房东找回密码验证码
-                    }
-
-                    //发送验证码
-                    sendMessage(param).then(response=>{
-                        if(response.data.sendstate){
-                        console.log('成功发送验证码')
-
-                        //读取回复中的验证码内容
-                        this.correctCode=response.data.code;
-
-                        //已经完成发送验证码步骤
-                        this.messageIsSend=true;
-                        }
-                        else{
-                        this.$message({
-                            message: '发送失败，请稍后尝试重新发送',
-                            type: 'error'
-                        });
-                        }
-
-                    })
-                    }
-                    else{
-                    this.$message({
-                        message: '该手机尚未被注册',
-                        type: 'warning'
-                    });
-                    return;
-                    }
-                }).catch(error=>{
-                    this.$message.error('发生异常，请稍后再试');
-                    return;
-                })
+            this.$message({
+                message: '该手机尚未被注册',
+                type: 'warning'
+            });
+            return;
             }
+        }).catch(error=>{
+            this.$message.error('发生异常，请稍后再试');
+            return;
+        })
+            
         },
         isLegalPhone(){
             /*

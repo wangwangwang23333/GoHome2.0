@@ -114,11 +114,11 @@ export function changeCustomerPassword(data) {
     修改顾客账号密码
     返回修改状态
     */
-    let param = new URLSearchParams(data)
-
+    // let param = new URLSearchParams(data)
+    console.log("发送的参数为",data)
     return request({
-        url: '/customer/changepassword',
-        method: 'post',
-        data: param
+        url: '/v1/signup/changePassword',
+        method: 'put',
+        params: data
     })
 }
