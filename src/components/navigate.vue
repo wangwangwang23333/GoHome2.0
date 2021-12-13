@@ -482,7 +482,7 @@ export default {
                 if (response.status === 200) {
                   this.userName = response.data.userName;
                   this.userAvatar = response.data.userAvatar;
-
+                  console.log("用户id为",response.data.userId)
                   
                   // 后端返回身份
                   // 将用户token保存到vuex中

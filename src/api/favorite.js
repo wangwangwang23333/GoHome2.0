@@ -12,19 +12,17 @@ import axios from 'axios'
 
 export function GetFavorite() {
   return request({
-    url: '/CustomerFavorite',
+    url: '/v1/personinfo/favorite/directory',
     method: 'get',
   })
 }
   
 
 export function InsertFavorite(data) {
-  let param=new URLSearchParams(data)
-  
   return request({  
-    url: '/CustomerFavorite',
+    url: '/v1/personinfo/favorite/addition',
     method: 'post',
-    data:param
+    data:data
   })
 }
 

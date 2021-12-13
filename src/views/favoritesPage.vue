@@ -63,11 +63,12 @@ export default {
 
     created:function(){
         GetFavorite().then(response=>{
-            
-            this.favorite_list=response.data.favoriteList;
+            this.favorite_list=response.data;
+            console.log(this.favorite_list)
         }).catch(error=>{
             console.log("fail");
-            this.$message.error("错误:数据库连接错误");
+            console.log(error);
+            this.$message.error("网络异常，请稍后重试");
         })
     },
 
@@ -92,22 +93,20 @@ export default {
             inputErrorMessage: '格式不正确',
             center: true
             }).then(({ value }) => {
-
+                console.log("value为",value)
                 //插入
-                InsertFavorite({name:value}).then(response=>{
-                    console.log(response.errorCode);
-                    if(response.errorCode==200){
-                        this.$message({
-                            type: 'success',
-                            message: '新的收藏夹名字是: ' + value
-                        });     
-                    }
-                
+                InsertFavorite({favoriteName:String(value)}).then(response=>{
+                    this.$message({
+                        type: 'success',
+                        message: '新的收藏夹名字是: ' + value
+                    });     
+                    console.log("在此为ok")
                     GetFavorite().then(response=>{
-                        this.favorite_list=response.data.favoriteList;
+                        console.log("在此为ok2")
+                        this.favorite_list=response.data;
                     })
                 }).catch(error=>{
-                    console.log("fail");
+                    console.log(error);
                     this.$message.error("错误:插入了重名的文件夹");
                 })
 
