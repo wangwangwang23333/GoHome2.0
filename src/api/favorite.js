@@ -29,9 +29,9 @@ export function InsertFavorite(data) {
 export function DeleteFavorite(data) {
 
   return request({  
-    url: '/CustomerFavorite',
+    url: '/v1/personinfo/favorite/deletion',
     method: 'delete',
-    params:{favoriteId:data}
+    data:{favoriteId:data}
   })
 }
 
@@ -46,18 +46,18 @@ export function GetFavoriteImage(data){
 
 export function GetFavoriteStay(data){
   return request({
-    url: '/FavoriteStay',
+    url: '/v1/personinfo/favorite/stayinfo',
     method: 'get',
     params:{favoriteId:data}
   })
 }
 
 
-export function DeleteFavoriteStay(data1,data2) {
+export function DeleteFavoriteStay(favoriteId,stayId) {
   return request({  
-    url: '/FavoriteStay',
+    url: '/v1/personinfo/favorite/stay/deletion',
     method: 'delete',
-    params:{favoriteId:data1,stayid:data2}
+    data:{favoriteId:favoriteId,stayId:stayId}
   })
 }
 export function InsertFavoriteStay(data1,data2) {

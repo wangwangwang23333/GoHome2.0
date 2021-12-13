@@ -35,10 +35,11 @@
                                     :offset=" index %3==0 ? 1 : 2 "  
                                     style="margin-bottom:40px;" >
                     <el-card :body-style="{ padding: '0px' }" shadow="hover"  @click.native="jump_to_oneFav(item)">
-                        <img v-if="item.imgurl=='' | item.imgurl==null " src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/9074398134361ed01c5bd7c2d917934a.png" class="emp-image">
+                        <img v-if="item.imgUrl=='' || item.imgUrl==null " src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/9074398134361ed01c5bd7c2d917934a.png" class="emp-image">
 <!--                        https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/f8cc5e654d8f69d1353e2a4833dd3a38.jpg-->
-                        <img v-else :src="item.imgurl" class="image">
+                        <img v-else :src="item.imgUrl" class="image">
                         <div style="padding: 14px;">
+
                             <div class="top-clearfix">
                                 <span class="time">共有{{ item.totalStay }}个房源</span>
                             </div>

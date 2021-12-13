@@ -6,7 +6,8 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <!-- 房源图片 -->
-        <img v-bind:src="test[1]" class="image">
+
+        <img v-bind:src="test[1][0]" class="image">
         <div style="padding: 0.5px;">
             <!-- 小标签，用于卡片内部字体 -->
             <div class="small-label" >{{this.intro}}</div>
