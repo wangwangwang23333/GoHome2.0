@@ -204,15 +204,20 @@ export default {
       //添加房源至收藏夹;
         StayCollection(){
             //向上传递参数 房源ID与dialogvisible参数.           
-            this.$emit('changeDialogVisible',true);
-            this.$emit('getCurrentStay',this.stayID);                              
+          this.$emit('changeDialogVisible',true);
+          this.$emit('getCurrentStay',this.curStayID);
+          this.isLike=true;                              
         },
         StayDelCollection(){
             let that=this;
             DeleteFavoriteStayByView(this.curStayID).then(response=>{
               that.isLike=false;
+              this.$message({
+                message: '成功取消收藏',
+                type: 'success'
+              });
             }).catch(error=>{
-            this.$message.error("删除数据失败，请稍后重试")});
+            this.$message.error("网络异常，请稍后重试")});
         },     
     },
     watch:{
