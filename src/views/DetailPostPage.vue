@@ -318,7 +318,7 @@ export default {
 
         let postId=this.$route.query.postId;
 
-        this.userId = localStorage.getItem('userId')
+        this.userId = Number(localStorage.getItem('userId'))
         
         
         getDetailedPost(postId).then((response) => {
