@@ -9,7 +9,6 @@
                             作者操作<i class="el-icon-menu el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="edit">编辑</el-dropdown-item>
                             <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -428,11 +427,7 @@ export default {
         },
         handleCommand(command) {
             
-            if(command==="edit")
-            {
-                //跳转到编辑界面
-            }
-            else if(command==="delete")
+            if(command==="delete")
             {
                 this.deleteVisible = true;
             }
