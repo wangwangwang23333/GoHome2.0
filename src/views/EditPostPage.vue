@@ -174,8 +174,9 @@
                                                     :stayImg="scope.row.item.stayPhotoList"
                                                     :stay_characteristic="scope.row.item.stayCharacteristic"
                                                     :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
+                                                    :erase="false"
                                                     @deleteStay="doNothing"
-                                                    @click.native="on_card_clicked(item.stayID)"
+                                                    @click.native="on_card_clicked(scope.row.item)"
                                                     ></stay-card>
                                 </template>
                             </el-table-column>
@@ -237,8 +238,9 @@
                                                     :stayImg="scope.row.item.stayPhotoList"
                                                     :stay_characteristic="scope.row.item.stayCharacteristic"
                                                     :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
+                                                    :erase="false"
                                                     @deleteStay="doNothing"
-                                                    @click.native="on_card_clicked(item.stayID)"
+                                                    @click.native="on_card_clicked(scope.row.item)"
                                                     ></stay-card>
                                 </template>
                             </el-table-column>
@@ -426,6 +428,7 @@ export default {
         handleSelectionChange(val)
         {
             
+            //这里求multipleSelection和tableData的对称差，直接删掉让他们重新选
             let selectable=this.multipleSelection.filter(v => this.tableData.filter(u=> u.item.stayID===  v.item.stayID).length>0);
             let unselectable=this.multipleSelection.filter(v=> selectable.filter(u=> u.item.stayID===  v.item.stayID).length==0);
             let selected=val;
@@ -444,9 +447,11 @@ export default {
         {
             this.dialogTableVisible=false;
         },
-        on_card_clicked(id){
+        on_card_clicked(item){
 
-            this.$router.push({path:"/StayInfo",query:{stayId:id}});
+            console.log("clicking",item)
+
+            this.$router.push({path:"/StayInfo",query:{stayId:item.stayID}});
         },
         getFavoriteCollection(){
             let userId=localStorage.getItem('userId');
@@ -481,7 +486,7 @@ export default {
                 console.log("staylist",this.tableData);
                 console.log("selection",this.multipleSelection);
 
-                //这里求multipleSelection和tableData的对称差，作为默认选中
+                //这里求multipleSelection和tableData的对称差，直接删掉让他们重新选
                 let intersection=this.tableData.filter(v => this.multipleSelection.filter(u=> u.item.stayID===  v.item.stayID).length>0)
                 this.multipleSelection=this.multipleSelection.filter(v=> intersection.filter(u=> u.item.stayID===  v.item.stayID).length==0);
 
