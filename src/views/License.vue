@@ -6,15 +6,16 @@
             </el-divider>
         </div>
         
-        <a style="text-align: right;display: block;">更新时间：2021年7月8日</a><br>
+        <a style="text-align: right;display: block;">更新时间：2021年12月8日</a><br>
         <b style="text-align: left;display: block;">【首页及导言】</b>
         
         <a style="text-align: left;display: block;">
             《归宿平台用户使用协议》（以下简称“本协议”）是您与归宿平台之间关于使用
-        归宿平台各项服务的法律协议。“归宿平台”是指归宿平台的开发小组同济大学软件学院数据库项目。
+        归宿平台各项服务的法律协议。“归宿平台”是指归宿平台的开发小组同济大学软件学院软件工程和JavaEE项目。
 本协议中与您的权益（可能）存在重大关系的条款（包括免除归宿平台责任的条款、限制您权利的条款、争议解决条款及司法管辖条款等），
-请您确保您在使用归宿平台服务前已仔细阅读、充分理解并毫无保留地接受本协议所有条款。
+
         </a>
+        <a style="text-align: left;display: block;">请您确保您在使用归宿平台服务前已仔细阅读、充分理解并毫无保留地接受本协议所有条款。</a>
         <b style="text-align: left;display: block;margin-top: 1%;">【顾客使用指南】</b>
         <el-table
         ref="singleTable"
@@ -68,6 +69,10 @@ export default{
             {
                 mention:'安全第一',
                 description:'在订购房源的时候一定要注意其周围环境，保护好自己'
+            },
+            {
+                mention:'文明用语',
+                description:'在论坛中发帖的时候，请一定要注意不要说不文明的话'
             },
             {
                 mention:'数据库学习',
