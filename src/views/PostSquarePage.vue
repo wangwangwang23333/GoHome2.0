@@ -118,7 +118,7 @@ export default {
             totalTags: 0,
 
             currentPostPage:-1,
-            postPageSize:18,
+            postPageSize:12,
             totalPosts:0,
             totalPostPages:0,
 
@@ -228,12 +228,24 @@ export default {
                 {
                     this.getPostListByDefault(this.currentPostPage+1);
                 }
+                else{
+                    this.$message({
+                        message: "暂无更多帖子",
+                        type: 'warning'
+                    });
+                }
             }
             else
             {
                 if(this.currentPostPage+1<=this.totalPostPages)
                 {
                     this.getPostListByTag(this.selectedTag,this.currentPostPage+1);
+                }
+                else{
+                    this.$message({
+                        message: "暂无更多帖子",
+                        type: 'warning'
+                    });
                 }
             }
         },
