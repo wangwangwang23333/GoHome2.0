@@ -7,12 +7,11 @@ export function sendMessage(data) {
     /*
     向指定手机号发送验证码
     */
-    let param = new URLSearchParams(data)
 
     return request({
-        url: '/phone/sendmessage',
-        method: 'post',
-        data: param
+        url: 'v1/signup/smsVerifyCode',
+        method: 'get',
+        params: data
     })
 }
 

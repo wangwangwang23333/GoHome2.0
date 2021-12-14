@@ -346,6 +346,7 @@ export default {
             // 回到首页
             this.$router.push({path: '/'});
           }, error => {
+            this.delLogin();
             this.$message({
               message: '注销失败',
               type: 'warning'

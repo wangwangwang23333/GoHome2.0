@@ -254,8 +254,7 @@ export default {
       console.log('你提交了注册申请！')
 
       //检验是否完成发送验证码的步骤
-      // if (!this.messageIsSend){
-      if (false) {
+      if (!this.messageIsSend){
         this.$message({
           message: '请先发送验证码',
           type: 'warning'
@@ -265,8 +264,8 @@ export default {
 
       //判断验证码是否正确
       // TODO: resume this when sms code is ready
-      // if(this.correctCode!==this.verifyCode){
-      if (false) {
+      if(this.correctCode!==this.verifyCode){
+      // if (false) {
         this.$message({
           message: '验证码输入错误',
           type: 'warning'
@@ -366,32 +365,29 @@ export default {
           
           //更新参数
           param= {
-            phoneCode:'+86',
-            phone:this.phone,
-            state:'0'
+            phone:this.phone
           }
 
           //手机号未被注册过，则发送验证码
-          // TODO: write this when sms code is ready
-          this.messageIsSend=true;
-          // sendMessage(param).then(response=>{
-          //   if(response.data.sendstate){
-          //     console.log('成功发送验证码')
-          //
-          //     //读取回复中的验证码内容
-          //     this.correctCode=response.data.code;
-          //
-          //     //已经完成发送验证码步骤
-          //     this.messageIsSend=true;
-          //   }
-          //   else{
-          //     this.$message({
-          //       message: '发送失败，请稍后尝试重新发送',
-          //       type: 'error'
-          //     });
-          //   }
-          //
-          // })
+          // this.messageIsSend=true;
+          sendMessage(param).then(response=>{
+            if(response.data.sendstate){
+              console.log('成功发送验证码')
+
+              //读取回复中的验证码内容
+              this.correctCode=response.data.code;
+
+              //已经完成发送验证码步骤
+              this.messageIsSend=true;
+            }
+            else{
+              this.$message({
+                message: '发送失败，请稍后尝试重新发送',
+                type: 'error'
+              });
+            }
+
+          })
         }
         else{
           console.log('该手机号已经被注册过')

@@ -561,31 +561,29 @@ export default {
 
       //更新参数
       let param = {
-        prenumber: '+86',
-        phonenumber: this.phone,
-        state: '2' //state为2：表示房东注册验证码
+        phone: this.phone
       }
 
       // 发送验证码
-      this.messageIsSend = true;
+      // this.messageIsSend = true;
 
-      // sendMessage(param).then(response => {
-      //   if (response.data.sendstate) {
-      //     console.log('成功发送验证码')
-      //
-      //     //读取回复中的验证码内容
-      //     this.correctCode = response.data.code;
-      //
-      //     //已经完成发送验证码步骤
-      //     this.messageIsSend = true;
-      //   } else {
-      //     this.$message({
-      //       message: '发送失败，请稍后尝试重新发送',
-      //       type: 'error'
-      //     });
-      //   }
-      //
-      // })
+      sendMessage(param).then(response => {
+        if (response.data.sendstate) {
+          console.log('成功发送验证码')
+
+          //读取回复中的验证码内容
+          this.correctCode = response.data.code;
+
+          //已经完成发送验证码步骤
+          this.messageIsSend = true;
+        } else {
+          this.$message({
+            message: '发送失败，请稍后尝试重新发送',
+            type: 'error'
+          });
+        }
+
+      })
 
     }
   }

@@ -233,9 +233,6 @@ export default{
                 return false;
             }
 
-            // TODO: 验证码待接入
-            this.curStep=1;
-
             //检验是否完成发送验证码的步骤
             if (!this.messageIsSend){
                 this.$message({
@@ -301,9 +298,7 @@ export default{
             
             //更新参数
             param= {
-                prenumber:'+86',
-                phonenumber:this.phone,
-                state:'1' //state为1：表示用户找回密码验证码
+                phone:this.phone,
             }
 
             //发送验证码
