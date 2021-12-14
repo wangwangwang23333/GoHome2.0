@@ -216,7 +216,6 @@ export default {
     getStayInfoFromStayIdList(){
       for(let i = 0;i<8 && i < this.stayIdList.length; ++i){
         GetDetailedStay(this.stayIdList[i]).then(response=>{
-          console.log(response.data.stayPositionInfo)
           let stayData = response.data.stayPositionInfo
           this.stayInfoList[i].StayType = stayData.stayDescribe
           this.stayInfoList[i].StayName = stayData.stayName
@@ -234,7 +233,7 @@ export default {
     },
 
     clickCard(index){
-      console.log(this.stayIdList[index])
+      // console.log(this.stayIdList[index])
       this.$router.push({path:"/StayInfo",query:{stayId:this.stayIdList[index]}});
     }
   },

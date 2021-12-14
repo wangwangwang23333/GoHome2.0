@@ -3,7 +3,7 @@
     <navigate />
     
     <router-view
-    style="padding-top: 60px;"
+    style="padding-top: 60px;margin-bottom: -60px;"
     />
    
     <!-- <HostInfoPage></HostInfoPage> -->

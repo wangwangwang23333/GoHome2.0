@@ -95,7 +95,7 @@
       </el-menu-item>
 
 
-      <!--房东个人信息-->
+
       <el-submenu index="5" v-if="loginState==2" style="float: right;">
         <template #title>
           <!--显示头像-->
@@ -122,8 +122,9 @@
       <el-submenu index="5" v-if="loginState==1" style="float: right;">
         <template #title>
           <!--显示头像-->
-          <el-avatar :size="30" href='https://www.baidu.com/s?wd=%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E7%95%8C%E9%9D%A2'
-                     :src="userAvatar" @error="errorHandler">
+          <el-avatar :size="30" 
+          href='https://www.baidu.com/s?wd=%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E7%95%8C%E9%9D%A2'
+            :src="userAvatar" @error="errorHandler">
             <!--这里是失败时候展示的图片-->
             <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
           </el-avatar>
@@ -244,22 +245,17 @@ export default {
   },
   created: function () {
     /*
-    初始化，判断是否有token
+    初始化，判断是否有登录记录
     */
-    let token = localStorage.getItem('Authorization');
+    let userId = localStorage.getItem('userId');
 
-    if (token === null || token === '') {
-      //无token，需要登录
-      console.log('本次访问网页无token信息')
+    if (userId === null || userId === '') {
       return;
     } else {
-      //有token，则读取token
-      console.log('本次访问网页有token信息，已自动读取')
       this.userName = localStorage.getItem('userName');
       this.userAvatar = localStorage.getItem('userAvatar');
       this.userIdentity = localStorage.getItem('userIdentity');
-      console.log(this.userIdentity, this.userIdentity === 'host')
-      this.loginState = this.userIdentity === 'Host' ? 2 : 1;
+      this.loginState = 1;
     }
 
     //
@@ -268,9 +264,8 @@ export default {
     window['startLogin'] = () => {
       this.login()
     };
-    let that = this;
     window['publicChangeName'] = (newName) => {
-      that.changeName(newName);
+      this.changeName(newName);
     }
     window['changeAvatar'] = (newAvatar)=>{
       this.changeAvatar(newAvatar);
@@ -283,26 +278,28 @@ export default {
     },
     changeAvatar(newAvatar){
       this.userAvatar = newAvatar;
+      // 同时修改localStorage
+      this.changeLogin({
+        userName: localStorage.getItem('userName'),
+        userAvatar: this.userAvatar,
+        userIdentity: localStorage.getItem('userIdentity'),
+        userId:localStorage.getItem('userId'),
+        userIdentity: 'Customer',
+        userPermissions: localStorage.getItem('userPermissions'),
+      });
     },
-    //add@Lq
     routerToUserPage: function () {
-      console.log("进入个人")
       this.$router.replace('/userInfoPage');
     },
     routerToPostSquare: function () {
-      console.log("进入论坛广场")
       this.$router.replace('/postSquare');
     },
     routerToEditPost: function () {
-      console.log("进入发帖")
       this.$router.replace('/EditPost');
     },
-    // add@Lq
     routerToHostPage: function () {
-      console.log('hello')
       this.$router.replace('/hostInfoPage');
     },
-    // add@ckx
     errorHandler() {
       return true
     },
@@ -310,9 +307,7 @@ export default {
     handleSelect(key, keyPath) {
       //这里表示切换了导航内容，应该更换路由
       console.log(keyPath);
-      console.log('处理选择信息');
       if (key === '1') {
-        console.log('前往首页');
         this.$router.push({path: '/'});
         return;
       }
@@ -340,8 +335,7 @@ export default {
 
       if (this.loginState == 1) {
         if (keyPath[1] === '5-4') {
-          
-
+ 
           userLogout().then(response => {
             this.delLogin();
             this.loginState = 0;
@@ -349,6 +343,8 @@ export default {
               message: '注销成功',
               type: 'success'
             });
+            // 回到首页
+            this.$router.push({path: '/'});
           }, error => {
             this.$message({
               message: '注销失败',
@@ -358,7 +354,6 @@ export default {
 
 
         } else if (keyPath[1] === '5-1') {
-          console.log('查看顾客个人信息')
           this.routerToUserPage();
         } else if (keyPath[1] === '5-2') {
           this.$router.push({path: '/customerOrder'});
@@ -388,11 +383,12 @@ export default {
             message: '注销成功',
             type: 'success'
           });
+
         }
 
       } else {
         if (key === '5') {
-          console.log('打开登录界面')
+
         }
       }
 
@@ -568,9 +564,9 @@ export default {
     setlocalHistory(val) {
       /*
       点击搜索按钮后的逻辑处理
-      @ckx
+
       */
-      console.log('这里进来了')
+
       val = val.trim(); //去空格啥的
       val = this.getCurrentTime() + " " + val; //开头加上时间戳
       let localHistory = localStorage.getItem('localHistory');//获取历史记录

@@ -208,7 +208,7 @@ export default {
       };
 
       uploadAvatar(param).then(response => {
-        console.log("成功上传头像的回复为",response)
+
         // 获取用户个人头像
         let userId=localStorage.getItem("userId")
         
