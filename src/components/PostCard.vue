@@ -29,14 +29,14 @@
         <el-row>
             
             <el-col :span="19">
-                <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%">
+                <h4 style="margin-top: 4%;font-family: 'Avenir';text-align:left;margin-left: 5%;margin-bottom: 2%;margin-right: 1vw;">
                     {{postTheme}}
                 </h4>
                 
             </el-col>
             <el-col :span="5">
                 <el-image class="UserAvatar" :src="userAvatar"
-                    style="float:right;margin-left: 0;margin-right: 10px">
+                    style="float:right;margin-left: 10px;margin-right: 10px">
                 </el-image>
             </el-col>
             

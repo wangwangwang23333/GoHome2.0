@@ -10,25 +10,37 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
         <!-- TODO 跑马灯设置宽度100% -->
-        <div id="ImageCarousel" style="background-color:transparent; margin:10px;" >
-      <el-carousel :interval="3000" type="card" trigger="click" width="1500px" height="450px" indicator-position="none">
-        <div class="heart" v-if="isLike" v-on:click="StayDelCollection()">
-        <el-image :src="hearts[0]" fit="fill"></el-image>
-        </div>
-        <div class="heart" v-else v-on:click="StayCollection()">
-        <el-image :src="hearts[1]" fit="fill"></el-image>
-        </div> 
-        <div v-loading="!dataReady">
-          <el-carousel-item v-for="(item,index) of data.stayImages" :key="index">
-          <!--        <h5 class="medium">{{ item }}</h5>-->
-          <el-image :src="item" :alt="item" style="width: 100%;height:80%;" fit="cover" />
-          </el-carousel-item> 
-        </div>  
-      </el-carousel>
-        </div>
+        <!-- <div id="ImageCarousel" style="background-color:transparent; margin:10px;">
+          <el-carousel :interval="3000" type="card" trigger="click" width="1500px" height="450px" indicator-position="none">
+            
+            <div v-loading="!dataReady">
+              <el-carousel-item v-for="(item,index) of data.stayImages" :key="index">
+                <el-image :src="item" :alt="item" style="width: 100%;height:80%;" fit="cover" />
+              </el-carousel-item>
+            </div>
+          </el-carousel>
+        </div> -->
+        
+        <el-card class="box-card" style="width:95%;margin:0 auto;" >
+          
+          <el-row>
+            <el-col :span="23">
+              <vueper-slides>
+                <vueper-slide v-for="(item,index) in data.stayImages" :key="index"  :image="item"/>
+              </vueper-slides>
+            </el-col>
+            <div style="z-index: 99;">
+              <div class="heart" v-if="isLike" v-on:click="StayDelCollection()">
+                <el-image :src="hearts[0]" fit="fill"></el-image>
+              </div>
+              <div class="heart" v-else v-on:click="StayCollection()" >
+                <el-image :src="hearts[1]" fit="fill"></el-image>
+              </div>
+            </div>
+          </el-row>
+        </el-card>
     
-    
-        <el-card class="box-card" shadow="hover" style="width:95%;margin:0 auto;border-radius:15px">
+        <el-card class="box-card" shadow="hover" style="width:95%;margin:0 auto;margin-top:1vh;border-radius:15px">
         <div class="NavBar">
           <el-menu class="NavMenu" :default-active="activeIndex" mode="horizontal" >
             <!--@select="handleSelect"-->
@@ -61,8 +73,11 @@
         </el-card>
         <br>
         <div ref="imageDom">
+          
           <div class="info" >
-            <detail id="detail" :stay="data" ></detail>
+            <detail id="detail" :stay="data" >
+              
+            </detail>
             <rooms v-for="(room, index) of data.rooms" :key="index" :room="room" 
             :stayId="stayId" 
             ></rooms>
@@ -99,6 +114,7 @@
 </template>
 
 <script>
+import { VueperSlides, VueperSlide } from 'vueperslides'
 import detail from '@/components/StayInfo/detail.vue'
 import rooms from '@/components/StayInfo/rooms.vue'
 import comments from '@/components/StayInfo/comments.vue'
@@ -110,7 +126,7 @@ import {getStayDetails} from '@/api/stay.js'
 
 
 import{DeleteFavoriteStayByView,GetSpecificStayLikeState} from '@/api/favorite.js'
-
+import 'vueperslides/dist/vueperslides.css'
 export default {
   name: "StayInfo",
   components: {
@@ -119,7 +135,8 @@ export default {
     comments,
     location,
     CollectionDialog,
-    advertisement
+    advertisement,
+    VueperSlides, VueperSlide ,
   },
   created() {
 

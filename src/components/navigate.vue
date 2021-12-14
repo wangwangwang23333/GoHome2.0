@@ -7,7 +7,7 @@
   <el-header
       style="display: inline-block;width: 100%;margin-bottom: -5px;
     margin-top: -5px;
-    position: fixed;left: 0;z-index: 10000;">
+    position: fixed;left: 0;z-index: 100;">
     <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"

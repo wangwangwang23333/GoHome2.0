@@ -535,6 +535,13 @@ export default {
                 });
                 return;
             }
+            if(this.images.length==0){
+                this.$message({
+                    message:"请至少上传一张封面图",
+                    type: "warning",
+                });
+                return;
+            }
             if(this.post.postTheme==""){
                 this.$message({
                     message:"请输入帖子标题",
