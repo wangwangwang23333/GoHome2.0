@@ -452,18 +452,17 @@ export default {
         return false;
       }
 
-      // TODO: 移到后端
       //验证码检验
-      console.log(md5(this.$refs.loginComponent.verifycode),
+      console.log(this.$refs.loginComponent.verifycode,
           this.$refs.loginComponent.trueVerifycode)
-      // if (md5(this.$refs.loginComponent.verifycode.toLowerCase()) !=
-      //     this.$refs.loginComponent.trueVerifycode) {
-      //   this.$message({
-      //     message: '验证码不正确',
-      //     type: 'warning'
-      //   });
-      //   return false;
-      // }
+      if (this.$refs.loginComponent.verifycode.toLowerCase() !==
+          this.$refs.loginComponent.trueVerifycode.toLowerCase()) {
+        this.$message({
+          message: '验证码不正确',
+          type: 'warning'
+        });
+        return false;
+      }
 
       //判断当前登录对象
       customerLogin(param).then(response => {
