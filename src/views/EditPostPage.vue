@@ -3,16 +3,14 @@
         <el-row>
             <el-card class="box-card" style="text-align:left;margin-bottom:10px">
                 <el-row>
-                <el-col :span="3">
-                    <h2>主题：</h2>
-                </el-col>
-                <el-col :span="15">
-                    <el-input v-model="post.postTheme" placeholder="请输入主题" class="input-tag">
+  
+                <el-col :span="20">
+                    <el-input v-model="post.postTheme"
+                    maxlength="20" 
+                    placeholder="请输入主题" class="input-tag">
                     </el-input>
                 </el-col>
-                <el-col :span="5" style="text-align:right">
-                    <el-button class="upload-post" style="margin-left:10%" @click="uploadPost">完成编辑并上传</el-button>
-                </el-col>
+                
                 </el-row>
                 <el-row>
                 </el-row>
@@ -21,14 +19,8 @@
         <el-row>
             <el-card class="box-card" style="text-align:left;margin-bottom:10px">
                 <el-row>
-                    <el-col :span="2.5">
-                        <h2>添加标签：</h2>
-                    </el-col>
-                    <!-- <el-col :span="4">
-                        <el-input v-model="input" placeholder="请输入内容" class="input-tag">
-                            <el-button slot="append" @click="appendTag" icon="el-icon-circle-plus"></el-button>
-                        </el-input>
-                    </el-col> -->
+    
+
                     <el-col :span="21.5">
                         <div class="label-list">
                             <el-tag
@@ -52,9 +44,10 @@
                                 size="small"
                                 @keyup.enter.native="saveTag"
                                 @blur="saveTag"
+                                maxlength="4" 
                                 >
                             </el-input>
-                            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+                            <el-button v-if="tags.length<3 && !inputVisible" class="button-new-tag" size="small" @click="showInput">添加标签</el-button>
                         </div>
                     </el-col>
                 </el-row>
@@ -63,7 +56,7 @@
 
         <el-row>
                 <el-card class="box-card" style="text-align:left;margin-bottom:10px">
-                    <h2>图片上传：</h2>
+                    <h2>封面图上传</h2>
                     <el-divider></el-divider>
                     <el-upload
                     action="#"
@@ -104,10 +97,12 @@
 
         <el-row>
             <el-card class="box-card" style="text-align:left;margin-bottom:-0.5px">
-                <h2>内容编辑：</h2>
+                <h2>帖子内容</h2>
             </el-card>
             <div style="margin-bottom:10px">
-                <mavon-editor v-model="post.postContent" :toolbars="this.toolbars"/>
+                <mavon-editor v-model="post.postContent" 
+                maxlength="1500"
+                :toolbars="this.toolbars"/>
             </div>
 
         </el-row>
@@ -146,21 +141,20 @@
                     </el-row>
                     <el-divider></el-divider>
                     <el-row>
-                        <h2>已经添加房源：</h2>
+                        <h2>已加入分享的房源:</h2>
                         <el-divider></el-divider>
                         
-                        <div v-if="multipleSelection.length==0">
-                                <img class="empty-img" src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/283dd5de830e60c82cf9ecc9362e8779.png">
-                                <p>还没有选中要添加房源哦，快去添加吧!</p>
+                        <div v-if="multipleSelection.length==0" style="margin-left: 25vw;">
+                                <img class="empty-img" src="https://tongjigohome.oss-cn-shanghai.aliyuncs.com/%E6%97%A0%E6%B0%91%E5%AE%BF.png">
+                                <p style="margin-left: -3vw;">还没有选中要添加房源哦，快去添加吧!</p>
                         </div>
                         <el-table v-else
                             :data="multipleSelection"
                             ref="finalCollection"
                             tooltip-effect="dark"
-                            style="width: 100%">
+                            style="width: 80%;margin-left: 10vw;">
                             <el-table-column
-                                label="卡片"
-                                width="750"
+                                
                                 align="center">
                                 <template slot-scope="scope">
                                     <stay-card  :money="scope.row.item.stayMinPrice" 
@@ -175,8 +169,7 @@
                                                     :stay_characteristic="scope.row.item.stayCharacteristic"
                                                     :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
                                                     :erase="false"
-                                                    @deleteStay="doNothing"
-                                                    @click.native="on_card_clicked(scope.row.item)"
+                                                    style="pointer-events: none;"
                                                     ></stay-card>
                                 </template>
                             </el-table-column>
@@ -239,8 +232,7 @@
                                                     :stay_characteristic="scope.row.item.stayCharacteristic"
                                                     :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
                                                     :erase="false"
-                                                    @deleteStay="doNothing"
-                                                    @click.native="on_card_clicked(scope.row.item)"
+                                                    style="pointer-events: none;"
                                                     ></stay-card>
                                 </template>
                             </el-table-column>
@@ -253,7 +245,9 @@
 
         
             </el-card>
-            
+            <el-card class="box-card" style="margin-top: 3vh;">
+                <el-button class="upload-post" primary plain @click="uploadPost">完成编辑并上传</el-button>
+            </el-card>
         </el-row>
     </div>
 </template>
@@ -363,6 +357,7 @@ export default {
                 /* 2.2.1 */
                 subfield: true, // 单双栏模式
                 preview: true, // 预览
+                postUrl:'',
             },
 
 
@@ -426,8 +421,7 @@ export default {
     },
     methods:{
         handleSelectionChange(val)
-        {
-            
+        {      
             //这里求multipleSelection和tableData的对称差，直接删掉让他们重新选
             let selectable=this.multipleSelection.filter(v => this.tableData.filter(u=> u.item.stayID===  v.item.stayID).length>0);
             let unselectable=this.multipleSelection.filter(v=> selectable.filter(u=> u.item.stayID===  v.item.stayID).length==0);
@@ -504,7 +498,11 @@ export default {
                 confirmButtonText: '确定',
                 showCancelButton:false,
                 callback: action => {
-                this.$router.go(-1);
+                    this.$router.push({
+                        path:"/DetailPost",
+                        query:{postId:this.postUrl}
+                    });
+                    // this.$router.go(-1);
                 }
             });
         },
@@ -520,14 +518,37 @@ export default {
         },
         saveTag() {
             let input = this.input;
-            if (input) {
-            this.tags.push(input);
+            if (input && input.replace(' ','')!='') {
+                this.tags.push(input);
             }
             this.inputVisible = false;
             this.input = '';
         },
         uploadPost()
         {
+
+            // 上传前的信息校验
+            if(this.tags.length==0){
+                this.$message({
+                    message:"请至少选择一个标签",
+                    type: "warning",
+                });
+                return;
+            }
+            if(this.post.postTheme==""){
+                this.$message({
+                    message:"请输入帖子标题",
+                    type: "warning",
+                });
+                return;
+            }
+            if(this.post.postContent==""){
+                this.$message({
+                    message:"请输入帖子内容",
+                    type: "warning",
+                });
+                return;
+            }
 
             this.stays=this.multipleSelection.map((element)=>{
                 return element.item.stayID;
@@ -538,8 +559,7 @@ export default {
                 base64images:this.images,
                 post:this.post
             }).then((response)=>{
-
-                console.log(response.data)
+                this.postUrl=response.data
 
                 this.uploadFinished();
 
