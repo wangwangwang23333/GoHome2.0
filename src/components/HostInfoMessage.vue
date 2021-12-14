@@ -17,6 +17,8 @@
           修改个人资料
         </u>
       </el-button>
+
+      <el-button class="Mybutton" @click="gotoOrder()" style="margin-left: -10vw;"> <u>我的订单</u></el-button>
       <el-drawer
           title="个人资料"
           :visible.sync="dialog"
@@ -79,7 +81,7 @@
               style="float: right;position: relative;left: -70px">
           </el-image> -->
           <span class="smallgretfontsize"
-                style="color: #333333;float: right;position: relative;left:30px;top:5px" >
+                style="color: #333333;float: right;position: relative;left:0px;top:5px" >
             {{rateString[Math.round(this.averageRate-3)<0?0:Math.round(this.averageRate-3)]}}
           </span>
 <!--          真名-->
@@ -750,6 +752,12 @@ export default {
   },
 
   methods:{
+    gotoOrder(){
+      this.$router.push({ 
+        path: "/hostOrder"
+      });
+    },
+
     createStay:function (){
       localStorage.setItem('stayAlter',JSON.stringify(false));
       this.$router.push({path:'/become-a-host/type'});
