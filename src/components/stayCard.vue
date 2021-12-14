@@ -24,17 +24,18 @@
             <br>
             <span class="small-label" style="float:left; padding:1px 6px;margin-top:6px">标签:</span>
             <!-- 标签列表，这里只放三个 -->
-            <label-list class="label-list">                        
+            <div class="label-list">                        
                 <el-tag
                 type="primary"
                 v-for="(i,index) in labels"
                 :key="index"
-                :effect="dark">
+                effect="dark">
                 {{i}}
                 </el-tag>
-            </label-list>
+            </div>
             <!-- 房主头像 删除按钮 -->
             <el-button class="del-button" 
+                        v-if="erasable"
                         type="danger" 
                         icon="el-icon-delete" 
                         style="float:right;margin:16px;" 
@@ -49,7 +50,7 @@
             <br>
             <!-- 评分栏 -->
             <el-rate class="rate-bar"
-                v-model="rate.toFixed(2)"
+                v-model="rate"
                 disabled
                 show-score
                 text-color="#ff9900"
@@ -90,7 +91,8 @@ export default {
         'comment_num':Number,       
         'money':Number,
         'hostImg':String,
-        'stayImg':String,
+        'stayImg':null,
+        'erase':Boolean
     },
 
     created(){
@@ -103,11 +105,13 @@ export default {
             this.test.push(this.hostImg);
             this.test.push(this.stayImg)
             this.intro=this.stay_characteristic.slice(0,18)+(this.stay_characteristic.length>=18?"...":"");
+            this.erasable=this.erase;
             // document.getElementById('avatarInit').setAttribute("src",this.hostImg)
     },
 
     data() {
         return {
+            erasable:true,
             id:this.stay_id,
             lb1:"",
             lb2:"",

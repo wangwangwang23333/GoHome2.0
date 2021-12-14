@@ -106,7 +106,7 @@
             <el-card class="box-card" style="text-align:left;margin-bottom:-0.5px">
                 <h2>内容编辑：</h2>
             </el-card>
-            <div id="main" style="margin-bottom:10px">
+            <div style="margin-bottom:10px">
                 <mavon-editor v-model="post.postContent" :toolbars="this.toolbars"/>
             </div>
 
@@ -114,7 +114,7 @@
         
         <el-row>
             <el-card class="box-card" style="text-align:left">
-                <h2>房源添加：</h2>
+                <h2>从收藏夹添加房源：</h2>
                 <el-divider></el-divider>
                 <!-- 收藏夹列表 -->
                 <div v-if="this.favorite_list.length==0">
@@ -122,7 +122,7 @@
                     <p>还没有创建收藏夹哦，快去收藏房源后再来添加吧!</p>
                 </div>
                 <div v-else class="card-list">
-                    <el-row :gutter='30'>
+                    <el-row :gutter='12'>
                         <el-col :span="6" v-for='item in favorite_list'
                             :key='item.id'>
                             <!-- :offset=" index %3==0 ? 1 : 2 ">   -->
@@ -144,6 +144,48 @@
                             </el-card>
                         </el-col>
                     </el-row>
+                    <el-divider></el-divider>
+                    <el-row>
+                        <h2>已经添加房源：</h2>
+                        <el-divider></el-divider>
+                        
+                        <div v-if="multipleSelection.length==0">
+                                <img class="empty-img" src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/283dd5de830e60c82cf9ecc9362e8779.png">
+                                <p>还没有选中要添加房源哦，快去添加吧!</p>
+                        </div>
+                        <el-table v-else
+                            :data="multipleSelection"
+                            ref="finalCollection"
+                            tooltip-effect="dark"
+                            style="width: 100%">
+                            <el-table-column
+                                label="卡片"
+                                width="750"
+                                align="center">
+                                <template slot-scope="scope">
+                                    <stay-card  :money="scope.row.item.stayMinPrice" 
+                                                    :rate="scope.row.item.stayRate"
+                                                    :comment_num="scope.row.item.commentNum"
+                                                    :stay_id='scope.row.item.stayID'
+                                                    :label1="scope.row.item.stayHasFacility"
+                                                    :label2="scope.row.item.stayHasWashroom"
+                                                    :label3="scope.row.item.stayHasPath"
+                                                    :hostImg="scope.row.item.hostAvatar"
+                                                    :stayImg="scope.row.item.stayPhotoList"
+                                                    :stay_characteristic="scope.row.item.stayCharacteristic"
+                                                    :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
+                                                    :erase="false"
+                                                    @deleteStay="doNothing"
+                                                    @click.native="on_card_clicked(scope.row.item)"
+                                                    ></stay-card>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+
+                    </el-row>
+
+
                 </div>
 
                 <!-- 收藏夹打开的选择房源界面 -->
@@ -170,17 +212,20 @@
                         </div>
                         <el-table v-else
                             :data="tableData"
-                            ref="multipleTable"
+                            ref="detailCollection"
                             tooltip-effect="dark"
                             style="width: 100%"
-                            @selection-change="handleSelectionChange">
+                            @selection-change="handleSelectionChange"
+                            :row-key="getRowKey">
                             <el-table-column
                                 type="selection"
-                                width="55">
+                                width="55"
+                                align="center">
                             </el-table-column>
                             <el-table-column
                                 label="卡片"
-                                width="750">
+                                width="750"
+                                align="center">
                                 <template slot-scope="scope">
                                     <stay-card  :money="scope.row.item.stayMinPrice" 
                                                     :rate="scope.row.item.stayRate"
@@ -193,8 +238,9 @@
                                                     :stayImg="scope.row.item.stayPhotoList"
                                                     :stay_characteristic="scope.row.item.stayCharacteristic"
                                                     :stay_name="scope.row.item.stayName.slice(0,18)+'...'"
+                                                    :erase="false"
                                                     @deleteStay="doNothing"
-                                                    @click.native="on_card_clicked(item.stayID)"
+                                                    @click.native="on_card_clicked(scope.row.item)"
                                                     ></stay-card>
                                 </template>
                             </el-table-column>
@@ -381,9 +427,17 @@ export default {
     methods:{
         handleSelectionChange(val)
         {
-            this.multipleSelection = val;
-            console.log(val);
+            
+            //这里求multipleSelection和tableData的对称差，直接删掉让他们重新选
+            let selectable=this.multipleSelection.filter(v => this.tableData.filter(u=> u.item.stayID===  v.item.stayID).length>0);
+            let unselectable=this.multipleSelection.filter(v=> selectable.filter(u=> u.item.stayID===  v.item.stayID).length==0);
+            let selected=val;
+            this.multipleSelection = unselectable.concat(selected);
 
+        },
+        getRowKey(row)
+        {
+            return row.item.stayID
         },
         doNothing()
         {
@@ -393,9 +447,11 @@ export default {
         {
             this.dialogTableVisible=false;
         },
-        on_card_clicked(id){
+        on_card_clicked(item){
 
-            this.$router.push({path:"/StayInfo",query:{stayId:id}});
+            console.log("clicking",item)
+
+            this.$router.push({path:"/StayInfo",query:{stayId:item.stayID}});
         },
         getFavoriteCollection(){
             let userId=localStorage.getItem('userId');
@@ -427,8 +483,16 @@ export default {
 
                 this.tableData=this.stayList.map((element)=>{return {item: element};});
 
-                console.log(this.stayList);
+                console.log("staylist",this.tableData);
+                console.log("selection",this.multipleSelection);
+
+                //这里求multipleSelection和tableData的对称差，直接删掉让他们重新选
+                let intersection=this.tableData.filter(v => this.multipleSelection.filter(u=> u.item.stayID===  v.item.stayID).length>0)
+                this.multipleSelection=this.multipleSelection.filter(v=> intersection.filter(u=> u.item.stayID===  v.item.stayID).length==0);
+
                 this.dialogTableVisible=true;
+
+
             }).catch(error=>{
                 console.log("fail");
                 this.$message.error("错误:",error);
@@ -465,7 +529,9 @@ export default {
         uploadPost()
         {
 
-            
+            this.stays=this.multipleSelection.map((element)=>{
+                return element.item.stayID;
+            })
             addPost({
                 tags:this.tags,
                 stays:this.stays,
