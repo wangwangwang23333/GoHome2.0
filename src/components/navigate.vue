@@ -284,7 +284,6 @@ export default {
         userAvatar: this.userAvatar,
         userIdentity: localStorage.getItem('userIdentity'),
         userId:localStorage.getItem('userId'),
-        userIdentity: 'Customer',
         userPermissions: localStorage.getItem('userPermissions'),
       });
     },
@@ -347,8 +346,9 @@ export default {
             this.$router.push({path: '/'});
           }, error => {
             this.delLogin();
+            this.loginState = 0;
             this.$message({
-              message: '注销失败',
+              message: '注销成功',
               type: 'warning'
             });
           })
