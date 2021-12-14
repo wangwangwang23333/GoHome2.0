@@ -14,7 +14,7 @@
       <div style="width: 85%;margin:0 auto"
         class="containerFlex">
       <!--使用flex布局-->
-      <div class="CardContainer" v-for="(item,index) in stayInfoList" >
+      <div class="CardContainer" v-for="(item,index) in stayInfoList" :key="index" >
         <!--房源卡片-->
         <div class="CardType"
              @mouseenter="changeCardStyle($event)"

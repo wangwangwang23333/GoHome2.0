@@ -164,3 +164,12 @@ export function deleteReplyLike(replyId) {
         params: {replyId:replyId,customerId:0}
     })
 }
+
+export function uploadPostImage(data) {
+    return request({
+        url: '/v1/posts/post/img',
+        method: 'post',
+        data: data
+    })
+}
+

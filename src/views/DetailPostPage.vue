@@ -26,15 +26,15 @@
                         <el-button @click="handleDelete">确 定</el-button>
                     </span>
                 </el-dialog>
-                <el-card class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" v-if="slides.length>0">
+                <el-card v-loading="dataLoading" class="box-card" :body-style="{'padding':'0px','border-radius':'10px'}" v-if="slides.length>0">
                     <div>
                         <vueper-slides>
                             <vueper-slide v-for="(slide, i) in slides" :key="i" :title="slide.title" :image="slide.image"/>
                         </vueper-slides>
                     </div>
-                </el-card v-loading="dataLoading">
+                </el-card>
                 
-                    <el-card class="box-card" style="margin-top: 5vh;">
+                <el-card v-loading="dataLoading" class="box-card" style="margin-top: 5vh;">
                     <el-row >
                         <el-col :span="2" >
                             <el-row style="margin-bottom: 20px;">
@@ -95,7 +95,7 @@
                         <div style="width: 95%;margin:0 auto"
                         class="containerFlex">
                                            <!--使用flex布局-->
-                                           <div class="CardContainer" v-for="(item,index) in stayInfoList" >
+                                           <div class="CardContainer" v-for="(item,index) in stayInfoList" :key="index" >
                                             <!--房源卡片-->
                                             <div class="CardType"
                                                 @mouseenter="changeCardStyle($event)"
@@ -320,7 +320,7 @@ export default {
 
         let postId=this.$route.query.postId;
 
-        this.userId = localStorage.getItem('userId')
+        this.userId = Number(localStorage.getItem('userId'))
         
         
         getDetailedPost(postId).then((response) => {
@@ -363,7 +363,7 @@ export default {
                 })
             }
 
-            this.dataLoading=false;
+            
             this.author=postDetail.author;
             this.value=postDetail.post.postContent;
             this.theme=postDetail.post.postTheme;
@@ -377,6 +377,8 @@ export default {
 
             // 获取点赞图标状态
             this.setAction()
+
+            this.dataLoading=false;
 
         }).catch((error) => {
             this.$message({
@@ -413,6 +415,7 @@ export default {
     {
     },
     methods:{
+        
         changeCardStyle(e){
             e.currentTarget.className='activeMe';
         },

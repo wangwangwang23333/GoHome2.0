@@ -155,11 +155,8 @@
         <el-menu-item index="6-1" @click="routerToPostSquare">
           广场
         </el-menu-item>
-        <el-menu-item index="6-2" @click="routerToPostSearch">
-          搜索
-        </el-menu-item>
-        <el-menu-item index="6-3" @click="routerToMyPost">
-          我的帖子
+        <el-menu-item index="6-2" @click="routerToEditPost">
+          发帖
         </el-menu-item>
       </el-submenu>
 
@@ -296,13 +293,9 @@ export default {
       console.log("进入论坛广场")
       this.$router.replace('/postSquare');
     },
-    routerToPostSearch: function () {
-      console.log("进入帖子搜索")
-      this.$router.replace('/postSearch');
-    },
-    routerToMyPost: function () {
-      console.log("进入个人发帖")
-      this.$router.replace('/myPost');
+    routerToEditPost: function () {
+      console.log("进入发帖")
+      this.$router.replace('/EditPost');
     },
     // add@Lq
     routerToHostPage: function () {
@@ -340,11 +333,7 @@ export default {
         return;
       }
       if (key === '6-2') {
-        this.$router.push({path: '/postSearch'});
-        return;
-      }
-      if (key === '6-3') {
-        this.$router.push({path: '/myPost'});
+        this.$router.push({path: '/EditPost'});
         return;
       }
 

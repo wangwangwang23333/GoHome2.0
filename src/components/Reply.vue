@@ -1,5 +1,5 @@
 <template>
-    <a-comment>
+    <a-comment style="text-align:left">
         <template slot="actions">
             <span key="comment-basic-like">
                 <a-tooltip title="点赞">
@@ -34,6 +34,7 @@
                 <el-button @click="onCancel">取消</el-button>
             </el-form-item>
         </el-form>
+        <a-divider dashed style="margin-top:1px"/>
         <ReplyList v-if="hasSonReply" ref="child" :replyList="this.sonReply" :id="this.reply.replyId"/>
     </a-comment>
 

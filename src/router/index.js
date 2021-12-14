@@ -79,14 +79,9 @@ const routes = [
     component: () =>import('../views/PostSquarePage.vue')
   },
   {
-    path: '/postSearch',
-    name: 'PostSearch',
-    component: () =>import('../views/PostSearchPage.vue')
-    },
-  {
-    path: '/myPost',
-    name: 'MyPost',
-    component: () =>import('../views/MyPostPage.vue')
+    path: '/EditPost',
+    name: 'EditPost',
+    component: () =>import('../views/EditPostPage.vue')
     },
     {
     path: '/DetailPost',
