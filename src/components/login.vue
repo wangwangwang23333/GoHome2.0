@@ -109,7 +109,6 @@ export default {
     //判断是否有"记住我"信息
     let rememberState = localStorage.getItem('rememberPhone');
 
-    console.log('记住我的状态为：', rememberState);
     if (rememberState === null || rememberState === '') {
       console.log('上次操作没有选择记住我')
     } else {
@@ -123,7 +122,6 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log('点击登录键')
       // this.$parent.$parent.$parent.$parent.$parent.dialogTableVisible=false;
       if (this.verifycode === this.trueVerifycode) {
         this.$emit("logins")
@@ -142,7 +140,6 @@ export default {
       /*
       更新验证码
       */
-      console.log('正在尝试更新验证码');
       getVerifyCode().then(response => {
         console.log('verifycode:', response);
         this.codeimg = response.data.codeImg;

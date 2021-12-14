@@ -305,7 +305,6 @@ export default {
     ...mapMutations(['delLogin']),
     handleSelect(key, keyPath) {
       //这里表示切换了导航内容，应该更换路由
-      console.log(keyPath);
       if (key === '1') {
         this.$router.push({path: '/'});
         return;
@@ -405,7 +404,6 @@ export default {
       /*
       关闭登录窗口
       */
-      console.log('登录窗口被关闭');
       this.dialogTableVisible = false;
     },
 
