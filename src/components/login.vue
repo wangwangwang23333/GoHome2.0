@@ -125,8 +125,17 @@ export default {
     submitForm() {
       console.log('点击登录键')
       // this.$parent.$parent.$parent.$parent.$parent.dialogTableVisible=false;
-      this.$emit("logins")
-      this.$router.go(0);
+      if (this.verifycode === this.trueVerifycode) {
+        this.$emit("logins")
+        this.$router.go(0);
+      } else {
+        this.verifycode = ""
+        this.updateVerifyCode()
+        this.$message({
+          message: "验证码错误，请重新输入",
+          type: 'warning'
+        });
+      }
     },
 
     updateVerifyCode() {

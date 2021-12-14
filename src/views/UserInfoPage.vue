@@ -66,7 +66,6 @@ export default {
               userAvatar: localStorage.getItem('userAvatar'),
               userIdentity: localStorage.getItem('userIdentity'),
               userId:localStorage.getItem('userId'),
-              userIdentity: 'Customer',
               userPermissions: localStorage.getItem('userPermissions'),
             });
 
