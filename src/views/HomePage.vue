@@ -62,13 +62,13 @@
         :wordClick="wordClickHandler"
         style="width: 80%;">
         </wordcloud>
-            <div class="block">
+            <!-- <div class="block">
                 <el-pagination
                     layout="prev, pager, next"
                     :total="totalTags"
                     @current-change="changeTags">
                 </el-pagination>
-            </div>
+            </div> -->
     </div>
     <!--瀑布流-->
 
@@ -197,7 +197,7 @@ export default {
         // }
       ],
       currentTagPage:0,
-      tagPageSize:20,
+      tagPageSize:50,
       totalTags: 0
     }
   },

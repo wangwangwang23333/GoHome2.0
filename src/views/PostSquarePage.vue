@@ -114,7 +114,7 @@ export default {
             defaultWords: [
             ],
             currentTagPage:0,
-            tagPageSize:20,
+            tagPageSize:50,
             totalTags: 0,
 
             currentPostPage:-1,
@@ -320,6 +320,9 @@ export default {
         },
         changeTags(currentPage)
         {
+            if(currentPage>0){
+                currentPage-=1;
+            }
             let that=this;
             getDefaultTagList(currentPage,that.tagPageSize).then((response) => {
                 
