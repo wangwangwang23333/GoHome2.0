@@ -105,6 +105,32 @@ export function addPost(data) {
     })
 }
 
+export function addPostReport(reportedCustomerId, reportReason) {
+
+    return request({
+        url: '/v1/posts/post/report',
+        method: 'post',
+        data: {
+            reportedCustomerId: reportedCustomerId,
+            reportReason: reportReason
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function getPostReport(reportedCustomerId) {
+
+    return request({
+        url: '/v1/posts/post/report',
+        method: 'get',
+        params: {
+            reportedCustomerId: reportedCustomerId
+        }
+    })
+}
+
 export function deletePost(postId) {
     return request({
         url: '/v1/posts/post',

@@ -186,6 +186,45 @@
                                 {{ this.replyCount}}
                             </span>
                         </a-tooltip>
+
+                        <el-dialog 
+                        title="举报发帖人" 
+                        width="30%"
+                        center
+                        :visible.sync="reportDialogVisible">
+                            <el-form :model="reportForm" label-width="80px">
+                              <el-form-item label="被举报人" style="width: 70%;">
+                                <el-input v-model="reportForm.reportedName" disabled></el-input>
+                              </el-form-item>
+                              <el-form-item label="举报人" style="width: 70%;">
+                                <el-input v-model="reportForm.reportName" disabled></el-input>
+                              </el-form-item>
+                              <el-form-item label="举报原因" >
+                                <el-input v-model="reportForm.reportReason"
+                                type="textarea"
+                                maxlength="100"
+                                :autosize="{ minRows: 5, maxRows: 5}"
+                                >
+
+                                </el-input>
+                              </el-form-item>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer">
+                              <el-button @click="reportDialogVisible = false">取 消</el-button>
+                              <el-button type="primary" @click="reportTo">确 定</el-button>
+                            </div>
+                          </el-dialog>
+
+                        <a-tooltip title="举报"  
+                        v-if=" this.userId!=this.author.customerId"
+                        @click="clickReport" style="cursor: pointer;margin-left: 1vw;">
+                            <span key="comment-basic-reply-to">
+                                <i class="el-icon-phone-outline"></i>
+                            </span>
+                            <span style="font-size:1em;">
+                                举报
+                            </span>
+                        </a-tooltip>
  
                     </div>
                     <el-divider ></el-divider>
@@ -260,7 +299,7 @@ import {mavonEditor} from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import ReplyList from '@/components/ReplyList'
 import {GetDetailedStay} from '@/api/staysView.js'
-import {getDetailedPost,deletePost} from '@/api/post.js'
+import {getDetailedPost,deletePost,addPostReport,getPostReport} from '@/api/post.js'
 import {getPostReplyList,addReply} from '@/api/post.js'
 import {getPostLikeStatus,addPostLike,deletePostLike} from '@/api/post.js'
 
@@ -313,6 +352,15 @@ export default {
 
             dataLoading:true,
 
+            reportDialogVisible:false,
+            reportForm:{
+                reportedId:0,
+                reportedName:'',
+                reportId:0,
+                reportName:'',
+                reportReason:''
+            }
+
         }
     },
     created() {
@@ -362,7 +410,8 @@ export default {
                 })
             }
 
-            
+            this.reportForm.reportedName=postDetail.author.customerName;
+            this.reportForm.reportedId=postDetail.author.customerId;
             this.author=postDetail.author;
             this.value=postDetail.post.postContent;
             this.theme=postDetail.post.postTheme;
@@ -563,7 +612,73 @@ export default {
                 return;
             }
             this.form.show=true;
-        }
+        },
+        reportTo(){
+            if(this.reportForm.reportReason.length<=10){
+                this.$message({
+                    message: "举报理由不能少于10个字!",
+                    type: "warning",
+                });
+                return;
+            }
+
+            // 确认举报
+            this.$confirm('确认举报该用户吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                addPostReport(this.reportForm.reportedId, 
+                this.reportForm.reportReason).then(response=>{
+                    this.$message({
+                        type: 'success',
+                        message: '举报成功!'
+                    });
+                    this.reportDialogVisible=false;
+                })
+                .catch(error => {
+                    this.$message({
+                        type: 'warning',
+                        message: '网络异常，请稍后重试'
+                    })
+                });   
+                
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });          
+            });
+        },
+        clickReport(){
+            if(this.userId == null || this.userId == ""){
+                this.$message({
+                    message: "您尚未登录，请先登录",
+                    type: "warning",
+                });
+                // 打开登录界面
+                startLogin();
+                return;
+            }
+            getPostReport(this.reportForm.reportedId).then(response=>{
+                if (response.data!=""){
+                    this.reportForm.reportReason = response.data
+                    this.$message({
+                        type: 'info',
+                        message: '检测到您曾经举报过该用户，已自动填充上次举报理由'
+                    });   
+                }
+            })
+            .catch(error => {
+                this.$message({
+                    type: 'warning',
+                    message: '网络异常，请稍后重试'
+                })
+            });   
+            this.reportForm.reportId=this.customerId;
+            this.reportForm.reportName=localStorage.getItem("userName");
+            this.reportDialogVisible=true;
+        },
 
     },
     props: {
