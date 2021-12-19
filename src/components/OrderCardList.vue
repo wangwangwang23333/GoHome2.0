@@ -16,7 +16,7 @@
             {{ order.stayName }}
           </div>
         </el-tooltip>
-        <div :style="cardTimeStyle(isComplete(order))">
+        <div :style="cardTimeStyle(isSpecial(order))">
           <i class="el-icon-time"></i>
           {{ order.orderStartTime }}到{{ order.orderEndTime }}
         </div>
@@ -29,6 +29,17 @@
                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
           </div>
         </el-tooltip>
+        <el-button v-if="order.orderStatus === 2 && isCustomer" size="mini" round 
+        style="margin-bottom:2px;fontFamily:'Lato-Bold','FZHeiBJW';" type="success" 
+        @click="refundForOrder(order.orderId,order.preOrderTime,order.totalCost)">退款</el-button>
+        <div v-if="order.orderStatus === 1 && isCustomer" >
+          <el-button size="mini" style="font-family:'Lato-Bold','FZHeiBJW';" type="success" 
+          @click="rePaymentForOrder(order.orderId,order.preOrderTime,order.totalCost)">付款</el-button>
+          <el-button size="mini" style="font-family:'Lato-Bold','FZHeiBJW'; margin-right:20px;" type="info" 
+          @click="cancelOrder(order.orderId)">取消</el-button>
+          <el-divider direction="vertical"></el-divider>
+          <span style="font-family:'Lato-Bold','FZHeiBJW';">{{order.rocallTime}}</span>
+        </div>
       </div>
       <el-tooltip :disabled="!isCustomer" placement="right" :open-delay="500" effect="light">
         <div slot="content" style="text-align:center">
@@ -60,7 +71,7 @@
 
     <el-dialog title="评价" :visible.sync="commentDialogVisible" width="30%" :before-close="handleCommentDialogClose">
       <div class="dialogStarsLeft">
-        评分：
+        评分:
       </div>
       <div class="dialogStarsRight">
         <el-rate v-model="commentStars" show-text :icon-classes="iconClasses" void-icon-class="icon-rate-face-off"
@@ -78,7 +89,7 @@
 
     <el-dialog title="举报" :visible.sync="reportDialogVisible" width="25%" :before-close="handleReportDialogClose"
                class="myDialog">
-      <p style="text-align:left"><b>举报原因：</b></p>
+      <p style="text-align:left"><b>举报原因:</b></p>
       <el-input type="textarea" :rows="5" placeholder="请输入举报原因" v-model="reportText" maxlength="400"
                 show-word-limit></el-input>
       <span slot="footer" class="dialog-footer">
@@ -202,8 +213,9 @@
 </style>
 
 <script>
-import {AddCustomerComment, AddHostComment, ReportCustomerOrder} from '@/api/order';
+import {AddCustomerComment, AddHostComment, ReportCustomerOrder, RefundForOrder, RePaymentForOrder, CancelOrder} from '@/api/order';
 import '@/assets/order/fonts/style.css'
+import { message } from 'ant-design-vue';
 
 export default {
   name: 'OrderCardList',
@@ -221,15 +233,18 @@ export default {
       commentText: '',
       reportText: '',
       orderId: '',
-      iconClasses: ['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']
+      iconClasses: ['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3'],
+
+      //倒计时
     };
   },
   methods: {
     isComplete(order) {
-      return order.orderStatus === 4 || order.orderStatus === 5 || order.orderStatus === 6;
+      return order.orderStatus === 4 || order.orderStatus === 5;
     },
-    tipInfo(order) {
-      return order.stayName + '<br/>' + order.stayProvince + order.stayCity + order.stayLocation;
+    //订单之下有没有底栏展示其他信息
+    isSpecial(order){
+      return order.orderStatus === 1 || order.orderStatus === 2 || order.orderStatus === 4 || order.orderStatus === 5;
     },
     handleRate(order) {
       this.orderId = order.orderId;
@@ -330,13 +345,77 @@ export default {
           .catch(_ => {
           });
 
+    },
+    refundForOrder(orderId,orderTime,totalCost){
+      //为订单进行退款,此时订单状态为2，处于待进行状态，退钱并且删除订单
+      RefundForOrder(orderId,orderTime,totalCost).then((response)=>{
+        console.log("退款提交上去了")
+        this.$message({
+          message: '退款已经完成,该订单已经取消!',
+          type: 'success'
+        });
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      })
+    },
+    computetTime(order) {
+      let ts = new Date().getTime(),
+        tc = new Date(order.preOrderTime).getTime();
+      let cm = 15 * 60 * 1000 - (ts - tc);
+      this.runBack(cm,order);
+    },
+    runBack(cm,order) {
+      if (cm > 0) {
+        cm > 60000
+          ? (this.$set(order,"rocallTime",(new Date(cm).getMinutes() < 10
+            ? "0" + new Date(cm).getMinutes()
+            : new Date(cm).getMinutes()) +
+          ":" +
+          (new Date(cm).getSeconds() < 10
+            ? "0" + new Date(cm).getSeconds()
+            : new Date(cm).getSeconds())))
+          : (this.$set(order,"rocallTime","00:" +
+          (new Date(cm).getSeconds() < 10
+            ? "0" + new Date(cm).getSeconds()
+            : new Date(cm).getSeconds())));
+        let _msThis = this;
+        setTimeout(function() {
+          cm -= 1000;
+          _msThis.runBack(cm,order);
+        }, 1000);
+      } else {
+        //删除订单
+        console.log("订单已经超时取消!")
+      }
+    },
+    rePaymentForOrder(orderId,orderTime,totalCost){
+      RePaymentForOrder(orderId,orderTime,totalCost).then((response)=>{
+        console.log("再次付款了")
+        const div = document.createElement('div') 
+        div.innerHTML = response.data
+        document.body.appendChild(div)
+        document.forms[0].submit() //重要，这个才是点击跳页面的核心
+      })
+    },
+    cancelOrder(orderId){
+      CancelOrder(orderId).then((response)=>{
+        console.log("取消订单了")
+        this.$message({
+          message: '该订单已经取消!',
+          type: 'success'
+        });
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      })
     }
   },
   computed: {
     cardTimeStyle: function () {
-      return function (isComplete) {
+      return function (isSpecial) {
         let style;
-        if (isComplete)
+        if (isSpecial)
           style = {
             height: '30px',
             lineHeight: '30px',
@@ -355,6 +434,13 @@ export default {
         return style;
       }
     }
+  },
+  created(){
+    this.orderList.forEach(element => {
+      if(element.orderStatus === 1 ){
+        this.computetTime(element)
+      }
+    });
   }
 }
 </script>
