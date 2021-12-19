@@ -77,7 +77,7 @@
 
 .tabs {
   float: left;
-  width: 700px;
+  width: 800px;
 }
 
 .link {
@@ -146,8 +146,11 @@ export default {
       }, {
         label: '已完成的订单',
         name: 'completed'
+      },{
+        label: '举报中的订单',
+        name: 'reported'
       }],
-      stationStatus: {'payment': 1, 'underway': 2, 'completing': 3, 'pending': 4, 'completed': 5},
+      stationStatus: {'payment': 1, 'underway': 2, 'completing': 3, 'pending': 4, 'completed': 5, 'reported': 6},
       orderInfo: [],
       emptyImgUrl: "https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/暂无订单.png",
       currentPage: 1,
@@ -166,6 +169,7 @@ export default {
       this.totalPage = response.data.totalPage;
 
       this.orderInfo.forEach((order) => {
+        order.preOrderTime = order.orderTime;
         order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
         order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
         order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
@@ -201,6 +205,7 @@ export default {
           this.totalPage = response.data.totalPage;
           console.log(this.totalPage)
           this.orderInfo.forEach((order) => {
+            order.preOrderTime = order.orderTime;
             order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
             order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
             order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
@@ -216,6 +221,7 @@ export default {
           this.orderInfo = response.data.orderInfo;
           this.totalPage = response.data.totalPage;
           this.orderInfo.forEach((order) => {
+            order.preOrderTime = order.orderTime;
             order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
             order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
             order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
@@ -260,6 +266,7 @@ export default {
           })
         }
       })
+      console.log("footMap: ",infos)
      return infos;
     }
   },

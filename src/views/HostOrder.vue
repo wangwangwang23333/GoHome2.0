@@ -102,10 +102,13 @@ export default{
         }, {
             label: '已完成的订单',
             name: 'completed'
+        }, {
+            label: '举报中的订单',
+            name: 'reported'
         }],
             hostOrderList: [],
             emptyImgUrl: "https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/暂无订单.png",
-            stationStatus: {'payment': 1, 'underway': 2, 'completing': 3, 'pending': 4, 'completed': 5},
+            stationStatus: {'payment': 1, 'underway': 2, 'completing': 3, 'pending': 4, 'completed': 5,'reported': 6},
             currentPage: 1,
             totalPage: 0,
             pageSize: 5

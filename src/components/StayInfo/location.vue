@@ -2,37 +2,33 @@
 <div>
   <el-card shadow="hover" style="width:95%;margin:0 auto;border-radius:15px;margin-top:10px" class="location-box">
     <div slot="header">
-        <h2>
-            <i class="iconfont icon-jingdian3" id="myIcon" ></i>
-            <span  > 周边信息</span>
-        </h2>
-
-      </div>
-    <div v-for="(cnt, index) of 3" :key="index" style="width:600px;margin:0 auto">
-      <div style="margin:5px 0 5px 0;float:left" v-if="cnt===1">
-          <i class="iconfont icon-jingdian2" id="myIcon"></i>
-          <span class="myInfo">热门景点</span>
-         <span class="myVal" v-for="(n, index) of spotsNearby" :key="index"> {{n.nearbyName}}({{n.nearbyDistance}})</span>
-      </div>
-
-<!--        <div v-for="near of "></div>-->
-      <div style="margin:5px 0 5px 0;float:left" v-else-if="cnt===2">
-          <i class="iconfont icon-gongjiaozhandian" id="myIcon"></i>
-          <span class="myInfo">地铁/公交车站</span>
-          <span class="myVal" v-for="(n, index) of metroNearby" :key="index">
-              {{n.nearbyName}}({{n.nearbyDistance}})
-          </span>
-      </div>
-      <div style="margin:5px 0 5px 0;float:left" v-else>
-          <i class="iconfont icon-huochezhan3" id="myIcon"></i>
-          <span class="myInfo">机场/火车站</span>
-          <span class="myVal" v-for="(n, index) of airpotNearby" :key="index">{{n.nearbyName}}({{n.nearbyDistance}}) &nbsp; </span>
-      </div>
+      <h2>
+          <i class="iconfont icon-jingdian3" id="myIcon" ></i>
+          <span> 周边信息</span>
+      </h2>
     </div>
-    
-    <div style="margin-top: 150px;">
+    <div style="margin:5px 0 5px 0; text-align:left;">
+        <i class="iconfont icon-jingdian2" id="myIcon"></i>
+        <span class="myInfo">热门景点</span>
+        <span class="myVal" v-for="(n, index) of nearList['景点']" :key="index"> {{n.name}}({{n.distance}}m)</span>
+    </div>
+    <div style="margin:5px 0 5px 0;text-align:left;">
+        <i class="iconfont icon-gongjiaozhandian" id="myIcon"></i>
+        <span class="myInfo">附近交通</span>
+        <span class="myVal" v-for="(n, index) of nearList['交通']" :key="index">
+            {{n.name}}({{n.distance}}m)
+        </span>
+    </div>
+    <div style="margin:5px 0 5px 0;text-align:left;">
+        <i class="iconfont icon-huochezhan3" id="myIcon"></i>
+        <span class="myInfo">美食天地</span>
+        <span class="myVal" v-for="(n, index) of nearList['美食']" :key="index">{{n.name}}({{n.distance}}m) &nbsp; </span>
+    </div>
+    <el-divider><i class="el-icon-food"></i></el-divider>
+    <div>
 <!--      <b style="text-align: center;display: inline-block;">这里是地图</b>-->
-      <StayLocationMap v-if="mapReady" ref="stayMap"  style="margin-left: 10%;" v-bind:centerPosition="centerPosition"></StayLocationMap>
+      <StayLocationMap v-if="mapReady" ref="stayMap"  style="margin-left: 15%;" v-bind:centerPosition="centerPosition" 
+      v-bind:nearList="nearList"></StayLocationMap>
     </div>
     
   </el-card>
@@ -41,9 +37,7 @@
 </template>
 
 <script>
-import near from '@/assets/getnearby.json'
 import StayLocationMap from '@/components/stayLocationMap.vue'
-let nearby = near.data;
 export default {
   name: "location",
   components: {
@@ -51,8 +45,35 @@ export default {
   },
   data() {
     return{
-      nearby,
       mapReady:false,
+      radius:2000,
+      nearList:{"美食":[],"交通":[],"景点":[]},
+    }
+  },
+  methods:{
+    aMapSearchNearBy(centerPoint, radius, keyword) {
+      let that = this;
+      AMap.service(["AMap.PlaceSearch"], ()=> {
+        var placeSearch = new AMap.PlaceSearch({
+            pageSize: 4,    // 每页10条
+            pageIndex: 1,    // 获取第一页
+            //city: city       // 指定城市名(如果你获取不到城市名称，这个参数也可以不传，注释掉)
+        });
+        
+        // 第一个参数是关键字，这里传入的空表示不需要根据关键字过滤
+        // 第二个参数是经纬度，数组类型
+        // 第三个参数是半径，周边的范围
+        // 第四个参数为回调函数
+        placeSearch.searchNearBy(keyword,centerPoint,radius, function(status, result) {
+            if(result.info === 'OK') {
+              var locationList = result.poiList.pois; // 周边地标建筑列表
+              that.nearList[keyword] = locationList;
+              console.log(that.nearList)
+            } else {
+              console.log('获取位置信息失败!');
+            }
+        });
+      });
     }
   },
   props:{
@@ -60,27 +81,18 @@ export default {
       Type:Array,
     }
   },
-  computed:{
-    spotsNearby: function(){
-      return this.nearby.nearbys.filter(function (nearby){
-        return nearby.nearbyType==="热门景点";
-      })
-    },
-    airpotNearby: function(){
-      return this.nearby.nearbys.filter(function (nearby){
-        return nearby.nearbyType==="机场/火车站";
-      })
-    },
-    metroNearby: function(){
-      return this.nearby.nearbys.filter(function (nearby){
-        return nearby.nearbyType==="地铁/公交车站";
-      })
-    }
-  },
+
   mounted(){
     setTimeout(()=>{
-      this.mapReady=true;
+      
+      console.log("加载周边")
+      this.aMapSearchNearBy(this.centerPosition, this.radius, "景点");
+      this.aMapSearchNearBy(this.centerPosition, this.radius, "交通");
+      this.aMapSearchNearBy(this.centerPosition, this.radius, "美食")
     },1000)
+    setTimeout(()=>{
+      this.mapReady=true;
+    },2000)
   }
 }
 </script>

@@ -87,3 +87,33 @@ export function UseCouponForOrder(couponId){
         params: {'couponId':couponId,'couponStatus':1}
     })
 }
+
+export function RefundForOrder(orderId,orderTime,totalCost){
+    return request({
+        url: '/v1/trade/refund',
+        method: 'post',
+        data: {"orderId":orderId,"orderTime":orderTime,"totalCost":totalCost},
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function RePaymentForOrder(orderId,orderTime,totalCost){
+    return request({
+        url: '/v1/trade/repayment',
+        method: 'post',
+        data: {"orderId":orderId,"orderTime":orderTime,"totalCost":totalCost},
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function CancelOrder(orderId){
+    return request({
+        url: "/v1/trade/order",
+        method: 'delete',
+        params: {"orderId":orderId}
+    })
+}
