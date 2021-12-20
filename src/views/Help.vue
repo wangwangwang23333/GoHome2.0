@@ -17,17 +17,17 @@
                             border
                             style="width: 100%">
                             <el-table-column
-                            prop="level"
+                            prop="customerGroupLevel"
                             label="等级"
                             width="180">
                             </el-table-column>
                             <el-table-column
-                            prop="name"
+                            prop="customerLevelName"
                             label="称号"
                             width="180">
                             </el-table-column>
                             <el-table-column
-                            prop="score"
+                            prop="customerNextLevelDegree"
                             label="所需积分">
                             </el-table-column>
                         </el-table>
@@ -52,6 +52,7 @@
                         <div v-if="index1==2&&index2==0">
                             <p>礼券是顾客在预定房源的过程中，会自动的使用可抵消金额最多的礼券
                             </p>
+
                         </div>
 
                         <div v-if="index1==2&&index2==1">
@@ -66,7 +67,7 @@
 
                     </el-collapse-item>
                 </el-collapse>
-            </el-tab-pane> 
+            </el-tab-pane>
         </el-tabs>
         <img class="aside" :src="solveImgUrl">
     </div>
@@ -106,77 +107,84 @@
 </style>
 
 <script>
-
+import {getCustomerGroup} from "@/api/customerInfo.js";
+import Coupon from "./Coupon";
 export default {
     name: 'Help',
-    data() {
+  components: {Coupon},
+  created() {
+      getCustomerGroup().then((response)=>{
+        this.customerGroupData = response.data.customerGroup
+    })
+  },
+  data() {
         return{
             customerGroupData: [{
-                level: '1',
-                name: '人在旅途',
-                score:'0'
+                customerGroupLevel: '1',
+              customerLevelName: '人在旅途',
+              customerNextLevelDegree:'0'
                 },{
-                level: '2',
-                name: '白衣秀士',
-                score:'10'
+                customerGroupLevel: '2',
+              customerLevelName: '白衣秀士',
+              customerNextLevelDegree:'10'
                 },{
-                level: '3',
-                name: '赏茶闲客',
-                score:'20'
+              customerGroupLevel: '3',
+              customerLevelName: '赏茶闲客',
+              customerNextLevelDegree:'20'
                 },{
-                level: '4',
-                name: '试剑江湖',
-                score:'50'
+              customerGroupLevel: '4',
+              customerLevelName: '试剑江湖',
+              customerNextLevelDegree:'50'
                 },{
-                level: '5',
-                name: '人海孤鸿',
-                score:'100'
+              customerGroupLevel: '5',
+              customerLevelName: '人海孤鸿',
+              customerNextLevelDegree:'100'
                 },{
-                level: '6',
-                name: '草莽豪杰',
-                score:'200'
+              customerGroupLevel: '6',
+              customerLevelName: '草莽豪杰',
+              customerNextLevelDegree:'200'
                 },{
-                level: '7',
-                name: '武林新贵',
-                score:'500'
+              customerGroupLevel: '7',
+              customerLevelName: '武林新贵',
+              customerNextLevelDegree:'500'
                 },{
-                level: '8',
-                name: '逍遥游侠',
-                score:'1000'
+              customerGroupLevel: '8',
+              customerLevelName: '逍遥游侠',
+              customerNextLevelDegree:'1000'
                 },{
-                level: '9',
-                name: '风云使者',
-                score:'2000'
+              customerGroupLevel: '9',
+              customerLevelName: '风云使者',
+              customerNextLevelDegree:'2000'
                 },{
-                level: '10',
-                name: '寂寞高手',
-                score:'5000'
+              customerGroupLevel: '10',
+              customerLevelName: '寂寞高手',
+              customerNextLevelDegree:'5000'
                 },{
-                level: '11',
-                name: '惊鸿侠影',
-                score:'10000'
+              customerGroupLevel: '11',
+              customerLevelName: '惊鸿侠影',
+              customerNextLevelDegree:'10000'
                 },{
-                level: '12',
-                name: '闻弦雅士',
-                score:'20000'
+              customerGroupLevel: '12',
+              customerLevelName: '闻弦雅士',
+              customerNextLevelDegree:'20000'
                 },{
-                level: '13',
-                name: '一代宗师',
-                score:'50000'
+              customerGroupLevel: '13',
+              customerLevelName: '一代宗师',
+              customerNextLevelDegree:'50000'
                 },{
-                level: '14',
-                name: '茶馆传奇',
-                score:'100000'
+              customerGroupLevel: '14',
+              customerLevelName: '茶馆传奇',
+              customerNextLevelDegree:'100000'
                 },{
-                level: '15',
-                name: '相忘江湖',
-                score:'200000'
+              customerGroupLevel: '15',
+              customerLevelName: '相忘江湖',
+              customerNextLevelDegree:'200000'
                 },{
-                level: '16',
-                name: '归宿',
-                score:'5000000'
+              customerGroupLevel: '16',
+              customerLevelName: '归宿',
+              customerNextLevelDegree:'5000000'
                 },
-                
+
             ],
             activeName: '1',
             helpInfos: [{

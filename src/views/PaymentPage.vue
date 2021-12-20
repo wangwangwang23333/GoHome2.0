@@ -45,13 +45,13 @@
               <i class="el-icon-user"></i>
               <span>最多<strong class="myVal">{{ thisRoom.roomCapacity }}</strong>人</span>
             </div>
-            <div style="margin:5px 0 5px 0; font-family:'Lato-Bold','FZHeiBJW';">              
+            <div style="margin:5px 0 5px 0; font-family:'Lato-Bold','FZHeiBJW';">
               <i class="el-icon-wallet"></i>
               <span>价格<strong class="myVal">{{ thisRoom.price }}</strong>/晚</span>
             </div>
               <i class="el-icon-alarm-clock"></i>
             <span v-for="(bed, index) in thisRoom.beds" :key="index" style="font-family:'Lato-Bold','FZHeiBJW'">
-              {{ bed.bedType }} <strong class="myVal">{{ bed.num }}</strong>张 
+              {{ bed.bedType }} <strong class="myVal">{{ bed.num }}</strong>张
             </span>
           </el-aside>
         </el-container>
@@ -116,7 +116,7 @@
               <p style="font-family:'Lato-Bold','FZHeiBJW'; margin-left: 10%; float:left">礼券优惠</p>
               <p align="right" style="margin-right: 10%"><el-button style="font-family:'Lato-Bold','FZHeiBJW'; margin-top:10px" @click="chooseCoupon">选择礼券</el-button></p>
               <p align="right" style="font-family:'Lato-Bold','FZHeiBJW'; margin-right: 10%">-￥{{ coupon_price }}</p>
-              
+
               <el-dialog style="font-family: 'FZHua'"
                   title="可使用的礼券"
                   :visible.sync="selectCouponVisible"
@@ -125,7 +125,7 @@
                 <!-- 分页后,展示礼券数据，即coupon_information -->
                 <div  v-for="(coupon,index) in coupon_information" :key="index">
                     <el-card class="box-card" style = "margin-bottom:10px;" @click.native="clickCouponCard(coupon.couponId,coupon.couponAmount)">
-                      
+
                       <p align="left" style="font-family:'Lato-Bold','FZHeiBJW'; margin-left: 10%">礼券名称</p>
                       <p align="right" style="font-family:'Lato-Bold','FZHeiBJW'; margin-right: 10%">{{coupon.couponName}}</p>
                       <p align="left" style="font-family:'Lato-Bold','FZHeiBJW'; margin-left: 10%">
@@ -138,15 +138,15 @@
                       <p align="left" style="font-family:'Lato-Bold','FZHeiBJW'; margin-left: 10%">礼券优惠金额</p>
                       <p align="right" style="font-family:'Lato-Bold','FZHeiBJW'; margin-right: 10%; font-size: x-large;">￥{{coupon.couponAmount}}</p>
                     </el-card>
-                  </div>   
+                  </div>
                 <el-pagination
                 :page-size="coupon_pageSize"
                 :page-count="coupon_totalPage"
-                @current-change="handleCurrentChange" 
+                @current-change="handleCurrentChange"
                 @prev-click="prevCurrentChange"
                 @next-click="nextCurrentChange"
                 layout="prev, pager, next"
-                :total="coupon_pageSize*coupon_totalPage">                  
+                :total="coupon_pageSize*coupon_totalPage">
                 </el-pagination>
               </el-dialog>
 
@@ -171,7 +171,7 @@
           style="font-family: 'FZHua'"
           :visible.sync="houseRulesDialogVisible"
           width="30%"
-          >        
+          >
         <el-row :gutter="20">
           <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false"
                 style="height: 20px; width: 20px; display: inline-block; fill: currentcolor;">
@@ -190,7 +190,7 @@
             </path>
           </svg>
           <span style="font-size: 16px; font-family: FZHeiBJW">不允许携带宠物</span>
-          
+
         </el-row>
         <el-row :gutter="20">
           <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false"
@@ -198,7 +198,7 @@
             <path
                 d="m19.2824314 18.7231393c.0580699.2873308-.1238824.5683982-.4080378.6278999l-3.0614452.6380779c-.2841554.0587188-.5621167-.1260497-.6209608-.4125976-.0518758-.2536653.0851692-.5088964.3244171-.6028466.4242975-.1675443.9507979-.3202133.8586603-.7711738l-.7371006-3.6162966c0-.0007829 0-.0015659-.0007743-.0015659-.0766522-.3640567-.2965436-.4893235-.481593-.5543057-.9012449-.274804-1.4966549-.9700349-1.8435258-1.8547319-.0394876-.1009963-.0712324-.2145194-.1083972-.3186474l4.3838905-4.43209681c.2632502 1.21900277.4862386 2.56248945.5226291 3.74860971.0309706.9363695-.2369252 1.8038422-.942281 2.4231301-.1672413.1511031-.3228686.3554446-.2477649.7249817l.7378749 3.6131649c.0913633.4493948.6372204.3812809 1.0909399.3648397.2562818-.010178.4815931.1698931.5334688.4235584m-10.22727104.7719568c-.05884417.2881137-.33680543.4728823-.62096082.4141634l-2.64721325-.5519569 2.30885929-2.3354433-.22453695 1.0999992c-.09136331.4517435.43513713.6044125.86020881.7719568.23847373.0939502.37474443.3483984.32364292.6012808m3.06144524-12.16419143c.0960089.60284659.2206656 1.26362908.367776 1.93302366l-.9748001.98569327c.2578304-.99195661.4622365-2.01522997.6070241-2.91871693m7.2138303-4.15885852c-.2268598-.22939487-.5946358-.22939487-.8214956 0l-1.5918895 1.60967868c-.1231082-.42825595-.2253112-.75786428-.2833811-.94263285-.0309707-.09629887-.1285281-.15423477-.2268598-.13387891l-4.0904439.85416315-4.47602798-.93402075c-.0983317-.02113878-.19666341.03679713-.22685975.13387891-.26325022.82832687-1.38980632 4.52369815-1.4772983 7.33280662-.03097062.9340208.23847373 1.8054081.9430552 2.424696.16724132.1503202.32286865.3546617.24776491.7241988l-.06194122.3006404-3.59491405 3.6350866c-.22685975.2293949-.22685975.6004978 0 .8298927.11381701.1150889.26247596.1722419.41113491.1722419.14865894 0 .29654363-.057153.41036063-.1722419l14.83879555-15.00383373c.2260855-.22939487.2260855-.60128075 0-.83067562"></path>
           </svg>
-          <span style="font-size: 16px; font-family: FZHeiBJW">不允许举办派对和活动</span>         
+          <span style="font-size: 16px; font-family: FZHeiBJW">不允许举办派对和活动</span>
         </el-row>
         <el-row>
           <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false"
@@ -206,7 +206,7 @@
             <path
                 d="m4.50336409 19.0040004c-.00078342.0015657-.00313367.0015657-.00470051.0031313l-.00470052.0046968s-.00078342 0-.00078342-.0007828c-.11359577.1080272-.25931174.165172-.4050277.165172-.15041648 0-.30083296-.0579276-.41599558-.1722173-.22954181-.2293621-.22954181-.6011949 0-.830557l.29456561-.294335-.01645181-2.8055764c-.00156683-.4344572.36272308-.7225298.70977777-.7248782l2.85791311-.0172218 6.46007446-6.45501741c-.0195855-.03522626-.0321202-.08141181-.0564062-.11037563-.2311087-.26928523-.4692681-.29042099-1.274623-.2262309-.6000991.04618554-1.3490478.10333037-2.0846784-.21605443-2.20532494-.96285126-2.1630203-3.12339554-2.14421824-4.0478893.00078341-.04618555.00235025-.0790634.00235025-.1189865.00783419-.04148871.03917096-.07436656.0814756-.07436656h2.10974779c.0446549 0 .0861761.03679188.0830424.10019915-.0070507 1.0340866-.0329036 1.6853811.7732348 2.03607815.2162236.09471951.5985322.0665385 1.0051267.03522626.8507933-.06732131 2.1371675-.16125801 3.1438612.98476982l3.0694362-3.06703351c.2295419-.22936213.601666-.22936213.8312078 0s.2295418.60119493 0 .83055706zm15.99663591-7.7161177v1.8975215c0 .10881-.0877429.1972671-.1958548.1972671-.2655791 0-1.6702496.0007828-1.9060588.0007828-1.0059102 0-3.033399-.0939367-3.9547-2.1401913-.0571896-.1275974-.0869595-.258326-.1237802-.3882718l2.1042639-2.10418222c.0023502.15734399.0031337.31077394.0015668.45715865-.0023502.25519472-.0117513.85717247.0908767 1.08966577.3055334.6779099.9024988.7796747 2.0235717.7929824h1.7642599c.1081119 0 .1958548.0884571.1958548.1972671zm-4.3088054 7.2049455-.0156684-2.7758297 2.8774986-.0133077.0125347 2.7758297zm4.283736-3.5187125c-.0023503-.395317-.3227687-.7154846-.7199622-.7154846l-8.8957246.0532308-5.69310709 5.6878676 14.62408549-.0023484c.4261801-.0093936.7113446-.3483486.7089944-.7240954l-.0086176-1.661897z"></path>
           </svg>
-          <span style="font-size: 16px; font-family: FZHeiBJW">禁止吸烟</span>          
+          <span style="font-size: 16px; font-family: FZHeiBJW">禁止吸烟</span>
         </el-row>
       </el-dialog>
       <span style="float: left; font-family:'Lato-Bold','FZHeiBJW';">,</span>
@@ -446,7 +446,7 @@ export default {
             }
           ]
         }
-     
+
       //调用API添加完成订单;
       AddOrder(data).then((response) => {
 
@@ -462,12 +462,12 @@ export default {
             return;
           });
         }
-        
+
         //添加完成的订单
         console.log(response.data);
         this.orderCreated = true;
 
-        const div = document.createElement('div') 
+        const div = document.createElement('div')
         div.innerHTML = response.data
         document.body.appendChild(div)
         document.forms[0].submit() //重要，这个才是点击跳页面的核心
@@ -479,7 +479,7 @@ export default {
         });
         return;
       });
-     
+
     },
 
     //修改房客人数
@@ -523,11 +523,12 @@ export default {
         this.coupon_information = response.data.couponInfo;
         this.coupon_totalPage = response.data.totalPage;
         this.selectCouponVisible = true;
-        
+
       })
     },
     //显示礼券界面
     chooseCoupon:function(){
+      console.log("获取礼券信息")
       this.getCouponListByPage(this.total_price,this.coupon_currentPage - 1,this.coupon_pageSize)
     },
     //点击卡片选择礼券

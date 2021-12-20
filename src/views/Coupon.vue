@@ -137,7 +137,8 @@ export default{
     },
     created:function(){
         GetCouponInfo().then(response=>{
-            this.couponList=response.data.couponList; 
+            this.couponList=response.data.couponList;
+            console.log(response.data)
         }).catch(()=>{
             console.log("fail");
             this.$message.error("错误:数据库连接错误");

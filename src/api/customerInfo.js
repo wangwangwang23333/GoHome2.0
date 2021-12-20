@@ -34,4 +34,10 @@ export function uploadBasicInfo(data)
     })
 }
 
+export function getCustomerGroup(data){
+    return request({
+        url:'v1/personinfo/customer/group',
+        method: 'get'
+    })
+}
 

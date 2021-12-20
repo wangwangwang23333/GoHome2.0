@@ -1,5 +1,5 @@
 <template>
-  <el-row style="height: 100%">
+  <el-row style="height: 80%">
     <el-col :span="15" style="height: 100%">
     <!--用户基本信息-->
     <p class="bigFontSize" style="float: left;text-align: left">您好，我是{{hostRealName}}</p>
@@ -11,14 +11,14 @@
       <br><br><br><br><br>
       <el-button
           class="Mybutton"
-          style="position: relative;left:-350px;top:10px"
+          style="position: relative;left:-230px"
           @click="dialog=true">
         <u>
           修改个人资料
         </u>
       </el-button>
 
-      <el-button class="Mybutton" @click="gotoOrder()" style="margin-left: -10vw;"> <u>我的订单</u></el-button>
+      <el-button class="Mybutton" @click="gotoOrder()" style="margin-left: -10vw"> <u>我的订单</u></el-button>
       <el-drawer
           title="个人资料"
           :visible.sync="dialog"
@@ -65,7 +65,7 @@
 
 
       <br><br>
-      <el-card shadow="hover" style="width: 550px;height: 200px;
+      <el-card shadow="hover" style="width: 550px;height: 210px;
       box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;">
         <!--信息卡片-->
         <el-col :span="15">
@@ -131,7 +131,7 @@
           style="position:relative;left:35px">
             发布房源
           </el-button>
- 
+
           <span
               class="smallgretfontsize"
               style="color: #333333;float: left;position: relative;left: 2px;top:-15px" >
@@ -215,10 +215,10 @@
         <br><br><br><br>
       <div v-for="i in publishedNum<=3?publishedNum:((this.publishedNum-this.publishedPageSize*(this.publishedCurrentPage-1))>3?3:(this.publishedNum-this.publishedPageSize*(this.publishedCurrentPage-1)))"
            v-if="publishedNum===0?false:true">
-      <el-card shadow="hover" class="card-class" style="float: left;" 
+      <el-card shadow="hover" class="card-class" style="float: left;"
       >
         <!--放置一个图片走马灯-->
-        <div class="imgBox" 
+        <div class="imgBox"
              style="position: relative;left:-20px;top:-20px;box-shadow: rgba(81, 80, 80, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;">
           <el-carousel
               height="130px"
@@ -753,7 +753,7 @@ export default {
 
   methods:{
     gotoOrder(){
-      this.$router.push({ 
+      this.$router.push({
         path: "/hostOrder"
       });
     },
@@ -908,14 +908,14 @@ export default {
       })
 
       getStayOrderChart(param).then(response=>{
-        
+
         let result = response.data
         var myDate=new Date()
         myDate.getFullYear()
         myDate.getMonth()
         for(let i=myDate.getMonth()+1;i<=12;++i){
           let curMonth = String(myDate.getFullYear()-1)+"-"+String(i)
-          
+
           let res = null
           for(let j=0;j<result.length;++j){
             if(result[j].date==curMonth){
@@ -938,19 +938,19 @@ export default {
               "房源评价":res.commentScore
             })
           }
-          
-          
+
+
         }
         for(let i=1;i<=myDate.getMonth();++i){
           let curMonth = String(myDate.getFullYear())+"-"+String(i)
-       
+
           let res = null
           for(let j=0;j<result.length;++j){
             if(result[j].date==curMonth){
               res=result[j]
             }
           }
-    
+
           if (res==null){
             this.orderSalesData.rows.push({
               "时间":curMonth,
@@ -967,10 +967,10 @@ export default {
               "房源评价":res.commentScore
             })
           }
-          
+
         }
 
-        
+
       }).catch((error)=>{
         this.$message({
           message:error,
