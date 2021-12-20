@@ -11,7 +11,7 @@
           </el-tooltip>
           <div class="couponTime">
             <i class="el-icon-time"></i>
-            {{coupon.couponStart}}到{{coupon.couponEnd}}
+            {{coupon.couponStartDate}}到{{coupon.couponEndDate}}
           </div>
         </div>
     </div>
@@ -50,11 +50,11 @@
     width:30%;
     float:left;
     color:white;
-    background-image: 
+    background-image:
     radial-gradient(
-      circle at 1px 10px, 
-      transparent 6px, 
-      #b0c4de 6px, 
+      circle at 1px 10px,
+      transparent 6px,
+      #b0c4de 6px,
       #b0c4de 0px);
       background-size: 150px 20px;
 }
@@ -64,11 +64,11 @@
 .rightCouponCard{
     width:70%;
     float:right;
-    background-image: 
+    background-image:
     radial-gradient(
-      circle at 349px 10px, 
-      transparent 6px, 
-      #f0f0f0 6px, 
+      circle at 349px 10px,
+      transparent 6px,
+      #f0f0f0 6px,
       #f0f0f0 0px);
       background-size: 350px 20px;
 }

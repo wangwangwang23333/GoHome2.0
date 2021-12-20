@@ -7,7 +7,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.withCredentials = true
 
 export function getDomainUrl() {
-    return 'http://8.131.225.65:8080'
+    return 'http://localhost:8080'
 }
 
 // create an axios instance

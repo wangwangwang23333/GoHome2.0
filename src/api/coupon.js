@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function GetCouponInfo() {
     return request({
-        url: '/coupon/CouponInfo',
+        url: 'v1/sale/customer/coupon',
         method: 'get'
     })
 }
@@ -14,3 +14,5 @@ export function GetCustomerCouponInfo(couponLimit, currentPage, pageSize){
         params: {"couponLimit":couponLimit,"currentPage":currentPage,"pageSize":pageSize}
     })
 }
+
+

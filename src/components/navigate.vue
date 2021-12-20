@@ -122,7 +122,7 @@
       <el-submenu index="5" v-if="loginState==1" style="float: right;">
         <template #title>
           <!--显示头像-->
-          <el-avatar :size="30" 
+          <el-avatar :size="30"
           href='https://www.baidu.com/s?wd=%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E7%95%8C%E9%9D%A2'
             :src="userAvatar" @error="errorHandler">
             <!--这里是失败时候展示的图片-->
@@ -333,7 +333,7 @@ export default {
 
       if (this.loginState == 1) {
         if (keyPath[1] === '5-4') {
- 
+
           userLogout().then(response => {
             this.delLogin();
             this.loginState = 0;
@@ -464,7 +464,7 @@ export default {
 
       //判断当前登录对象
       customerLogin(param).then(response => {
-        
+
         //判断是否登录成功
         if (response.data.code === 200) {
           getCustomerInfo().then(response => {
@@ -473,7 +473,7 @@ export default {
                   this.userName = response.data.userName;
                   this.userAvatar = response.data.userAvatar;
                   console.log("用户id为",response.data.userId)
-                  
+
                   // 后端返回身份
                   // 将用户token保存到vuex中
                   this.changeLogin({

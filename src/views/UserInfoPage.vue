@@ -237,7 +237,7 @@ export default {
       this.AuthenticationTag = 1;
       this.EmailTag = response.data.emailTag == false ? 0 : 1;
       this.PhoneTag = 1;
-      this.Score = response.data.userScore;
+      this.Score = response.data.userScore === null? 0:response.data.userScore;
       this.RegisterDate = response.data.registerDate.substring(0, 10);
       this.user_img = response.data.userAvatar;
       console.log(this.user_img);
