@@ -87,8 +87,10 @@
                         </span>
                         </div>
                     </el-upload>
+                    
                     <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="">
+                        
                     </el-dialog>
                     
                 </el-card>
@@ -578,8 +580,8 @@ export default {
         });
 
         },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
+        handlePictureCardPreview(file) {       
+            this.dialogImageUrl = file.url;         
             this.dialogVisible = true;
         },
         changeImages(file,fileList)

@@ -14,7 +14,10 @@
         <strong>{{comments.commentNum}}</strong>&nbsp;&nbsp;条评价
       </div>
       <div id="ratings" style="margin-left: auto;margin-top:10px;">
-        <el-rate v-model="comments.ratings.toFixed(2)" disabled show-score text-color="#ff9900" score-template="{value}"
+        <el-rate v-model="comments.ratings" 
+        disabled show-score 
+        text-color="#ff9900" 
+        score-template="{value} 分"
     >
         </el-rate>
       </div>
@@ -107,6 +110,9 @@ export default {
     current_change:function (publishedCurrentPage){
       this.publishedCurrentPage = publishedCurrentPage;
     },
+
+  },
+  computed:{
 
   },
   props: {
