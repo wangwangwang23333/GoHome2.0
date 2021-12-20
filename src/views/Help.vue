@@ -42,6 +42,25 @@
                             <p>通过房东组的逐渐升级，您能够感受到【归宿】这个世界正在逐渐向您打开
                             </p>
                             <p>努力地成为更好的房东吧！</p>
+                          <el-table
+                              :data="hostGroupData"
+                              border
+                              style="width: 100%">
+                            <el-table-column
+                                prop="hostLevel"
+                                label="等级"
+                                width="180">
+                            </el-table-column>
+                            <el-table-column
+                                prop="hostLevelName"
+                                label="称号"
+                                width="180">
+                            </el-table-column>
+                            <el-table-column
+                                prop="hostLevelDegree"
+                                label="所需积分">
+                            </el-table-column>
+                          </el-table>
                         </div>
 
                         <div v-if="index1==1&&index2==1">
@@ -109,6 +128,7 @@
 <script>
 import {getCustomerGroup} from "@/api/customerInfo.js";
 import Coupon from "./Coupon";
+import {getHostGroup} from "../api/customerInfo";
 export default {
     name: 'Help',
   components: {Coupon},
@@ -116,9 +136,14 @@ export default {
       getCustomerGroup().then((response)=>{
         this.customerGroupData = response.data.customerGroup
     })
+
+    getHostGroup().then((response)=>{
+      this.hostGroupData = response.data.customerGroup
+    })
   },
   data() {
         return{
+          hostGroupData:[],
             customerGroupData: [{
                 customerGroupLevel: '1',
               customerLevelName: '人在旅途',

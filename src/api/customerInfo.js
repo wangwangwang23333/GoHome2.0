@@ -40,4 +40,11 @@ export function getCustomerGroup(data){
         method: 'get'
     })
 }
+export function getHostGroup(data){
+    return request({
+        url:'v1/personinfo/host/group',
+        method: 'get'
+    })
+}
+
 
