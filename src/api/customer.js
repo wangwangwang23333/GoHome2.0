@@ -40,8 +40,7 @@ export function customerLogin(data) {
 export function userLogout() {
     var config = {
         method: 'get',
-        //url: getDomainUrl() + '/sso/logout',
-        url:'/sso/logout',
+        url: getDomainUrl() + '/sso/logout',
         headers: {}
     };
 
