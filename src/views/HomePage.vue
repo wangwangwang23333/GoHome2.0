@@ -197,7 +197,7 @@ export default {
         // }
       ],
       currentTagPage:0,
-      tagPageSize:50,
+      tagPageSize:80,
       totalTags: 0
     }
   },

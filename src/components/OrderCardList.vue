@@ -294,6 +294,9 @@ export default {
                 type: 'success',
                 message: '评价成功!'
               })
+              setTimeout(() => {
+                location.reload();
+              }, 2000);
             }
           })
           .catch(_ => {
@@ -340,6 +343,9 @@ export default {
                 type: 'success',
                 message: '举报成功!'
               })
+              setTimeout(() => {
+                location.reload();
+              }, 2000);
             }
           })
           .catch(_ => {

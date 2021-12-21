@@ -5,7 +5,7 @@
         <el-image src="https://oliver-img.oss-cn-shanghai.aliyuncs.com/img/7d754360eef21afdb2980c794875d420.png"
                   alt="返回" style="height: 30px; width: 30px; float:left;"></el-image>
       </el-link>
-      <span style="float: left;">确认并支付</span>
+      <span style="float: left;" :loading="payLoading">确认并支付</span>
     </div>
     <el-card class="box-card" shadow="hover" :header-style="{}" style="width:70%; margin-bottom: 5%; margin-left: 15%;">
       <div slot="header" class="clearfix">
@@ -406,7 +406,9 @@ export default {
       coupon_currentPage: 1,
       coupon_pageSize: 2,
       coupon_totalPage: 0,
-      coupon_id:-1
+      coupon_id:-1,
+
+      payLoading:true,
 
     }
   },
@@ -595,6 +597,7 @@ export default {
         }
       }
       this.dataReady = true;
+      this.payLoading=false;
     })
         .catch((error) => {
           this.$message({
