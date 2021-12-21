@@ -8,6 +8,13 @@ export function GetHostOrderInfo(currentPage, pageSize) {
         params: {currentPage: currentPage, pageSize:pageSize}
     })
 }
+export function GetHostOrderInfoByStatus(currentPage, pageSize, orderStatus){
+    return request({
+        url: '/v1/orders/host',
+        method: 'get',
+        params: {currentPage:currentPage,pageSize:pageSize,orderStatus:orderStatus}
+    })
+}
 
 export function GetFootMap() {
     return request({

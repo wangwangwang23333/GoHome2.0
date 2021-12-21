@@ -61,7 +61,7 @@
 </style>
 
 <script>
-import { GetHostOrderInfo } from '@/api/order';
+import { GetHostOrderInfo,GetHostOrderInfoByStatus } from '@/api/order';
 import OrderCardList from '@/components/OrderCardList.vue'
 
 export default{
@@ -73,7 +73,7 @@ export default{
         return {
             sortOrder: '',
             hostOrderStation: 'whole',
-            listLoading:true,
+            listLoading:false,
             options: [{
             value: 'orderStartTime',
             label: '时间顺序'
@@ -127,8 +127,8 @@ export default{
                 //     this.$set(order,'stayLocation',res.result.formatted_address);
                 // });
             })
-        }).catch(()=>{
-            console.log("fail");
+        }).catch((error)=>{
+            console.log(error);
             this.$message.error("网络异常，请稍后重试");
         })
     },
@@ -142,29 +142,30 @@ export default{
                 GetCustomerOrderInfo(currentPage, pageSize).then(response => {
                 this.hostOrderList = response.data.orderInfo;
                 this.totalPage = response.data.totalPage;
-                console.log(this.totalPage)
-                this.orderInfo.forEach((order) => {
+                console.log(this.hostOrderList);
+                this.hostOrderList.forEach((order) => {
                     order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
                     order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
                     order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
                 });
-                }).catch(() => {
-                console.log("fail");
+                }).catch((error) => {
+                console.log(error);
                 this.$message.error("网络异常，请稍后重试");
                 })
             } else {
                 let status = this.stationStatus[currentStation]
                 console.log('status', status)
-                GetCustomerOrderInfoByStatus(currentPage, pageSize, status).then(response => {
+                GetHostOrderInfoByStatus(currentPage, pageSize, status).then(response => {
                 this.hostOrderList = response.data.orderInfo;
+                console.log(this.hostOrderList);
                 this.totalPage = response.data.totalPage;
-                this.orderInfo.forEach((order) => {
+                this.hostOrderList.forEach((order) => {
                     order.orderTime = order.orderTime.substring(0, 16).replace('T', ' ');
                     order.orderStartTime = order.orderStartTime.substring(0, 16).replace('T',' ');
                     order.orderEndTime = order.orderEndTime.substring(0, 16).replace('T',' ');
                 });
-                }).catch(() => {
-                console.log("fail");
+                }).catch((error) => {
+                    console.log(error);
                 this.$message.error("网络异常，请稍后重试");
                 })
             }
