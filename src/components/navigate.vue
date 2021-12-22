@@ -5,7 +5,7 @@
 
 <template>
   <el-header
-      style="display: inline-block;width: 100%;margin-bottom: -5px;
+      style="display: inline-block;margin-bottom: -5px;
     margin-top: -5px;
     position: fixed;left: 0;z-index: 100;">
     <el-menu
@@ -94,30 +94,20 @@
 
       </el-menu-item>
 
-
-
-      <el-submenu index="5" v-if="loginState==2" style="float: right;">
+      <el-submenu index="6" style="padding-left:0% ;">
         <template #title>
-          <!--显示头像-->
-          <el-avatar :size="30" :href='userAvatar' :src="userAvatar" @error="errorHandler">
-            <!--这里是失败时候展示的图片-->
-            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
-          </el-avatar>
-          {{ userName }}
+          <i class="el-icon-s-comment"></i>
+          论坛
         </template>
-        <el-menu-item index="5-1">
-          <i class="el-icon-info"></i>
-          个人信息
+        <el-menu-item index="6-1" @click="routerToPostSquare">
+          广场
         </el-menu-item>
-        <el-menu-item index="5-2">
-          <i class="el-icon-circle-plus"></i>
-          创建房源
-        </el-menu-item>
-        <el-menu-item index="5-4">
-          <i class="el-icon-remove"></i>
-          退出登录
+        <el-menu-item index="6-2" @click="routerToEditPost">
+          发帖
         </el-menu-item>
       </el-submenu>
+
+     
       <!--顾客个人信息-->
       <el-submenu index="5" v-if="loginState==1" style="float: right;">
         <template #title>
@@ -148,18 +138,7 @@
         </el-menu-item>
       </el-submenu>
 
-      <el-submenu index="6" style="padding-left:0% ;">
-        <template #title>
-          <i class="el-icon-s-comment"></i>
-          论坛
-        </template>
-        <el-menu-item index="6-1" @click="routerToPostSquare">
-          广场
-        </el-menu-item>
-        <el-menu-item index="6-2" @click="routerToEditPost">
-          发帖
-        </el-menu-item>
-      </el-submenu>
+      
 
       <el-menu-item v-if="loginState==0" style="float: right;">
         <el-link :underline="false" @click="login">登录</el-link>
@@ -598,7 +577,6 @@ export default {
         return;
       }
 
-      //! 在这之后加入你的搜索与后端交互逻辑，就是点击搜索按钮后的各种跳转页面和传值
       let searchText = this.searchText;
       let searchValue = this.selectSearch;
       this.setlocalHistory(this.searchText);
@@ -606,7 +584,8 @@ export default {
 
       this.$router.push({path: '/staysView', query: {searchText: searchText, searchValue: searchValue}}
       ).catch(err => {
-        console.log('输出报错', err)
+        console.log(err)
+
       });
 
     }

@@ -3,15 +3,16 @@
         <!--此处仍然是词云图-->
         <div>
             <wordcloud :data="defaultWords" nameKey="标签" valueKey="热度" :color="cloudColors" :showTooltip="true"
-                :wordClick="wordClickHandler" style="width: 90vw;">
+                :wordClick="wordClickHandler" style="width: 90vw;" v-if="!tagLoading">
             </wordcloud>
+            <div style="width: 90vw;height: 50vh;" v-loading="tagLoading" v-if="tagLoading"></div>
             <div class="block">
                 <el-pagination
                     layout="prev, pager, next"
                     :total="totalTags"
                     @current-change="changeTags">
                 </el-pagination>
-                <el-button @click="setPostListByDefault()" round>取消筛选</el-button>
+                <el-button @click="setPostListByDefault()" round :disabled="selectedTag==null">取消筛选</el-button>
             </div>
         </div>
         <el-divider>
@@ -57,6 +58,7 @@
             right: 5vw;bottom: 12vh;"
             plain
             @click="getMoreData()"
+            v-loading="postLoading"
             >More</el-button>
             <el-button
             style="position: fixed;border-radius: 100%;height: 9vh;
@@ -114,7 +116,7 @@ export default {
             defaultWords: [
             ],
             currentTagPage:0,
-            tagPageSize:80,
+            tagPageSize:100,
             totalTags: 0,
 
             currentPostPage:-1,
@@ -122,7 +124,10 @@ export default {
             totalPosts:0,
             totalPostPages:0,
 
-            selectedTag:null
+            selectedTag:null,
+
+            postLoading:true,
+            tagLoading:true,
         };
     },
     created()
@@ -221,11 +226,12 @@ export default {
 
         },
         getMoreData() {
-
+           
             if(!this.selectedTag)
             {
                 if(this.currentPostPage+1<=this.totalPostPages)
                 {
+                    this.postLoading=true;
                     this.getPostListByDefault(this.currentPostPage+1);
                 }
                 else{
@@ -233,12 +239,14 @@ export default {
                         message: "暂无更多帖子",
                         type: 'warning'
                     });
+                    this.postLoading=false;
                 }
             }
             else
             {
                 if(this.currentPostPage+1<=this.totalPostPages)
                 {
+                    this.postLoading=true;
                     this.getPostListByTag(this.selectedTag,this.currentPostPage+1);
                 }
                 else{
@@ -246,6 +254,7 @@ export default {
                         message: "暂无更多帖子",
                         type: 'warning'
                     });
+                    this.postLoading=false;
                 }
             }
         },
@@ -320,6 +329,7 @@ export default {
         },
         changeTags(currentPage)
         {
+            this.tagLoading=true;
             if(currentPage>0){
                 currentPage-=1;
             }
@@ -343,6 +353,7 @@ export default {
                 })
                 
                 that.defaultWords=words;
+                this.tagLoading=false;
             })
             .catch((error) => {
                 this.$message({
@@ -374,6 +385,7 @@ export default {
                 that.currentPostPage=currentPage;
                 
                 that.AppendData(posts);
+                this.postLoading=false;
 
             })
             .catch((error) => {
@@ -407,6 +419,7 @@ export default {
                 that.currentPostPage=currentPage;
                 
                 that.AppendData(posts);
+                this.postLoading=false;
 
             })
             .catch((error) => {
