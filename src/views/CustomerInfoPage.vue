@@ -1,0 +1,188 @@
+<template>
+  <!--整体使用弹性布局-->
+  <div class="customer-flex-box">
+  <div class = "customer-basic-info">
+    <CustomerBasicInfo
+        v-bind:user_img="user_img"
+              :user-nick-name="userNickName"
+              :review-num="reviewNum"
+              :user-group-level="UserGroupLevel"
+              :tagimg-list="TagimgList"
+              :authentication-tag="AuthenticationTag"
+              :email-tag="EmailTag"
+              :phone-tag="PhoneTag"
+              :score="Score">
+    </CustomerBasicInfo>
+  </div>
+  <el-divider direction="vertical" class="el-divider--vertical"></el-divider>
+  <div class="customer-detailed-info">
+    <CustomerDetailedInfo
+      v-bind:user-nick-name="userNickName"
+            :register-date="RegisterDate"
+            :user-birth-date="userBirthDate"
+            :comment-num="reviewNum"
+            :user-sex="userSex"
+            :mood="mood"
+            :comment-list="commentList"
+            @UpdateMood="updateMood">
+    </CustomerDetailedInfo>
+  </div>
+    <el-divider direction="vertical" class="el-divider--vertical"></el-divider>
+    <div
+        class="side-bar-box">
+      <CustomerSideBar></CustomerSideBar>
+    </div>
+  </div>
+</template>
+
+<script>
+import CustomerBasicInfo from "@/components/CustomerBasicInfo";
+import CustomerDetailedInfo from "@/components/CustomerDetailedInfo";
+import {uploadBasicInfo} from "@/api/customerInfo";
+import {mapMutations} from "vuex";
+import CustomerSideBar from "@/components/CustomerSideBar";
+export default {
+  name: "CustomerInfoPage",
+  components: {CustomerSideBar, CustomerDetailedInfo, CustomerBasicInfo},
+  data:function(){
+    return{
+      user_img: "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",//一个用户图片url的假数据
+      userNickName: "用户昵称",
+      reviewNum: 3,//评价条数
+      UserGroupLevel: '基础用户',//用户组等级，字符串
+      TagimgList: ["https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E9%94%99%E8%AF%AF.png", "https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E6%AD%A3%E7%A1%AE%20(1).png"],
+      AuthenticationTag: 1,//是否进行了身份认证表示，0表示未认证，1表示认证
+      EmailTag: 0,//是否拥有电子邮箱标识
+      PhoneTag: 1,//是否进行了手机号认证标识
+      Score: 0,
+      RegisterDate: "2022年2月10日",//注册的时间
+      userBirthDate: '暂无生日',
+      userSex: '未知',
+      mood: 0,//当前心情
+      commentList: [{
+        commentTime:"2022-2-11",
+        hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+        hostNickName:"房东昵称",
+        hostRegisterDate:"2022-1-11",
+        customerStars:5.0,
+        comment:"房东对该顾客的评价内容..."
+      },
+        {
+          commentTime:"2022-2-11",
+          hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+          hostNickName:"房东昵称",
+          hostRegisterDate:"2022-1-11",
+          customerStars:5.0,
+          comment:"房东对该顾客的评价内容..."
+        },{
+        commentTime:"2022-2-11",
+        hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+        hostNickName:"房东昵称",
+        hostRegisterDate:"2022-1-11",
+        customerStars:5.0,
+        comment:"房东对该顾客的评价内容..."
+  },
+    {
+      commentTime:"2022-2-11",
+          hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+        hostNickName:"房东昵称",
+        hostRegisterDate:"2022-1-11",
+        customerStars:5.0,
+        comment:"房东对该顾客的评价内容..."
+    },{        commentTime:"2022-2-11",
+          hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+          hostNickName:"房东昵称",
+          hostRegisterDate:"2022-1-11",
+          customerStars:5.0,
+          comment:"房东对该顾客的评价内容..."
+        },
+        {
+          commentTime:"2022-2-11",
+          hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+          hostNickName:"房东昵称",
+          hostRegisterDate:"2022-1-11",
+          customerStars:5.0,
+          comment:"房东对该顾客的评价内容..."
+        },        {
+          commentTime:"2022-2-11",
+          hostAvatar:"https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E7%94%A8%E6%88%B7.png",
+          hostNickName:"房东昵称",
+          hostRegisterDate:"2022-1-11",
+          customerStars:5.0,
+          comment:"房东对该顾客的评价内容..."
+        }
+        ],
+    }
+  },
+  methods:{
+    ...mapMutations(['changeLogin']),
+    updateMood: function (mood) {
+      console.log("当前点击的心情：",mood)
+      this.mood = mood;
+      let NewName = this.UserNickName;
+      let param = {
+        mood: mood,
+        userNickName: NewName
+      };
+
+      uploadBasicInfo(param).then(response => {
+        //如果修改成功，需要更改本地信息
+        this.changeLogin({
+          userName: NewName,
+          userAvatar: localStorage.getItem('userAvatar'),
+          userIdentity: localStorage.getItem('userIdentity'),
+          userId:localStorage.getItem('userId'),
+          userPermissions: localStorage.getItem('userPermissions'),
+        });
+
+        //刷新
+        this.$router.go(0);
+
+      }).catch((error) => {
+        this.$message({
+          message: error,
+          type: 'warning'
+        });
+        return;
+      })
+    },
+  }
+}
+</script>
+
+<style scoped>
+.customer-flex-box{
+  display: flex;
+  width: 100%;
+  height: 1900px;
+  flex-direction: row; /*弹性布局方向为水平从左至右*/
+  flex-wrap: wrap; /*容器进行换行*/
+  justify-content: center; /*指定容器内元素的排列方式为均匀居中分布*/
+}
+
+.customer-basic-info{
+  width: 350px;
+  height: calc(10% + 720px);
+  padding-top: 5%;
+  align-items: center;
+}
+
+.customer-detailed-info{
+  width: 800px;
+  height: 1900px;
+}
+
+.side-bar-box{
+  width:300px ;
+  height: 1900px;
+}
+
+.el-divider--vertical {
+  height: 95%;
+  margin-top: 80px;
+  width: 1px;
+  animation: fadeInDown;
+  animation-duration: 1s;
+  color: #42b983;
+}
+</style>

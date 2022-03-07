@@ -69,6 +69,11 @@ const routes = [
     component: () =>import('../views/UserInfoPage.vue')
   },
   {
+    path: '/customerinfopage',
+    name: 'CustomerInfoPage',
+    component: () =>import('../views/CustomerInfoPage.vue')
+  },
+  {
     path: '/hostinfopage',
     name: 'HostInfoPage',
     component: () =>import('../views/HostInfoPage.vue')
