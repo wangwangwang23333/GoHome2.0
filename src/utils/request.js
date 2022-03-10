@@ -7,7 +7,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.withCredentials = true
 
 export function getDomainUrl() {
-    return 'http://8.131.225.65:8080'
+    return 'http://124.223.171.21:8080'
 }
 
 // create an axios instance
@@ -43,7 +43,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-
+        console.log("response:", response);
         // if the custom code is not 200, it is judged as an error.
         if (response.status != 200) {
 
