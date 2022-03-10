@@ -267,7 +267,7 @@ export default {
       });
     },
     routerToUserPage: function () {
-      this.$router.replace('/userInfoPage');
+      this.$router.replace('/CustomerInfoPage');
     },
     routerToPostSquare: function () {
       this.$router.replace('/postSquare');
