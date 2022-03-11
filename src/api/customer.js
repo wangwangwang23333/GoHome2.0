@@ -19,16 +19,16 @@ export function customerLogin(data) {
     /*
     顾客登录
     */
-
+    axios.defaults.withCredentials = true;
     let param = new URLSearchParams(data)
     console.log('paramss', param);
     console.log('data', data);
     var config = {
         method: 'get',
         url: getDomainUrl() + '/sso/doLogin',
-        params: data
+        params: data,
     };
-
+    
     return axios(config)
     // return request({
     //     url: '/sso/doLogin',
