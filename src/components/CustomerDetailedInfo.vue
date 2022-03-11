@@ -627,6 +627,60 @@ export default {
             return;
           })
     },
+    gotoUpgrade() {
+      this.$router.push({
+        path: "/hostRegister"
+      })
+    },
+    onsubmit() {
+      console.log('submit!')
+    },
+    resaveInfo: function () {
+      console.log("更新的日期", this.form.BirthDate);
+      let Name = this.form.name;
+      if (this.form.BirthDate === '' && this.form.sex === '') {
+        this.$emit('UpdateName', Name);
+      } else if (this.form.sex === '' && this.form.BirthDate != '') {
+        let NewBirth = this.form.BirthDate;
+        this.$emit('UpdateNameBirthDay', Name, NewBirth);
+      } else if (this.form.sex != '' && this.form.BirthDate === '') {
+        let NewSex = this.form.sex;
+        this.$emit('UpdateNameSex', Name, NewSex);
+      } else {
+        let NewBirth = this.form.BirthDate;
+        let NewSex = this.form.sex;
+        let NewName = this.form.name;
+        this.$emit('UpdateAll', NewName, NewSex, NewBirth);
+      }
+
+
+    }
+  },
+  created() {
+    let userPermissions=localStorage.getItem("userPermissions").split(",")
+    for(let i=0;i<userPermissions.length;++i){
+      if(userPermissions[i]=="upgrade"){
+        this.canUpgrade = true;
+        this.isHost = false;
+        break;
+      }
+      this.isHost = true;
+    }
+
+    // 获取指定用户的发帖记录
+    this.userId = localStorage.getItem('userId')
+    getPersonalPostList(this.userId, 0, 3).then(response => {
+      this.postNumber = response.data.postNum
+      this.posts = response.data.postInfo.content
+
+    })
+        .catch((error) => {
+          this.$message({
+            message: "网络异常，请稍后重试",
+            type: 'warning'
+          });
+          return;
+        })
   }
 }
 </script>

@@ -38,7 +38,7 @@
 <script>
 import CustomerBasicInfo from "@/components/CustomerBasicInfo";
 import CustomerDetailedInfo from "@/components/CustomerDetailedInfo";
-import {uploadBasicInfo} from "@/api/customerInfo";
+import {getCustomerInfo, uploadBasicInfo} from "@/api/customerInfo";
 import {mapMutations} from "vuex";
 import CustomerSideBar from "@/components/CustomerSideBar";
 export default {
@@ -146,7 +146,190 @@ export default {
         return;
       })
     },
+    ...mapMutations(['changeLogin']),
+    updateNickName: function (NewName) {
+      this.UserNickName = NewName;
+      let param = {
+        userNickName: NewName
+      };
+      console.log("修改昵称传入的参数", NewName)
+      uploadBasicInfo(param).then(response => {
+        console.log("需要在这里更改基本信息")
+        //如果修改成功，需要更改本地信息
+        this.changeLogin({
+          Authorization: localStorage.getItem('Authorization'),
+          userName: NewName,
+          userAvatar: localStorage.getItem('userAvatar'),
+          userId:localStorage.getItem('userId'),
+          userIdentity: 'Customer',
+          userPermissions: localStorage.getItem('userPermissions'),
+        });
+
+        //刷新
+        this.$router.go(0);
+      }).catch((error) => {
+        console.log(error);
+        this.$message({
+          message: error,
+          type: 'warning'
+        });
+        return;
+      })
+    },
+    ...mapMutations(['changeLogin']),
+    updateNameAndBirthDate: function (NewName, NewBirth) {
+      this.UserNickName = NewName;
+      this.BirthDate = NewBirth;
+      let param = {
+        userNickName: NewName,
+        userBirthDate: NewBirth
+      };
+      console.log("传入的生日", NewBirth, typeof (NewBirth),)
+      uploadBasicInfo(param).then(response => {
+        console.log("需要在这里更改基本信息")
+        //如果修改成功，需要更改本地信息
+        this.changeLogin({
+          Authorization: localStorage.getItem('Authorization'),
+          userName: NewName,
+          userAvatar: localStorage.getItem('userAvatar'),
+          userId:localStorage.getItem('userId'),
+          userIdentity: 'Customer',
+          userPermissions: localStorage.getItem('userPermissions'),
+        });
+
+        //刷新
+        this.$router.go(0);
+      }).catch((error) => {
+        this.$message({
+          message: error,
+          type: 'warning'
+        });
+        return;
+      })
+    },
+    ...mapMutations(['changeLogin']),
+    updateNameAndSex: function (NewName, NewSex) {
+      this.UserNickName = NewName;
+      this.userSex = NewSex;
+      console.log("传入的性别参数", NewSex);
+      let sex = NewSex === '男' ? 'm' : 'f';
+      let param = {
+        userNickName: NewName,
+        userSex: sex
+      };
+      uploadBasicInfo(param).then(response => {
+        console.log("需要在这里更改基本信息")
+        //如果修改成功，需要更改本地信息
+        this.changeLogin({
+          Authorization: localStorage.getItem('Authorization'),
+          userName: NewName,
+          userAvatar: localStorage.getItem('userAvatar'),
+          userId:localStorage.getItem('userId'),
+          userIdentity: 'Customer',
+          userPermissions: localStorage.getItem('userPermissions'),
+        });
+
+        //刷新
+        this.$router.go(0);
+
+      }).catch((error) => {
+        this.$message({
+          message: error,
+          type: 'warning'
+        });
+        return;
+      })
+    },
+    updateAllInfo: function (NewName, NewSex, NewBirthDate) {
+      this.UserNickName = NewName;
+      console.log("传入的生日参数", NewBirthDate);
+      console.log("传入的性别参数", NewSex);
+      let sex = NewSex === '男' ? 'm' : 'f';
+      let param = {
+        userNickName: NewName,
+        userSex: sex,
+        userBirthDate: NewBirthDate
+      };
+      uploadBasicInfo(param).then(response => {
+        console.log("需要在这里更改基本信息")
+        //如果修改成功，需要更改本地信息
+        this.changeLogin({
+          Authorization: localStorage.getItem('Authorization'),
+          userName: NewName,
+          userAvatar: localStorage.getItem('userAvatar'),
+          userId:localStorage.getItem('userId'),
+          userIdentity: 'Customer',
+          userPermissions: localStorage.getItem('userPermissions'),
+        });
+
+        //刷新
+        this.$router.go(0);
+      }).catch((error) => {
+        this.$message({
+          message: error,
+          type: 'warning'
+        });
+        return;
+      })
+    }
+  },
+  created() {
+    const loading = this.$loading({
+      lock: true,
+      text: '个人主页加载中',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0,0,0,0.7)'
+    });
+
+    //有token,则读取token
+    this.userName = localStorage.getItem('userName');
+    console.log('user:', this.userName)
+    this.userAvatar = localStorage.getItem('userAvatar');
+    this.hasLogin = true;
+    //loading.close()
+    //调用api
+    getCustomerInfo().then(response => {
+      console.log("获取到的个人信息为",response.data);
+      //获取api中的数据
+      this.reviewNum = response.data.evalNum;
+      if (response.data.userGroupLevel == null)
+        this.UserGroupLevel = "暂无等级";
+      else
+        this.UserGroupLevel = '等级：' + response.data.userGroupLevel;
+      this.userNickName = response.data.userNickName;
+      // TODO: 从后端获取是否完成身份认证的信息，通过发送获取 permission 来完成。
+      this.AuthenticationTag = 1;
+      this.EmailTag = response.data.emailTag == false ? 0 : 1;
+      this.PhoneTag = 1;
+      this.Score = response.data.userScore === null? 0:response.data.userScore;
+      this.RegisterDate = response.data.registerDate.substring(0, 10);
+      this.user_img = response.data.userAvatar;
+      console.log(this.user_img);
+      this.userBirthDate = response.data.userBirthDate === null ? '未知' : response.data.userBirthDate;
+      this.commentList = response.data.hostCommentList;
+      this.mood = response.data.mood;
+      if (this.userBirthDate != '未知') {
+        this.userBirthDate = this.userBirthDate.substring(0, 10);
+      }
+      this.userSex = response.data.userSex;
+      if (this.userSex === null)
+        this.userSex = '未知';
+      else if (this.userSex === 'f')
+        this.userSex = '女';
+      else
+        this.userSex = '男';
+
+      loading.close()
+    }).catch((error) => {
+      this.$message({
+        message: error,
+        type: 'warning'
+      });
+      console.log('error', error)
+      return;
+    })
   }
+
 }
 </script>
 
