@@ -26,9 +26,9 @@
         </svg>
       </a>
 
-      <a @click="dialog=true"
+      <a @click="gotoUpgrade"
          v-if="!isHost"
-          style="margin-left: 2%;margin-top: 2%">
+          style="margin-left: 2%;margin-top: 2%;cursor: pointer">
         <svg class="icon-arrow before">
           <use xlink:href="#arrow"></use>
         </svg>
