@@ -16,7 +16,7 @@
     <!--修改资料弹出框-->
     <div class="info-box">
       <a @click="dialog=true"
-          style="margin-left: 2%;margin-top: 2%">
+          style="margin-left: 2%;margin-top: 2%;cursor: pointer">
         <svg class="icon-arrow before">
           <use xlink:href="#arrow"></use>
         </svg>
@@ -40,7 +40,8 @@
 
       <a href="javascript:;"
           v-if="isHost"
-          style="margin-left: 2%;margin-top: 2%">
+          style="margin-left: 2%;margin-top: 2%"
+         @click="gotoHost">
         <svg class="icon-arrow before">
           <use xlink:href="#arrow"></use>
         </svg>
@@ -226,7 +227,6 @@
                        :tabindex="moodIndex"
           >
             <el-button
-                @click="cancelForm"
                 class="normal-button"
                 style="font-size: 1.2em"
                 type="primary">
@@ -324,17 +324,7 @@
 
     </div>
     <!--评价分页-->
-    <div class="newPagination">
-      <el-pagination
-          layout="prev, pager, next"
-          :page-size="pageSize"
-          :pager-count="pageCount"
-          :total="commentNum"
-          @current-change="current_change"
-          background
-          style="margin-top: 2%;margin-right: 15%;">
-      </el-pagination>
-    </div>
+
     <!--无评价时的占位符-->
     <el-image v-if="commentNum===0"
               src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/Light_转账.png"
@@ -345,6 +335,17 @@
         v-if="commentNum===0" >
       该用户暂无评价哦...
     </h>
+  <div class="newPagination">
+    <el-pagination
+        layout="prev, pager, next"
+        :page-size="pageSize"
+        :pager-count="pageCount"
+        :total="commentNum"
+        @current-change="current_change"
+        background
+        style="margin-top: 2%;margin-right: 15%;">
+    </el-pagination>
+  </div>
     <el-divider></el-divider>
       <!--我的帖子部分-->
     <div class="info-box">
@@ -605,6 +606,11 @@ export default {
     current_change: function (currentPage) {
       this.currentPage = currentPage;
       console.log(this.currentPage);
+    },
+    gotoHost() {
+      this.$router.push({
+        path: "/hostInfoPage"
+      })
     },
     gotoPost(postId){
       this.$router.push({

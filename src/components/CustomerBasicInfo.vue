@@ -7,7 +7,7 @@
       <el-image
           class="user-avatar"
           :src="user_img"
-          :fit="cover">
+          fit="cover">
       </el-image>
       <!--用户昵称-->
       <p class="user-name">{{ userNickName }}</p>

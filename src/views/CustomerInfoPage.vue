@@ -119,7 +119,7 @@ export default {
     updateMood: function (mood) {
       console.log("当前点击的心情：",mood)
       this.mood = mood;
-      let NewName = this.UserNickName;
+      let NewName = this.userNickName;
       let param = {
         mood: mood,
         userNickName: NewName
@@ -148,7 +148,7 @@ export default {
     },
     ...mapMutations(['changeLogin']),
     updateNickName: function (NewName) {
-      this.UserNickName = NewName;
+      this.userNickName = NewName;
       let param = {
         userNickName: NewName
       };
@@ -178,7 +178,7 @@ export default {
     },
     ...mapMutations(['changeLogin']),
     updateNameAndBirthDate: function (NewName, NewBirth) {
-      this.UserNickName = NewName;
+      this.userNickName = NewName;
       this.BirthDate = NewBirth;
       let param = {
         userNickName: NewName,
@@ -209,7 +209,7 @@ export default {
     },
     ...mapMutations(['changeLogin']),
     updateNameAndSex: function (NewName, NewSex) {
-      this.UserNickName = NewName;
+      this.userNickName = NewName;
       this.userSex = NewSex;
       console.log("传入的性别参数", NewSex);
       let sex = NewSex === '男' ? 'm' : 'f';
@@ -241,7 +241,7 @@ export default {
       })
     },
     updateAllInfo: function (NewName, NewSex, NewBirthDate) {
-      this.UserNickName = NewName;
+      this.userNickName = NewName;
       console.log("传入的生日参数", NewBirthDate);
       console.log("传入的性别参数", NewSex);
       let sex = NewSex === '男' ? 'm' : 'f';
