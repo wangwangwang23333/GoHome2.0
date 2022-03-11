@@ -577,7 +577,7 @@ export default {
       }
       this.$confirm('您确定要做这样的修改吗？', {
         dangerouslyUseHTMLString: true,
-        confirmButtonClass: 'Mybutton',
+        confirmButtonClass: 'normal-button',
         confirmButtonText: '确定',
 
       })
