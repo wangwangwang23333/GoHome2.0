@@ -21,7 +21,8 @@
                   class="grid-content bg-purple">
                 <el-image
                     class="user-avatar"
-                    :src="user_img">
+                    :src="user_img"
+                    fit="cover">
                   <div slot="error" class="image-slot">
                     <el-image src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/头像 (3).png"></el-image>
                   </div>
@@ -87,7 +88,7 @@
               src="https://joes-bucket.oss-cn-shanghai.aliyuncs.com/img/%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7.png"
               class="image-icon">
           </el-image>
-          <h class="person-info-text">等级: {{UserGroupLevel}}级</h>
+          <h class="person-info-text">{{UserGroupLevel}}级</h>
         </div>
       <el-divider class="el-divider--horizontal">
       </el-divider>

@@ -24,7 +24,11 @@
             :user-sex="userSex"
             :mood="mood"
             :comment-list="commentList"
-            @UpdateMood="updateMood">
+            @UpdateMood="updateMood"
+            @UpdateName="updateNickName"
+            @UpdateNameBirthDay="updateNameAndBirthDate"
+            @UpdateNameSex="updateNameAndSex"
+            @UpdateAll="updateAllInfo">
     </CustomerDetailedInfo>
   </div>
     <el-divider direction="vertical" class="el-divider--vertical"></el-divider>
